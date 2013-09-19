@@ -29,6 +29,7 @@ import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.progressbar.ProgressBar;
+import org.cruxframework.crux.widgets.client.uploader.FileUploader.ClientProcessFileHandler;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.NativeEvent;
@@ -127,17 +128,9 @@ abstract class AbstractFileUploader extends Composite
 
 	public void uploadFile(File file)
 	{
-		if(clientProcessFileHandler == null || clientProcessFileHandler.process(file))
-		{
-			uploadFile(file, url);
-		}
+		uploadFile(file, url);
 	}
-	
-	public static interface ClientProcessFileHandler
-	{
-		boolean process(File file);
-	}
-	
+
 	public void setClientProcessFileHandler(ClientProcessFileHandler clientProcessFileHandler) 
 	{
 		this.clientProcessFileHandler = clientProcessFileHandler;
@@ -145,9 +138,12 @@ abstract class AbstractFileUploader extends Composite
 	
 	public void uploadFile(final File file, String url)
 	{
-		XMLHttpRequest2 xhr = getXhr(file);
-		xhr.open(HTTP_POST, url);
-		xhr.send("file", file);
+		if(clientProcessFileHandler == null || clientProcessFileHandler.process(file))
+		{
+			XMLHttpRequest2 xhr = getXhr(file);
+			xhr.open(HTTP_POST, url);
+			xhr.send("file", file);
+		}
 	}
 
 	public void uploadAllFiles()
