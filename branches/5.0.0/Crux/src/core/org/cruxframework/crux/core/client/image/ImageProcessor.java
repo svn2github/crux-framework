@@ -43,6 +43,38 @@ public class ImageProcessor
 	protected ImageProcessor(){}
 	
 	/**
+	 * Create ImageProcessor instance and automatically loads the image. 
+	 * @param file Image File
+	 * @param handler Called whem image is completely loaded
+	 */
+	public static void createIfSupportedAndLoadImage(final File image, final ImageLoadHandler handler)
+	{
+		ImageProcessor imageProcessor = createIfSupported();
+		if(imageProcessor == null) 
+		{
+			handler.onError();
+			return;
+		}
+		imageProcessor.loadImage(image, handler);
+	}
+	
+	/**
+	 * Create ImageProcessor instance and automatically loads the image.
+	 * @param url Image URL
+	 * @param handler Called whem image is completely loaded
+	 */
+	public static void createIfSupportedAndLoadImage(String url, final ImageLoadHandler handler)
+	{
+		ImageProcessor imageProcessor = createIfSupported();
+		if(imageProcessor == null) 
+		{
+			handler.onError();
+			return;
+		}
+		imageProcessor.loadImage(url, handler);
+	}
+	
+	/**
 	 * Loads an image to the processor.
 	 * @param url Image URL
 	 * @param handler Called whem image is completely loaded
