@@ -89,7 +89,7 @@ public class ImageProcessor
 			@Override
 			public void onLoad(ImageProcessor processor)
 			{
-				processor.image = newImage;
+				image = newImage;
 				if (handler != null)
 				{
 					handler.onLoad(processor);
@@ -151,7 +151,7 @@ public class ImageProcessor
 			{
 				if (width > maxWidth)
 				{
-					height = Math.round(height *= maxWidth / width);
+					height = Math.round(height *= maxWidth / (double) width);
 					width = maxWidth;
 				}
 			}
@@ -159,7 +159,7 @@ public class ImageProcessor
 			{
 				if (height > maxHeight)
 				{
-					width = Math.round(width *= maxHeight / height);
+					width = Math.round(width *= maxHeight / (double) height);
 					height = maxHeight;
 				}
 			}
@@ -210,7 +210,7 @@ public class ImageProcessor
 	}
 	
 	private native String toJpegURL(CanvasElement canvas, double quality)/*-{
-		return canvas.toDataUrl("image/jpeg", quality);
+		return canvas.toDataURL("image/jpeg", quality);
 	}-*/;
 	
 	/**

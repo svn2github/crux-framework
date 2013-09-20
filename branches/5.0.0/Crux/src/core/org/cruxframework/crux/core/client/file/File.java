@@ -92,6 +92,6 @@ public class File extends Blob
 	}
 
 	protected static native File create(Blob blob, String fileName)/*-{
-		return new $File(blob, fileName);
+		return new $wnd.File(blob, fileName);
 	}-*/;
 }
