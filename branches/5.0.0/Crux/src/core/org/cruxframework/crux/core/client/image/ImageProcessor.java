@@ -55,12 +55,12 @@ public class ImageProcessor
 		newImage.setLoadHandler(new ImageLoadHandler()
 		{
 			@Override
-			public void onLoad()
+			public void onLoad(ImageProcessor processor)
 			{
 				image = newImage;
 				if (handler != null)
 				{
-					handler.onLoad();
+					handler.onLoad(processor);
 				}
 			}
 			
@@ -72,7 +72,7 @@ public class ImageProcessor
 					handler.onError();
 				}
 			}
-		});
+		}, this);
 		newImage.setSrc(url);
 	}
 	
@@ -254,9 +254,9 @@ public class ImageProcessor
 			this.src = url;
 		}-*/;
 
-		public final native void setLoadHandler(ImageLoadHandler handler)/*-{
+		public final native void setLoadHandler(ImageLoadHandler handler, ImageProcessor processor)/*-{
 			this.onload = function(){
-				handler.@org.cruxframework.crux.core.client.image.ImageProcessor.ImageLoadHandler::onLoad()();
+				handler.@org.cruxframework.crux.core.client.image.ImageProcessor.ImageLoadHandler::onLoad(Lorg/cruxframework/crux/core/client/image/ImageProcessor;)(processor);
 			};
 			this.onerror = function(){
 				handler.@org.cruxframework.crux.core.client.image.ImageProcessor.ImageLoadHandler::onError()();
@@ -270,7 +270,7 @@ public class ImageProcessor
 	
 	public static interface ImageLoadHandler 
 	{
-		void onLoad();
+		void onLoad(ImageProcessor processor);
 		void onError();
 	}
 }
