@@ -438,11 +438,11 @@ public class StringUtils
 	  var i = -1;
 	  var x, y;
 	
-	  while(++i < input.length)
+	  while(++i < utf16String.length)
 	  {
 	    // Decode utf-16 surrogate pairs 
-	    x = input.charCodeAt(i);
-	    y = i + 1 < input.length ? input.charCodeAt(i + 1) : 0;
+	    x = utf16String.charCodeAt(i);
+	    y = i + 1 < utf16String.length ? utf16String.charCodeAt(i + 1) : 0;
 	    if(0xD800 <= x && x <= 0xDBFF && 0xDC00 <= y && y <= 0xDFFF)
 	    {
 	      x = 0x10000 + ((x & 0x03FF) << 10) + (y & 0x03FF);
@@ -481,7 +481,8 @@ public class StringUtils
 		for(int i = 0; i < input.length(); i++)
 		{
 			x = charCodeAt(input, i);
-			output.append(hexTab.charAt((x >>> 4) & 0x0F) +  hexTab.charAt(x & 0x0F));
+			output.append(hexTab.charAt((x >>> 4) & 0x0F));
+			output.append(hexTab.charAt(x & 0x0F));
 		}
 		return output.toString();
 	}
