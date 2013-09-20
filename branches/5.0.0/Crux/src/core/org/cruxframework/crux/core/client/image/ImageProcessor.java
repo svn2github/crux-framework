@@ -47,12 +47,12 @@ public class ImageProcessor
 	 * @param file Image File
 	 * @param handler Called whem image is completely loaded
 	 */
-	public static void createIfSupportedAndLoadImage(final File image, final ImageLoadHandler handler)
+	public static void createIfSupportedAndLoadImage(final File image, final ImageCreateAndLoadHandler handler)
 	{
 		ImageProcessor imageProcessor = createIfSupported();
 		if(imageProcessor == null) 
 		{
-			handler.onError();
+			handler.onNotSupported();
 			return;
 		}
 		imageProcessor.loadImage(image, handler);
@@ -63,12 +63,12 @@ public class ImageProcessor
 	 * @param url Image URL
 	 * @param handler Called whem image is completely loaded
 	 */
-	public static void createIfSupportedAndLoadImage(String url, final ImageLoadHandler handler)
+	public static void createIfSupportedAndLoadImage(String url, final ImageCreateAndLoadHandler handler)
 	{
 		ImageProcessor imageProcessor = createIfSupported();
 		if(imageProcessor == null) 
 		{
-			handler.onError();
+			handler.onNotSupported();
 			return;
 		}
 		imageProcessor.loadImage(url, handler);
@@ -89,7 +89,7 @@ public class ImageProcessor
 			@Override
 			public void onLoad(ImageProcessor processor)
 			{
-				image = newImage;
+				processor.image = newImage;
 				if (handler != null)
 				{
 					handler.onLoad(processor);
@@ -298,6 +298,11 @@ public class ImageProcessor
 		public static native NativeImage create()/*-{
 			return new Image();
 		}-*/;
+	}
+	
+	public static interface ImageCreateAndLoadHandler extends ImageLoadHandler  
+	{
+		void onNotSupported();
 	}
 	
 	public static interface ImageLoadHandler 
