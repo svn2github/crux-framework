@@ -22,6 +22,7 @@ import org.cruxframework.crux.core.client.file.File;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 
 /**
  * An HTML5 based file uploader widget.
@@ -29,7 +30,7 @@ import com.google.gwt.user.client.ui.Composite;
  * @author Thiago da Rosa de Bustamante
  */
 @PartialSupport
-public class FileUploader extends Composite
+public class FileUploader extends Composite implements HasEnabled 
 {
 	private AbstractFileUploader impl;
 	
