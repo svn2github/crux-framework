@@ -29,6 +29,7 @@ import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.progressbar.ProgressBar;
+import org.cruxframework.crux.widgets.client.uploader.FileUploader.ClientSendFileHandler;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.NativeEvent;
@@ -40,6 +41,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
@@ -51,7 +53,7 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
  * @author Thiago da Rosa de Bustamante
  */
 @PartialSupport
-abstract class AbstractFileUploader extends Composite
+abstract class AbstractFileUploader extends Composite implements HasEnabled 
 {
 	static final int HTTP_STATUS_NON_HTTP = 0;
 	static final int HTTP_STATUS_OK = 200;
@@ -67,27 +69,9 @@ abstract class AbstractFileUploader extends Composite
 	protected Button sendButton;
 	
 	//TODO: Implement this behavior
-	protected boolean disabled = false;
+	protected boolean enabled = true;
 	
-	/**
-	 * @author samuel.cardoso
-	 * If client wants to process any kind of information before file upload.
-	 */
-	public static interface ClientProcessFileHandler
-	{
-		/**
-		 * @param file the file submitted
-		 * @return true if client wants to upload the file to server and false otherwise.
-		 */
-		boolean onStart(File file);
-		
-		/**
-		 * Action to be executed after the client has processed the file.
-		 */
-		void onComplete();
-	}
-	
-	private ClientProcessFileHandler clientSendFileHandler = new ClientProcessFileHandler() {
+	private ClientSendFileHandler clientSendFileHandler = new ClientSendFileHandler() {
 		@Override
 		public boolean onStart(File file) {
 			//Override if necessary
@@ -469,16 +453,17 @@ abstract class AbstractFileUploader extends Composite
 		return File.isSupported() && FileList.isSupported() && FileReader.isSupported() && XMLHttpRequest2.isSupported();
 	}
 
-	public boolean isDisabled() {
-		return disabled;
-	}
-
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
-
-	public void setClientSendFileHandler(
-			ClientProcessFileHandler clientSendFileHandler) {
+	public void setClientSendFileHandler(ClientSendFileHandler clientSendFileHandler) {
 		this.clientSendFileHandler = clientSendFileHandler;
+	}
+
+	public boolean isEnabled() 
+	{
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) 
+	{
+		this.enabled = enabled;
 	}
 }

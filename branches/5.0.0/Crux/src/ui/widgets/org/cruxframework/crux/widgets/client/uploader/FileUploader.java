@@ -18,7 +18,6 @@ package org.cruxframework.crux.widgets.client.uploader;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.file.File;
-import org.cruxframework.crux.widgets.client.uploader.AbstractFileUploader.ClientProcessFileHandler;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.PartialSupport;
@@ -33,6 +32,24 @@ import com.google.gwt.user.client.ui.Composite;
 public class FileUploader extends Composite
 {
 	private AbstractFileUploader impl;
+	
+	/**
+	 * @author samuel.cardoso
+	 * If client wants to process any kind of information before file upload.
+	 */
+	public static interface ClientSendFileHandler
+	{
+		/**
+		 * @param file the file submitted
+		 * @return true if client wants to upload the file to server and false otherwise.
+		 */
+		boolean onStart(File file);
+		
+		/**
+		 * Action to be executed after the client has processed the file.
+		 */
+		void onComplete();
+	}
 	
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
@@ -137,18 +154,17 @@ public class FileUploader extends Composite
 		return AbstractFileUploader.isSupported();
 	}
 	
-	public boolean isDisabled() 
+	public boolean isEnabled() 
 	{
-		return impl.isDisabled();
+		return impl.isEnabled();
 	}
 
-	public void setDisabled(boolean disabled) 
+	public void setEnabled(boolean enabled) 
 	{
-		impl.setDisabled(disabled);
+		impl.setEnabled(enabled);
 	}
 	
-	public void setClientSendFileHandler(
-			ClientProcessFileHandler clientSendFileHandler) {
+	public void setClientSendFileHandler(ClientSendFileHandler clientSendFileHandler) {
 		impl.setClientSendFileHandler(clientSendFileHandler);
 	}
 }
