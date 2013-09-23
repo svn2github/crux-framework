@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.uploader;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.widgets.client.uploader.AbstractFileUploader.ClientProcessFileHandler;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.PartialSupport;
@@ -32,20 +33,6 @@ import com.google.gwt.user.client.ui.Composite;
 public class FileUploader extends Composite
 {
 	private AbstractFileUploader impl;
-	
-	
-	/**
-	 * @author samuel.cardoso
-	 * If client wants to process any kind of information before file upload.
-	 */
-	public static interface ClientProcessFileHandler
-	{
-		/**
-		 * @param file the file submitted
-		 * @return true if client wants to upload the file to server and false otherwise.
-		 */
-		boolean process(File file);
-	}
 	
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
@@ -64,11 +51,6 @@ public class FileUploader extends Composite
 	public void setUrl(String url)
 	{
 		impl.setUrl(url);
-	}
-	
-	public void setClientProcessFileHandler(ClientProcessFileHandler clientProcessFileHandler) 
-	{
-		impl.setClientProcessFileHandler(clientProcessFileHandler);
 	}
 	
 	public void setFileInputText(String text)
@@ -154,7 +136,21 @@ public class FileUploader extends Composite
 	{
 		return AbstractFileUploader.isSupported();
 	}
+	
+	public boolean isDisabled() 
+	{
+		return impl.isDisabled();
+	}
+
+	public void setDisabled(boolean disabled) 
+	{
+		impl.setDisabled(disabled);
+	}
+	
+	public void setClientSendFileHandler(
+			ClientProcessFileHandler clientSendFileHandler) {
+		impl.setClientSendFileHandler(clientSendFileHandler);
+	}
 }
 //TODO tratar resubimssao.... marcar arquivos como enviados...
 //TODO por a url como required na factory
-// Adicionar um callback pro envio

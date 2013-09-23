@@ -29,7 +29,6 @@ import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.progressbar.ProgressBar;
-import org.cruxframework.crux.widgets.client.uploader.FileUploader.ClientProcessFileHandler;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.NativeEvent;
@@ -67,7 +66,39 @@ abstract class AbstractFileUploader extends Composite
 	protected boolean autoUploadFiles = false;
 	protected Button sendButton;
 	
-	private ClientProcessFileHandler clientProcessFileHandler;
+	//TODO: Implement this behavior
+	protected boolean disabled = false;
+	
+	/**
+	 * @author samuel.cardoso
+	 * If client wants to process any kind of information before file upload.
+	 */
+	public static interface ClientProcessFileHandler
+	{
+		/**
+		 * @param file the file submitted
+		 * @return true if client wants to upload the file to server and false otherwise.
+		 */
+		boolean onStart(File file);
+		
+		/**
+		 * Action to be executed after the client has processed the file.
+		 */
+		void onComplete();
+	}
+	
+	private ClientProcessFileHandler clientSendFileHandler = new ClientProcessFileHandler() {
+		@Override
+		public boolean onStart(File file) {
+			//Override if necessary
+			return true;
+		}
+		
+		@Override
+		public void onComplete() {
+			//Override if necessary
+		}
+	};
 	
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
@@ -131,19 +162,15 @@ abstract class AbstractFileUploader extends Composite
 		uploadFile(file, url);
 	}
 
-	public void setClientProcessFileHandler(ClientProcessFileHandler clientProcessFileHandler) 
-	{
-		this.clientProcessFileHandler = clientProcessFileHandler;
-	}
-	
 	public void uploadFile(final File file, String url)
 	{
-		if(clientProcessFileHandler == null || clientProcessFileHandler.process(file))
+		if(clientSendFileHandler.onStart(file))
 		{
 			XMLHttpRequest2 xhr = getXhr(file);
 			xhr.open(HTTP_POST, url);
 			xhr.send("file", file);
-		}
+		} 
+		clientSendFileHandler.onComplete();
 	}
 
 	public void uploadAllFiles()
@@ -440,5 +467,18 @@ abstract class AbstractFileUploader extends Composite
 	static boolean isSupported()
 	{
 		return File.isSupported() && FileList.isSupported() && FileReader.isSupported() && XMLHttpRequest2.isSupported();
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public void setClientSendFileHandler(
+			ClientProcessFileHandler clientSendFileHandler) {
+		this.clientSendFileHandler = clientSendFileHandler;
 	}
 }
