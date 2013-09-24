@@ -71,15 +71,7 @@ public class LocaleResolverImpl implements LocaleResolver
 	@Override
     public void initializeUserLocale(HttpRequest request)
     {
-	    List<Locale> languages = request.getHttpHeaders().getAcceptableLanguages();
-	    if (languages == null || languages.size() == 0)
-	    {
-			userLocale = Locale.getDefault();
-	    }
-	    else
-	    {
-	    	userLocale = languages.get(0);
-	    }
+		userLocale = request.getLocale();
     }
 
 }
