@@ -24,7 +24,6 @@ import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
-import org.cruxframework.crux.widgets.client.slider.TouchSlider;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,7 +32,6 @@ import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAnimation;
@@ -48,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MessageDialog extends Composite implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler
+public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-MessageDialog";
 	private DialogBox dialogBox;
@@ -86,7 +84,7 @@ public class MessageDialog extends Composite implements HasOkHandlers, HasAnimat
     }
 
 	private void handleOrientationChangeHandlers() {
-		addAttachHandler(new Handler()
+		dialogBox.addAttachHandler(new Handler()
 		{
 			private HandlerRegistration orientationHandlerRegistration;
 
