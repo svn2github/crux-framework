@@ -15,8 +15,11 @@
  */
 package org.cruxframework.crux.widgets.client.dialog;
 
+import java.util.ArrayList;
+
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
@@ -42,7 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
+public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-MessageDialog";
 	private DialogBox dialogBox;
@@ -50,6 +53,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	private Label messageLabel;
 	private Button okButton;
 	protected WidgetMessages messages = WidgetMsgFactory.getMessages();
+	private ArrayList<DialogBox> openedDialogBoxes = new ArrayList<DialogBox>(); 
 
 	/**
 	 * Constructor 
@@ -74,6 +78,8 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 		messagePanel.getElement().getParentElement().setAttribute("align", "center");
 
 		setStyleName(DEFAULT_STYLE_NAME);
+		
+		Screen.addOrientationChangeOrResizeHandler(this);
     }
 
 	/**
@@ -196,6 +202,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 		try
 		{
 			Screen.blockToUser("crux-MessageDialogScreenBlocker");
+			openedDialogBoxes.add(dialogBox);
 			dialogBox.center();
 			dialogBox.show();
 			okButton.setFocus(true);
@@ -213,6 +220,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	public void hide()
 	{
 		dialogBox.hide();
+		openedDialogBoxes.remove(dialogBox);
 		Screen.unblockToUser();
 	}
 	
@@ -297,4 +305,17 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
     {
 		dialogBox.fireEvent(event);
     }
+
+	@Override
+	public void onOrientationChangeOrResize() {
+		if(openedDialogBoxes == null)
+		{
+			return;
+		}
+		
+		for(DialogBox dialogBox : openedDialogBoxes)
+		{
+			dialogBox.center();
+		}
+	}
 }
