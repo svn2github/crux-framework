@@ -93,7 +93,14 @@ public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, Ori
 			{
 				if (event.isAttached())
 				{
-					orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(MessageDialog.this);
+					try
+					{
+						orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(MessageDialog.this);	
+					} catch (Exception e)
+					{
+						orientationHandlerRegistration.removeHandler();
+						orientationHandlerRegistration = null;
+					}
 				}
 				else if (orientationHandlerRegistration != null)
 				{
