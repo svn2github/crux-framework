@@ -17,6 +17,7 @@ package org.cruxframework.crux.widgets.rebind.uploader;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasEnabledFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
@@ -30,11 +31,12 @@ import org.cruxframework.crux.widgets.client.uploader.FileUploader;
 @TagAttributes({
 	@TagAttribute(value="multiple", type=Boolean.class, defaultValue="false"),
 	@TagAttribute(value="autoUploadFiles", type=Boolean.class, defaultValue="false"),
+	@TagAttribute(value="showProgressBar", type=Boolean.class, defaultValue="true"),
 	@TagAttribute(value="fileInputText", supportsI18N=true),
 	@TagAttribute(value="sendButtonText", supportsI18N=true),
 	@TagAttribute("url")
 })
-public class FileUploaderFactory extends WidgetCreator<WidgetCreatorContext>
+public class FileUploaderFactory extends WidgetCreator<WidgetCreatorContext> implements HasEnabledFactory<WidgetCreatorContext>
 {
 	@Override
     public WidgetCreatorContext instantiateContext()

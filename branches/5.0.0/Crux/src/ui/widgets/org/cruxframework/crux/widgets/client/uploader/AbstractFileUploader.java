@@ -29,7 +29,7 @@ import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.progressbar.ProgressBar;
-import org.cruxframework.crux.widgets.client.uploader.FileUploader.ClientSendFileHandler;
+import org.cruxframework.crux.widgets.client.uploader.FileUploader.UploadHandler;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.NativeEvent;
@@ -72,18 +72,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	//TODO: Implement this behavior
 	protected boolean enabled = true;
 	
-	private ClientSendFileHandler clientSendFileHandler = new ClientSendFileHandler() {
-		@Override
-		public boolean onStart(File file) {
-			//Override if necessary
-			return true;
-		}
-		
-		@Override
-		public void onComplete() {
-			//Override if necessary
-		}
-	};
+	private UploadHandler uploadHandler = null;
 	
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
@@ -149,13 +138,16 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 
 	public void uploadFile(final File file, String url)
 	{
-		if(clientSendFileHandler.onStart(file))
+		if(uploadHandler == null || uploadHandler.onStart(file))
 		{
 			XMLHttpRequest2 xhr = getXhr(file);
 			xhr.open(HTTP_POST, url);
 			xhr.send("file", file);
-		} 
-		clientSendFileHandler.onComplete();
+		}
+		else if (uploadHandler != null)
+ 		{
+			uploadHandler.onCanceled();
+		}
 	}
 
 	public void uploadAllFiles()
@@ -195,6 +187,33 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		processFile(file);
 	}
 
+
+	public boolean isShowProgressBar() 
+	{
+		return showProgressBar;
+	}
+
+	public void setShowProgressBar(boolean showProgressBar) 
+	{
+		this.showProgressBar = showProgressBar;
+	}
+	
+	public void setUploadHandler(UploadHandler uploadHandler) {
+		this.uploadHandler = uploadHandler;
+	}
+
+	@Override
+	public boolean isEnabled() 
+	{
+		return enabled;
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) 
+	{
+		this.enabled = enabled;
+	}
+	
 	protected FlowPanel initFilesPanel()
 	{
 		FlowPanel filesPanel = new FlowPanel();
@@ -387,7 +406,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 					xhr.clearOnReadyStateChange();
 					if (getBrowserSpecificFailure(xhr) != null)
 					{
-						getProgressBar(file).setError(true);
+						uploadError(file);
 					}
 					else
 					{
@@ -398,19 +417,33 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 						}
 						else
 						{
-							getProgressBar(file).setError(true);
+							uploadError(file);
 						}
 					}
 				}
 			}
+
 		});
 		return xhr;
+	}
+
+	protected void uploadError(final File file)
+	{
+		getProgressBar(file).setError(true);
+		if (uploadHandler != null)
+		{
+			uploadHandler.onError();
+		}
 	}
 
 	protected void concludeUpload(File file)
 	{
 		getProgressBar(file).conclude();
 		getRemoveButton(file).getElement().getStyle().setVisibility(Visibility.HIDDEN);
+		if (uploadHandler != null)
+ 		{
+			uploadHandler.onComplete();
+		}
 	}
 
 	protected native JsArray<File> getFiles(NativeEvent event)/*-{
@@ -455,27 +488,5 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	static boolean isSupported()
 	{
 		return File.isSupported() && FileList.isSupported() && FileReader.isSupported() && XMLHttpRequest2.isSupported();
-	}
-
-	public void setClientSendFileHandler(ClientSendFileHandler clientSendFileHandler) {
-		this.clientSendFileHandler = clientSendFileHandler;
-	}
-
-	public boolean isEnabled() 
-	{
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) 
-	{
-		this.enabled = enabled;
-	}
-
-	public boolean isShowProgressBar() {
-		return showProgressBar;
-	}
-
-	public void setShowProgressBar(boolean showProgressBar) {
-		this.showProgressBar = showProgressBar;
 	}
 }

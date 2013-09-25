@@ -38,9 +38,10 @@ public class FileUploader extends Composite implements HasEnabled
 	 * @author samuel.cardoso
 	 * If client wants to process any kind of information before file upload.
 	 */
-	public static interface ClientSendFileHandler
+	public static interface UploadHandler
 	{
 		/**
+		 * Action to be executed before the file upload start.
 		 * @param file the file submitted
 		 * @return true if client wants to upload the file to server and false otherwise.
 		 */
@@ -50,6 +51,16 @@ public class FileUploader extends Composite implements HasEnabled
 		 * Action to be executed after the client has processed the file.
 		 */
 		void onComplete();
+		
+		/**
+		 * Action to be executed when the file upload is aborted (by onStart method).
+		 */
+		void onCanceled();
+
+		/**
+		 * Action to be executed when an error occurs during the file upload.
+		 */
+		void onError();
 	}
 	
 	/**
@@ -165,15 +176,18 @@ public class FileUploader extends Composite implements HasEnabled
 		impl.setEnabled(enabled);
 	}
 	
-	public void setClientSendFileHandler(ClientSendFileHandler clientSendFileHandler) {
-		impl.setClientSendFileHandler(clientSendFileHandler);
+	public void setUploadHandler(UploadHandler uploadHandler) 
+	{
+		impl.setUploadHandler(uploadHandler);
 	}
 	
-	public boolean isShowProgressBar() {
+	public boolean isShowProgressBar() 
+	{
 		return impl.isShowProgressBar();
 	}
 
-	public void setShowProgressBar(boolean showProgressBar) {
+	public void setShowProgressBar(boolean showProgressBar) 
+	{
 		impl.setShowProgressBar(showProgressBar);
 	}
 }
