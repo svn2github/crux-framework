@@ -41,6 +41,9 @@ public interface Crux
 	String enableWebRootScannerCache();
 
 	@DefaultServerMessage("true")
+	String enableGenerateHTMLDoctype();
+	
+	@DefaultServerMessage("true")
 	String enableHotDeploymentForWebDirs();
 
 	@DefaultServerMessage("false")
