@@ -79,6 +79,7 @@ public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, Ori
 		messagePanel.getElement().getParentElement().setAttribute("align", "center");
 
 		setStyleName(DEFAULT_STYLE_NAME);
+		handleOrientationChangeHandlers();
     }
 
 	private void handleOrientationChangeHandlers() {
@@ -228,7 +229,6 @@ public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, Ori
 		try
 		{
 			Screen.blockToUser("crux-MessageDialogScreenBlocker");
-			handleOrientationChangeHandlers();
 			openedDialogBoxes.add(dialogBox);
 			dialogBox.center();
 			dialogBox.show();
