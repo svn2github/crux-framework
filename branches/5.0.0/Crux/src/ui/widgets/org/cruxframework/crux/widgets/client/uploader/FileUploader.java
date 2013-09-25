@@ -168,6 +168,14 @@ public class FileUploader extends Composite implements HasEnabled
 	public void setClientSendFileHandler(ClientSendFileHandler clientSendFileHandler) {
 		impl.setClientSendFileHandler(clientSendFileHandler);
 	}
+	
+	public boolean isShowProgressBar() {
+		return impl.isShowProgressBar();
+	}
+
+	public void setShowProgressBar(boolean showProgressBar) {
+		impl.setShowProgressBar(showProgressBar);
+	}
 }
 //TODO tratar resubimssao.... marcar arquivos como enviados...
 //TODO por a url como required na factory

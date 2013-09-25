@@ -66,6 +66,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	protected Map<String, FlowPanel> filePanelWidgets = new HashMap<String, FlowPanel>();
 	protected String url;
 	protected boolean autoUploadFiles = false;
+	protected boolean showProgressBar = true;
 	protected Button sendButton;
 	
 	//TODO: Implement this behavior
@@ -308,7 +309,10 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		filePanel.setWidth("100%");
 		filePanel.add(createDeleteButton(file));
 		filePanel.add(createNameLabel(file));
-		filePanel.add(createProgressBar(file));
+		if(showProgressBar)
+		{
+			filePanel.add(createProgressBar(file));
+		}
 		return filePanel;
 	}
 
@@ -465,5 +469,13 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	public void setEnabled(boolean enabled) 
 	{
 		this.enabled = enabled;
+	}
+
+	public boolean isShowProgressBar() {
+		return showProgressBar;
+	}
+
+	public void setShowProgressBar(boolean showProgressBar) {
+		this.showProgressBar = showProgressBar;
 	}
 }
