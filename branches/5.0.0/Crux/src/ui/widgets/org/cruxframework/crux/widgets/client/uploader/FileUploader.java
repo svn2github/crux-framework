@@ -53,6 +53,11 @@ public class FileUploader extends Composite implements HasEnabled
 		void onComplete();
 		
 		/**
+		 * Action to be executed after the client has removed the file.
+		 */
+		void onFileRemoved();
+		
+		/**
 		 * Action to be executed when the file upload is aborted (by onStart method).
 		 */
 		void onCanceled();

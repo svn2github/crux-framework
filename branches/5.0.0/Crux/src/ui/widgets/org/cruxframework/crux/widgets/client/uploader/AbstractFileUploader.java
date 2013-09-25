@@ -171,6 +171,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 			filePanelWidgets.remove(file.getName());
 			filePanel.removeFromParent();
 			files.remove(file);
+			uploadHandler.onFileRemoved();
 		}
 	}
 
@@ -202,13 +203,11 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		this.uploadHandler = uploadHandler;
 	}
 
-	@Override
 	public boolean isEnabled() 
 	{
 		return enabled;
 	}
 	
-	@Override
 	public void setEnabled(boolean enabled) 
 	{
 		this.enabled = enabled;
@@ -238,7 +237,6 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		sendButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		sendButton.addSelectHandler(new SelectHandler()
 		{
-			@Override
 			public void onSelect(SelectEvent event)
 			{
 				uploadAllFiles();
@@ -254,7 +252,6 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		fileInput.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		fileInput.addChangeHandler(new ChangeHandler()
 		{
-			@Override
 			public void onChange(ChangeEvent event)
 			{
 				onSelectFile(event);
@@ -342,7 +339,6 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		delete.getElement().getStyle().setFloat(Float.LEFT);
 		delete.addSelectHandler(new SelectHandler()
 		{
-			@Override
 			public void onSelect(SelectEvent event)
 			{
 				removeFile(file);
@@ -390,7 +386,6 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		XMLHttpRequest2 xhr = XMLHttpRequest2.create();
 		xhr.setOnProgressHandler(new XMLHttpRequest2.ProgressHandler()
 		{
-			@Override
 			public void onProgress(double loaded, double total)
 			{
 				updateProgressBar(file, loaded, total);
@@ -398,7 +393,6 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		});
 		xhr.setOnReadyStateChange(new ReadyStateChangeHandler()
 		{
-			@Override
 			public void onReadyStateChange(XMLHttpRequest xhr)
 			{
 				if (xhr.getReadyState() == XMLHttpRequest.DONE) 
