@@ -6,7 +6,7 @@
   <version>5.0.0-SNAPSHOT</version>
   <name>crux-module-container-app</name>
   <url>http://maven.apache.org</url>
-  <description>Crux ${project.version} application following the module container layout for project.</description>
+  <description>Crux application following the module container layout for project.</description>
   <packaging>maven-archetype</packaging>
 
   <properties>
