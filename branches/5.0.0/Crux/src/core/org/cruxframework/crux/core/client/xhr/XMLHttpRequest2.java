@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.core.client.xhr;
 
-import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.core.client.file.Blob;
 
 import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.xhr.client.XMLHttpRequest;
@@ -42,7 +42,7 @@ public class XMLHttpRequest2 extends XMLHttpRequest
 	    };
 	}-*/;
 	
-	public final native void send(String paramName, File file) /*-{
+	public final native void send(String paramName, Blob file) /*-{
 	    var fd = new FormData();
 	    fd.append(paramName, file);
 	    this.send(fd);

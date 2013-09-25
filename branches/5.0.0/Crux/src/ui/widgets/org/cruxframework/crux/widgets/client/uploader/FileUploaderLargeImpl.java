@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.widgets.client.uploader;
 
-import org.cruxframework.crux.core.client.file.File;
 import org.cruxframework.crux.widgets.client.progressbar.ProgressBar;
 
 import com.google.gwt.dom.client.Style.Float;
@@ -107,9 +106,9 @@ class FileUploaderLargeImpl extends AbstractFileUploader
 	    }
 	}
 	
-	protected ProgressBar createProgressBar(File file)
+	protected ProgressBar createProgressBar()
 	{
-		ProgressBar progressBar = super.createProgressBar(file);
+		ProgressBar progressBar = super.createProgressBar();
 		progressBar.getElement().getStyle().setFloat(Float.RIGHT);
 		return progressBar;
 	}

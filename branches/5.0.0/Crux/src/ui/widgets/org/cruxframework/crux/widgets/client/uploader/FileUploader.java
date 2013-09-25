@@ -17,7 +17,7 @@ package org.cruxframework.crux.widgets.client.uploader;
 
 import java.util.Iterator;
 
-import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.core.client.file.Blob;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.PartialSupport;
@@ -43,29 +43,34 @@ public class FileUploader extends Composite implements HasEnabled
 		/**
 		 * Action to be executed before the file upload start.
 		 * @param file the file submitted
+		 * @param fileName the fileName submitted
 		 * @return true if client wants to upload the file to server and false otherwise.
 		 */
-		boolean onStart(File file);
+		boolean onStart(Blob file, String fileName);
 		
 		/**
 		 * Action to be executed after the client has processed the file.
+		 * @param fileName the fileName submitted
 		 */
-		void onComplete();
+		void onComplete(String fileName);
 		
 		/**
 		 * Action to be executed after the client has removed the file.
+		 * @param fileName the fileName submitted
 		 */
-		void onFileRemoved();
+		void onFileRemoved(String fileName);
 		
 		/**
 		 * Action to be executed when the file upload is aborted (by onStart method).
+		 * @param fileName the fileName submitted
 		 */
-		void onCanceled();
+		void onCanceled(String fileName);
 
 		/**
 		 * Action to be executed when an error occurs during the file upload.
+		 * @param fileName the fileName submitted
 		 */
-		void onError();
+		void onError(String fileName);
 	}
 	
 	/**
@@ -117,19 +122,29 @@ public class FileUploader extends Composite implements HasEnabled
 		impl.setMultiple(multiple);
 	}
 
-	public Iterator<File> iterateFiles()
+	public Iterator<Blob> iterateFiles()
 	{
 		return impl.iterateFiles();
 	}
 
-	public void uploadFile(File file)
+	public void uploadFile(String fileName)
 	{
-		impl.uploadFile(file);
+		impl.uploadFile(fileName);
 	}
 
-	public void uploadFile(final File file, String url)
+	public void uploadFile(String fileName, String url)
 	{
-		impl.uploadFile(file, url);
+		impl.uploadFile(fileName, url);
+	}
+
+	public void uploadFile(Blob file, String fileName)
+	{
+		impl.uploadFile(file, fileName);
+	}
+
+	public void uploadFile(final Blob file, String fileName, String url)
+	{
+		impl.uploadFile(file, fileName, url);
 	}
 
 	public void uploadAllFiles()
@@ -142,9 +157,9 @@ public class FileUploader extends Composite implements HasEnabled
 		impl.uploadAllFiles(url);
 	}
 
-	public void removeFile(File file)
+	public void removeFile(String fileName)
 	{
-		impl.removeFile(file);
+		impl.removeFile(fileName);
 	}
 
 	public void clear()
@@ -152,9 +167,9 @@ public class FileUploader extends Composite implements HasEnabled
 		impl.clear();
 	}
 	
-	public void addFile(File file)
+	public void addFile(Blob file, String fileName)
 	{
-		impl.addFile(file);
+		impl.addFile(file, fileName);
 	}
 
 	public static FileUploader createIfSupported()

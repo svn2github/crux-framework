@@ -29,7 +29,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectDeleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
-import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.FileReader;
 import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
 import org.cruxframework.crux.core.client.utils.FileUtils;
@@ -52,43 +52,12 @@ public class FileStore extends DBObject
 		this.idbObjectStore = idbObjectStore;
 	}
 
-	public void add(File file)
+	public void add(Blob file, String fileName)
 	{
-		add(file, null);
+		add(file, fileName, null);
 	}
 
-	public void add(final File file, final DatabaseWriteCallback<String> callback)
-	{
-		if (NativeDBHandler.usesWebSQL())
-		{
-			FileReader fileReader = FileReader.createIfSupported();
-			assert(fileReader != null):"Unsupported browser";
-			fileReader.readAsDataURL(file, new ReaderStringCallback()
-			{
-				@Override
-				public void onComplete(String result)
-				{
-					FileInfo fileInfo = FileInfo.createObject().cast();
-					fileInfo.setFileData(result);
-					fileInfo.setName(file.getName());
-					IDBObjectStoreRequest storeRequest = idbObjectStore.add(fileInfo, file.getName());
-					handleWriteCallback(callback, storeRequest);
-				}
-			});
-		}
-		else
-		{
-			IDBObjectStoreRequest storeRequest = idbObjectStore.add(file, file.getName());
-			handleWriteCallback(callback, storeRequest);
-		}
-	}
-
-	public void put(File file)
-	{
-		put(file, null);
-	}
-
-	public void put(final File file, final DatabaseWriteCallback<String> callback)
+	public void add(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback)
 	{
 		if (NativeDBHandler.usesWebSQL())
 		{
@@ -101,20 +70,49 @@ public class FileStore extends DBObject
 				{
 					FileInfo fileInfo = FileInfo.createObject().cast();
 					fileInfo.setFileData(result);
-					fileInfo.setName(file.getName());
-					IDBObjectStoreRequest storeRequest = idbObjectStore.put(fileInfo, file.getName());
+					IDBObjectStoreRequest storeRequest = idbObjectStore.add(fileInfo, fileName);
 					handleWriteCallback(callback, storeRequest);
 				}
 			});
 		}
 		else
 		{
-			IDBObjectStoreRequest storeRequest = idbObjectStore.put(file, file.getName());
+			IDBObjectStoreRequest storeRequest = idbObjectStore.add(file, fileName);
 			handleWriteCallback(callback, storeRequest);
 		}
 	}
 
-	public void get(String key, DatabaseRetrieveCallback<File> callback)
+	public void put(Blob file, String fileName)
+	{
+		put(file, fileName, null);
+	}
+
+	public void put(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback)
+	{
+		if (NativeDBHandler.usesWebSQL())
+		{
+			FileReader fileReader = FileReader.createIfSupported();
+			assert(fileReader != null):"Unsupported browser";
+			fileReader.readAsDataURL(file, new ReaderStringCallback()
+			{
+				@Override
+				public void onComplete(String result)
+				{
+					FileInfo fileInfo = FileInfo.createObject().cast();
+					fileInfo.setFileData(result);
+					IDBObjectStoreRequest storeRequest = idbObjectStore.put(fileInfo, fileName);
+					handleWriteCallback(callback, storeRequest);
+				}
+			});
+		}
+		else
+		{
+			IDBObjectStoreRequest storeRequest = idbObjectStore.put(file, fileName);
+			handleWriteCallback(callback, storeRequest);
+		}
+	}
+
+	public void get(String key, DatabaseRetrieveCallback<Blob> callback)
 	{
 		IDBObjectRetrieveRequest retrieveRequest = idbObjectStore.get(key);
 		handleRetrieveCallback(callback, retrieveRequest);
@@ -334,7 +332,7 @@ public class FileStore extends DBObject
 		}
     }
 
-	private void handleRetrieveCallback(final DatabaseRetrieveCallback<File> callback, IDBObjectRetrieveRequest retrieveRequest)
+	private void handleRetrieveCallback(final DatabaseRetrieveCallback<Blob> callback, IDBObjectRetrieveRequest retrieveRequest)
 	{
 		if (callback != null || db.errorHandler != null)
 		{
@@ -359,11 +357,11 @@ public class FileStore extends DBObject
 					{
 						try
 						{
-							File file;
+							Blob file;
 							if (NativeDBHandler.usesWebSQL())
 							{
 								FileInfo fileInfo = event.getObject().cast();
-								file = FileUtils.fromDataURI(fileInfo.getFileData(), fileInfo.getName());
+								file = FileUtils.fromDataURI(fileInfo.getFileData());
 							}
 							else
 							{
@@ -392,14 +390,6 @@ public class FileStore extends DBObject
 
 		public final native void setFileData(String data)/*-{
 			this.fileData = data;
-		}-*/;
-
-		public final native String getName()/*-{
-			return this.name;
-		}-*/;
-
-		public final native void setName(String fileName)/*-{
-			this.name = fileName;
 		}-*/;
 	}
 	

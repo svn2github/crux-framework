@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.core.client.image;
 
-import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.FileReader;
 import org.cruxframework.crux.core.client.file.URL;
 import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
@@ -47,7 +47,7 @@ public class ImageProcessor
 	 * @param file Image File
 	 * @param handler Called whem image is completely loaded
 	 */
-	public static void createIfSupportedAndLoadImage(final File image, final ImageCreateAndLoadHandler handler)
+	public static void createIfSupportedAndLoadImage(final Blob image, final ImageCreateAndLoadHandler handler)
 	{
 		ImageProcessor imageProcessor = createIfSupported();
 		if(imageProcessor == null) 
@@ -113,7 +113,7 @@ public class ImageProcessor
 	 * @param file Image File
 	 * @param handler Called whem image is completely loaded
 	 */
-	public void loadImage(final File image, final ImageLoadHandler handler)
+	public void loadImage(final Blob image, final ImageLoadHandler handler)
 	{
 		if (URL.isSupported())
 		{
@@ -194,11 +194,10 @@ public class ImageProcessor
 	
 	/**
 	 * Export content image as a JPEG file.
-	 * @param fileName Name of the exported file
 	 * @param quality JPEG quality. It ranges from 0.0 to 1.0
 	 * @return
 	 */
-	public File asJpeg(String fileName, double quality)
+	public Blob asJpeg(double quality)
 	{
 		assert (image != null || this.canvas != null) : "You must load an image first";
 		
@@ -206,7 +205,7 @@ public class ImageProcessor
 		{
 			resize(image.getWidth(), image.getHeight());
 		}
-		return FileUtils.fromDataURI(toJpegURL(canvas, quality), fileName);
+		return FileUtils.fromDataURI(toJpegURL(canvas, quality));
 	}
 	
 	private native String toJpegURL(CanvasElement canvas, double quality)/*-{
@@ -215,25 +214,23 @@ public class ImageProcessor
 	
 	/**
 	 * Export content image as a PNG file.
-	 * @param fileName Name of the exported file
 	 * @return
 	 */
-	public File asPng(String fileName)
+	public Blob asPng()
 	{
-		return exportImage(fileName, "image/png");
+		return exportImage("image/png");
 	}
 
 	/**
 	 * Export content image as a GIF file.
-	 * @param fileName Name of the exported file
 	 * @return
 	 */
-	public File asGif(String fileName)
+	public Blob asGif()
 	{
-		return exportImage(fileName, "image/gif");
+		return exportImage("image/gif");
 	}
 
-	private File exportImage(String fileName, String imageType)
+	private Blob exportImage(String imageType)
     {
 	    assert (image != null || this.canvas != null) : "You must load an image first";
 		
@@ -241,7 +238,7 @@ public class ImageProcessor
 		{
 			resize(image.getWidth(), image.getHeight());
 		}
-		return FileUtils.fromDataURI(canvas.toDataUrl(imageType), fileName);
+		return FileUtils.fromDataURI(canvas.toDataUrl(imageType));
     }
 
 	/**
@@ -250,7 +247,7 @@ public class ImageProcessor
 	 */
 	public static boolean isSupported()
 	{
-		return File.isSupported() && FileReader.isSupported();
+		return Blob.isSupported() && FileReader.isSupported();
 	}
 	
 	/**

@@ -17,7 +17,7 @@ package org.cruxframework.crux.core.client.db;
 
 import org.cruxframework.crux.core.client.db.FileStore.FileInfo;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
-import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.FileReader;
 import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
 import org.cruxframework.crux.core.client.utils.FileUtils;
@@ -28,7 +28,7 @@ import com.google.gwt.core.client.JsArrayMixed;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class FileCursor extends Cursor<String, File>
+public class FileCursor extends Cursor<String, Blob>
 {
 	private boolean usesWebSQL;
 
@@ -47,7 +47,7 @@ public class FileCursor extends Cursor<String, File>
     }
 
 	@Override
-    public void update(final File file)
+    public void update(final Blob file)
     {
 		if (usesWebSQL)
 		{
@@ -60,7 +60,6 @@ public class FileCursor extends Cursor<String, File>
 				{
 					FileInfo fileInfo = FileInfo.createObject().cast();
 					fileInfo.setFileData(result);
-					fileInfo.setName(file.getName());
 					idbCursor.update(file);
 				}
 			});
@@ -78,12 +77,12 @@ public class FileCursor extends Cursor<String, File>
     }
 
 	@Override
-    public File getValue()
+    public Blob getValue()
     {
 		if (usesWebSQL)
 		{
 		    FileInfo fileInfo = idbCursor.getValue().cast();
-			return FileUtils.fromDataURI(fileInfo.getFileData(), fileInfo.getName());
+			return FileUtils.fromDataURI(fileInfo.getFileData());
 		}
 	    return idbCursor.getValue().cast();
     }

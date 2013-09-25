@@ -15,12 +15,11 @@
  */
 package org.cruxframework.crux.widgets.client.uploader;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
+import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.File;
 import org.cruxframework.crux.core.client.file.FileList;
 import org.cruxframework.crux.core.client.file.FileReader;
@@ -62,7 +61,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	protected FlowPanel mainPanel;
 	protected FlowPanel filesPanel;
 	protected FileButton fileInput;
-	protected List<File> files = new ArrayList<File>();
+	protected Map<String, Blob> files = new HashMap<String, Blob>();
 	protected Map<String, FlowPanel> filePanelWidgets = new HashMap<String, FlowPanel>();
 	protected String url;
 	protected boolean autoUploadFiles = false;
@@ -126,27 +125,37 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		fileInput.setMultiple(multiple);
 	}
 
-	public Iterator<File> iterateFiles()
+	public Iterator<Blob> iterateFiles()
 	{
-		return files.iterator();
+		return files.values().iterator();
 	}
 
-	public void uploadFile(File file)
+	public void uploadFile(String fileName)
 	{
-		uploadFile(file, url);
+		uploadFile(fileName, url);
 	}
 
-	public void uploadFile(final File file, String url)
+	public void uploadFile(String fileName, String url)
 	{
-		if(uploadHandler == null || uploadHandler.onStart(file))
+		uploadFile(files.get(fileName), fileName, url);
+	}
+
+	public void uploadFile(Blob file, String fileName)
+	{
+		uploadFile(file, fileName, url);
+	}
+
+	public void uploadFile(final Blob file, String fileName, String url)
+	{
+		if(uploadHandler == null || uploadHandler.onStart(file, fileName))
 		{
-			XMLHttpRequest2 xhr = getXhr(file);
+			XMLHttpRequest2 xhr = getXhr(fileName);
 			xhr.open(HTTP_POST, url);
 			xhr.send("file", file);
 		}
 		else if (uploadHandler != null)
  		{
-			uploadHandler.onCanceled();
+			uploadHandler.onCanceled(fileName);
 		}
 	}
 
@@ -157,35 +166,51 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	
 	public void uploadAllFiles(String url)
 	{
-		for (File file : files)
+		for (String fileName : files.keySet())
 		{
-			uploadFile(file, url);
+			uploadFile(fileName, url);
 		}
 	}
 
-	public void removeFile(File file)
+	public void removeFile(String fileName)
 	{
-		Widget filePanel = filePanelWidgets.get(file.getName());
+		removeFile(fileName, true);
+	}
+	
+	public void removeFile(String fileName, boolean fireEvents)
+	{
+		Widget filePanel = filePanelWidgets.get(fileName);
 		if (filePanel != null)
 		{
-			filePanelWidgets.remove(file.getName());
+			filePanelWidgets.remove(fileName);
 			filePanel.removeFromParent();
-			files.remove(file);
-			uploadHandler.onFileRemoved();
+			files.remove(fileName);
+			if (fireEvents)
+			{
+				uploadHandler.onFileRemoved(fileName);
+			}
 		}
 	}
 
 	public void clear()
 	{
-		while (files.size() > 0)
+		Iterator<String> keys = files.keySet().iterator();
+		while (keys.hasNext())
         {
-	        removeFile(files.get(0));
+			String key = keys.next();
+			keys.remove();
+			Widget filePanel = filePanelWidgets.get(key);
+			if (filePanel != null)
+			{
+				filePanelWidgets.remove(key);
+				filePanel.removeFromParent();
+			}
         }
 	}
 	
-	public void addFile(File file)
+	public void addFile(Blob file, String fileName)
 	{
-		processFile(file);
+		processFile(file, fileName);
 	}
 
 
@@ -293,23 +318,23 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		for (int i=0; i< files.length(); i++)
 		{
 			File file = files.get(i);
-			boolean processed = processFile(file);
+			boolean processed = processFile(file, file.getName());
 			if (processed && isAutoUploadFiles())
 			{
-				uploadFile(file);
+				uploadFile(file, file.getName());
 			}
 		}
 	}
 
-	protected boolean processFile(File file)
+	protected boolean processFile(Blob file, String fileName)
 	{
-		if (!filePanelWidgets.containsKey(file.getName()))
+		if (!filePanelWidgets.containsKey(fileName))
 		{
 			if (isMultiple() || files.size() < 1)
 			{
-				files.add(file);
-				FlowPanel filePanel = createFilePanel(file);
-				filePanelWidgets.put(file.getName(), filePanel);
+				files.put(fileName, file);
+				FlowPanel filePanel = createFilePanel(fileName);
+				filePanelWidgets.put(fileName, filePanel);
 				filesPanel.add(filePanel);
 				return true;
 			}
@@ -317,22 +342,22 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		return false;
 	}
 
-	protected FlowPanel createFilePanel(final File file)
+	protected FlowPanel createFilePanel(String fileName)
 	{
 		FlowPanel filePanel = new FlowPanel();
 		filePanel.setStyleName("filePanel");
 		filePanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		filePanel.setWidth("100%");
-		filePanel.add(createDeleteButton(file));
-		filePanel.add(createNameLabel(file));
+		filePanel.add(createDeleteButton(fileName));
+		filePanel.add(createNameLabel(fileName));
 		if(showProgressBar)
 		{
-			filePanel.add(createProgressBar(file));
+			filePanel.add(createProgressBar());
 		}
 		return filePanel;
 	}
 
-	protected Button createDeleteButton(final File file)
+	protected Button createDeleteButton(final String fileName)
 	{
 		Button delete = new Button();
 		delete.setStyleName("cancelUploadButton");
@@ -341,54 +366,54 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		{
 			public void onSelect(SelectEvent event)
 			{
-				removeFile(file);
+				removeFile(fileName);
 			}
 		});
 		return delete;
 	}
 
-	protected Label createNameLabel(final File file)
+	protected Label createNameLabel(String fileName)
 	{
-		Label label = new Label(file.getName());
+		Label label = new Label(fileName);
 		label.getElement().getStyle().setFloat(Float.LEFT);
 		return label;
 	}
 
-	protected ProgressBar createProgressBar(File file)
+	protected ProgressBar createProgressBar()
 	{
 		ProgressBar progressBar = new ProgressBar();
 		return progressBar;
 	}
 
-	protected ProgressBar getProgressBar(File file)
+	protected ProgressBar getProgressBar(String fileName)
 	{
-		FlowPanel filePanel = filePanelWidgets.get(file.getName());
+		FlowPanel filePanel = filePanelWidgets.get(fileName);
 		ProgressBar progressBar = (ProgressBar) filePanel.getWidget(filePanel.getWidgetCount()-1);
 		return progressBar;
 	}
 	
-	protected Button getRemoveButton(File file)
+	protected Button getRemoveButton(String fileName)
 	{
-		FlowPanel filePanel = filePanelWidgets.get(file.getName());
+		FlowPanel filePanel = filePanelWidgets.get(fileName);
 		Button button = (Button) filePanel.getWidget(0);
 		return button;
 	}
 
-	protected void updateProgressBar(File file, double loaded, double total)
+	protected void updateProgressBar(String fileName, double loaded, double total)
 	{
-		ProgressBar progressBar = getProgressBar(file);
+		ProgressBar progressBar = getProgressBar(fileName);
 		int percentLoaded = (int) Math.round((loaded / total) * 100);
 		progressBar.update(percentLoaded);
 	}
 
-	protected XMLHttpRequest2 getXhr(final File file)
+	protected XMLHttpRequest2 getXhr(final String fileName)
 	{
 		XMLHttpRequest2 xhr = XMLHttpRequest2.create();
 		xhr.setOnProgressHandler(new XMLHttpRequest2.ProgressHandler()
 		{
 			public void onProgress(double loaded, double total)
 			{
-				updateProgressBar(file, loaded, total);
+				updateProgressBar(fileName, loaded, total);
 			}
 		});
 		xhr.setOnReadyStateChange(new ReadyStateChangeHandler()
@@ -400,18 +425,18 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 					xhr.clearOnReadyStateChange();
 					if (getBrowserSpecificFailure(xhr) != null)
 					{
-						uploadError(file);
+						uploadError(fileName);
 					}
 					else
 					{
 						int status = xhr.getStatus()-200;
 						if (status >= 0 && status < 10)
 						{
-							concludeUpload(file);
+							concludeUpload(fileName);
 						}
 						else
 						{
-							uploadError(file);
+							uploadError(fileName);
 						}
 					}
 				}
@@ -421,22 +446,22 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		return xhr;
 	}
 
-	protected void uploadError(final File file)
+	protected void uploadError(final String fileName)
 	{
-		getProgressBar(file).setError(true);
+		getProgressBar(fileName).setError(true);
 		if (uploadHandler != null)
 		{
-			uploadHandler.onError();
+			uploadHandler.onError(fileName);
 		}
 	}
 
-	protected void concludeUpload(File file)
+	protected void concludeUpload(String fileName)
 	{
-		getProgressBar(file).conclude();
-		getRemoveButton(file).getElement().getStyle().setVisibility(Visibility.HIDDEN);
+		getProgressBar(fileName).conclude();
+		getRemoveButton(fileName).getElement().getStyle().setVisibility(Visibility.HIDDEN);
 		if (uploadHandler != null)
  		{
-			uploadHandler.onComplete();
+			uploadHandler.onComplete(fileName);
 		}
 	}
 
