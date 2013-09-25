@@ -30,6 +30,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
@@ -50,9 +52,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-import sun.rmi.runtime.Log;
-
 
 /**
  * Create the html page to be sent to browser. This page is created based on the 
