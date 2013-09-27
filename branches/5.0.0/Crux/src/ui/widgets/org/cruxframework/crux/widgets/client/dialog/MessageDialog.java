@@ -21,17 +21,17 @@ import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAnimation;
@@ -297,9 +297,9 @@ public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, Ori
 		okButton.setText(messages.okLabel());
 		okButton.addStyleName("button");
 		okButton.addStyleName("okButton");
-		okButton.addClickHandler(new ClickHandler()
+		okButton.addSelectHandler(new SelectHandler()
 		{
-			public void onClick(ClickEvent event)
+			public void onSelect(SelectEvent event)
 			{
 				hide();
 				try
