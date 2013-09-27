@@ -209,7 +209,7 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	display: none;
 }
 
-@external crux-FileUploader, dropArea, filesArea, filePanel, crux-ProgressBar, percentBar, cancelUploadButton, fileInputButton;
+@external crux-FileUploader, dropArea, filesArea, filePanel, crux-ProgressBar, percentBar, cancelUploadButton, fileInputButton, thumbnailImage;
 .crux-FileUploader
 {
 	width: 400px;
@@ -217,8 +217,14 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 }
 .crux-FileUploader .fileInputButton
 {
-	color: #FFFFFF;
-	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	/*helped a lot: http://gradients.glrzad.com */
+	background-image: linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
+	background-image: -o-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
+	background-image: -moz-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
+	background-image: -webkit-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
+	background-image: -ms-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
+	    
+    color: #FFFFFF;
 	border: 1px solid #206080;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
@@ -229,10 +235,29 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	height: 30px;
 	line-height: 30px;
 	margin-top: 10px;
+	text-align: center;
 }
 .crux-FileUploader .fileInputButton:hover
 {
-	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+	/*helped a lot: http://gradients.glrzad.com */
+    background-image: linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
+	background-image: -o-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
+	background-image: -moz-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
+	background-image: -webkit-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
+	background-image: -ms-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
+}
+.crux-FileUploader .dropArea
+{
+    /* height hack */
+    min-height:100px;
+    height:auto !important;
+    height:100px;
+    
+    width: 100%;
+    border-color: #D0D0D0;
+    border-radius: 20px 20px 20px 20px;
+    border-style: dotted;
+    border-width: 3px;
 }
 .crux-FileUploader .filePanel
 {
@@ -241,6 +266,14 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	box-shadow: 0 0 10px rgba(90,90,90,0.1);
 	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
 	padding: 10px;
+	width: calc(100% - 20px);
+}
+.crux-FileUploader .filePanel .thumbnailImage
+{
+	border: 1px solid #206080;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+	height: 50px;
+    width: 50px;
 }
 .crux-FileUploader .filePanel .cancelUploadButton
 {

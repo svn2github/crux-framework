@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.File;
 import org.cruxframework.crux.core.client.file.FileList;
 import org.cruxframework.crux.core.client.file.FileReader;
+import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
 import org.cruxframework.crux.core.client.xhr.XMLHttpRequest2;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
@@ -38,9 +39,11 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
@@ -54,6 +57,14 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
 @PartialSupport
 abstract class AbstractFileUploader extends Composite implements HasEnabled 
 {
+	public static final String SUPPORTED_IMAGES_MIMETYPES = 
+			  "image/jpg,"
+			+ "image/jpeg,"
+			+ "image/tif,"
+			+ "image/gif,"
+			+ "image/png,"
+			+ "image/raw";
+	
 	static final int HTTP_STATUS_NON_HTTP = 0;
 	static final int HTTP_STATUS_OK = 200;
 	static final String HTTP_POST = "POST";
@@ -318,6 +329,14 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		for (int i=0; i< files.length(); i++)
 		{
 			File file = files.get(i);
+			if(uploadHandler != null && !uploadHandler.onFileAdded(file))
+			{
+				//remove the file
+				files.set(i, null);
+				continue;
+			}
+			
+			
 			boolean processed = processFile(file, file.getName());
 			if (processed && isAutoUploadFiles())
 			{
@@ -333,7 +352,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 			if (isMultiple() || files.size() < 1)
 			{
 				files.put(fileName, file);
-				FlowPanel filePanel = createFilePanel(fileName);
+				FlowPanel filePanel = createFilePanel(fileName, file);
 				filePanelWidgets.put(fileName, filePanel);
 				filesPanel.add(filePanel);
 				return true;
@@ -342,19 +361,37 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		return false;
 	}
 
-	protected FlowPanel createFilePanel(String fileName)
+	protected FlowPanel createFilePanel(String fileName, Blob file)
 	{
 		FlowPanel filePanel = new FlowPanel();
 		filePanel.setStyleName("filePanel");
 		filePanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		filePanel.setWidth("100%");
 		filePanel.add(createDeleteButton(fileName));
+		createThumbnailIfSupported(file, filePanel);
 		filePanel.add(createNameLabel(fileName));
 		if(showProgressBar)
 		{
 			filePanel.add(createProgressBar());
 		}
 		return filePanel;
+	}
+
+	private void createThumbnailIfSupported(Blob file, final FlowPanel filePanel) {
+		FileReader fileReader = FileReader.createIfSupported();
+		//if is supported and is image create it, otherwise return.
+		if(fileReader == null && !SUPPORTED_IMAGES_MIMETYPES.contains(file.getType()))
+		{
+			return;
+		}
+		
+		fileReader.readAsDataURL(file, new ReaderStringCallback() {
+			public void onComplete(String result) {
+				Image image = new Image(result);
+				image.setStyleName("thumbnailImage");
+				image.getElement().getStyle().setFloat(Float.LEFT);
+				filePanel.add(image);
+			}
+		});
 	}
 
 	protected Button createDeleteButton(final String fileName)

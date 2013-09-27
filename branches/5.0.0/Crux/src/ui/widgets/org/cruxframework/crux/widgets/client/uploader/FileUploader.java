@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.uploader;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.file.Blob;
+import org.cruxframework.crux.core.client.file.File;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.PartialSupport;
@@ -59,6 +60,12 @@ public class FileUploader extends Composite implements HasEnabled
 		 * @param fileName the fileName submitted
 		 */
 		void onFileRemoved(String fileName);
+		
+		/**
+		 * Action to be executed after the client has added some file.
+		 * @param file the fileName submitted
+		 */
+		boolean onFileAdded(File file);
 		
 		/**
 		 * Action to be executed when the file upload is aborted (by onStart method).
