@@ -310,6 +310,11 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 		this.enabled = enabled;
 	}
 	
+	public Blob getFile(String fileName)
+    {
+	    return files.get(fileName);
+    }
+
 	protected FlowPanel initFilesPanel()
 	{
 		FlowPanel filesPanel = new FlowPanel();
@@ -434,7 +439,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 		return filePanel;
 	}
 
-	private void createThumbnailIfSupported(Blob file, final FlowPanel filePanel) {
+	protected void createThumbnailIfSupported(Blob file, final FlowPanel filePanel) {
 		FileReader fileReader = FileReader.createIfSupported();
 		//if is supported and is image create it, otherwise return.
 		if(fileReader == null && !SUPPORTED_IMAGES_MIMETYPES.contains(file.getType()))

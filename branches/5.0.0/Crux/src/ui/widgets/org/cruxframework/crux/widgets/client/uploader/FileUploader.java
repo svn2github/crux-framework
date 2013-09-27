@@ -217,6 +217,12 @@ public class FileUploader extends Composite implements HasEnabled, HasAddFileHan
     {
 	    return impl.addAddFileHandler(handler);
     }
+	
+	public Blob getFile(String fileName)
+	{
+		return impl.getFile(fileName);
+	}
+	
 }
 //TODO tratar resubimssao.... marcar arquivos como enviados...
 //TODO por a url como required na factory
