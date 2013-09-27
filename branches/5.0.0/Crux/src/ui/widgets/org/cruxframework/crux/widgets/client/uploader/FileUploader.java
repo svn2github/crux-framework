@@ -18,10 +18,22 @@ package org.cruxframework.crux.widgets.client.uploader;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.file.Blob;
-import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.widgets.client.uploader.event.AddFileHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.HasAddFileHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasRemoveFileHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadCanceledHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadCompleteHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadErrorHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadStartHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.RemoveFileHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadCanceledHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadCompleteHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadErrorHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadStartHandler;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.PartialSupport;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 
@@ -31,54 +43,11 @@ import com.google.gwt.user.client.ui.HasEnabled;
  * @author Thiago da Rosa de Bustamante
  */
 @PartialSupport
-public class FileUploader extends Composite implements HasEnabled 
+public class FileUploader extends Composite implements HasEnabled, HasAddFileHandlers, 
+				HasRemoveFileHandlers, HasUploadStartHandlers, HasUploadErrorHandlers, 
+				HasUploadCompleteHandlers, HasUploadCanceledHandlers 
 {
 	private AbstractFileUploader impl;
-	
-	/**
-	 * @author samuel.cardoso
-	 * If client wants to process any kind of information before file upload.
-	 */
-	public static interface UploadHandler
-	{
-		/**
-		 * Action to be executed before the file upload start.
-		 * @param file the file submitted
-		 * @param fileName the fileName submitted
-		 * @return true if client wants to upload the file to server and false otherwise.
-		 */
-		boolean onStart(Blob file, String fileName);
-		
-		/**
-		 * Action to be executed after the client has processed the file.
-		 * @param fileName the fileName submitted
-		 */
-		void onComplete(String fileName);
-		
-		/**
-		 * Action to be executed after the client has removed the file.
-		 * @param fileName the fileName submitted
-		 */
-		void onFileRemoved(String fileName);
-		
-		/**
-		 * Action to be executed after the client has added some file.
-		 * @param file the fileName submitted
-		 */
-		boolean onFileAdded(File file);
-		
-		/**
-		 * Action to be executed when the file upload is aborted (by onStart method).
-		 * @param fileName the fileName submitted
-		 */
-		void onCanceled(String fileName);
-
-		/**
-		 * Action to be executed when an error occurs during the file upload.
-		 * @param fileName the fileName submitted
-		 */
-		void onError(String fileName);
-	}
 	
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
@@ -203,11 +172,6 @@ public class FileUploader extends Composite implements HasEnabled
 		impl.setEnabled(enabled);
 	}
 	
-	public void setUploadHandler(UploadHandler uploadHandler) 
-	{
-		impl.setUploadHandler(uploadHandler);
-	}
-	
 	public boolean isShowProgressBar() 
 	{
 		return impl.isShowProgressBar();
@@ -217,6 +181,42 @@ public class FileUploader extends Composite implements HasEnabled
 	{
 		impl.setShowProgressBar(showProgressBar);
 	}
+
+	@Override
+    public HandlerRegistration addUploadCanceledHandler(UploadCanceledHandler handler)
+    {
+	    return impl.addUploadCanceledHandler(handler);
+    }
+
+	@Override
+    public HandlerRegistration addUploadCompleteHandler(UploadCompleteHandler handler)
+    {
+	    return impl.addUploadCompleteHandler(handler);
+    }
+
+	@Override
+    public HandlerRegistration addUploadErrorHandler(UploadErrorHandler handler)
+    {
+	    return impl.addUploadErrorHandler(handler);
+    }
+
+	@Override
+    public HandlerRegistration addUploadStartHandler(UploadStartHandler handler)
+    {
+	    return impl.addUploadStartHandler(handler);
+    }
+
+	@Override
+    public HandlerRegistration addRemoveFileHandler(RemoveFileHandler handler)
+    {
+	    return impl.addRemoveFileHandler(handler);
+    }
+
+	@Override
+    public HandlerRegistration addAddFileHandler(AddFileHandler handler)
+    {
+	    return impl.addAddFileHandler(handler);
+    }
 }
 //TODO tratar resubimssao.... marcar arquivos como enviados...
 //TODO por a url como required na factory

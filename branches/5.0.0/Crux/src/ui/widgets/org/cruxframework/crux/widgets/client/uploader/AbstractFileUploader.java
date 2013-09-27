@@ -29,7 +29,24 @@ import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.progressbar.ProgressBar;
-import org.cruxframework.crux.widgets.client.uploader.FileUploader.UploadHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.AddFileEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.AddFileHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.HasAddFileHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasRemoveFileHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadCanceledHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadCompleteHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadErrorHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.HasUploadStartHandlers;
+import org.cruxframework.crux.widgets.client.uploader.event.RemoveFileEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.RemoveFileHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadCanceledEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadCanceledHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadCompleteEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadCompleteHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadErrorEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadErrorHandler;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadStartEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.UploadStartHandler;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.NativeEvent;
@@ -39,7 +56,7 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -55,7 +72,9 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
  * @author Thiago da Rosa de Bustamante
  */
 @PartialSupport
-abstract class AbstractFileUploader extends Composite implements HasEnabled 
+abstract class AbstractFileUploader extends Composite implements HasEnabled, HasAddFileHandlers, 
+							HasRemoveFileHandlers, HasUploadStartHandlers, HasUploadErrorHandlers, 
+							HasUploadCompleteHandlers, HasUploadCanceledHandlers  
 {
 	public static final String SUPPORTED_IMAGES_MIMETYPES = 
 			  "image/jpg,"
@@ -81,9 +100,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	
 	//TODO: Implement this behavior
 	protected boolean enabled = true;
-	
-	private UploadHandler uploadHandler = null;
-	
+		
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
 	 */
@@ -100,6 +117,42 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
     	return url;
     }
 
+	@Override
+	public HandlerRegistration addAddFileHandler(AddFileHandler handler)
+	{
+	    return addHandler(handler, AddFileEvent.getType());
+	}
+
+	@Override
+	public HandlerRegistration addRemoveFileHandler(RemoveFileHandler handler)
+	{
+	    return addHandler(handler, RemoveFileEvent.getType());
+	}
+
+	@Override
+	public HandlerRegistration addUploadStartHandler(UploadStartHandler handler)
+	{
+	    return addHandler(handler, UploadStartEvent.getType());
+	}
+	
+	@Override
+	public HandlerRegistration addUploadCompleteHandler(UploadCompleteHandler handler)
+	{
+	    return addHandler(handler, UploadCompleteEvent.getType());
+	}
+	
+	@Override
+	public HandlerRegistration addUploadCanceledHandler(UploadCanceledHandler handler)
+	{
+	    return addHandler(handler, UploadCanceledEvent.getType());
+	}
+	
+	@Override
+	public HandlerRegistration addUploadErrorHandler(UploadErrorHandler handler)
+	{
+	    return addHandler(handler, UploadErrorEvent.getType());
+	}
+	
 	public void setFileInputText(String text)
 	{
 		fileInput.setText(text);
@@ -158,15 +211,17 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 
 	public void uploadFile(final Blob file, String fileName, String url)
 	{
-		if(uploadHandler == null || uploadHandler.onStart(file, fileName))
+		UploadStartEvent uploadStartEvent = UploadStartEvent.fire(this, file, fileName);
+		
+		if(uploadStartEvent.isCanceled())
 		{
+			UploadCanceledEvent.fire(this, file, fileName);
+		}
+		else
+ 		{
 			XMLHttpRequest2 xhr = getXhr(fileName);
 			xhr.open(HTTP_POST, url);
 			xhr.send("file", file);
-		}
-		else if (uploadHandler != null)
- 		{
-			uploadHandler.onCanceled(fileName);
 		}
 	}
 
@@ -193,12 +248,22 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		Widget filePanel = filePanelWidgets.get(fileName);
 		if (filePanel != null)
 		{
-			filePanelWidgets.remove(fileName);
-			filePanel.removeFromParent();
-			files.remove(fileName);
 			if (fireEvents)
 			{
-				uploadHandler.onFileRemoved(fileName);
+				filePanelWidgets.remove(fileName);
+				filePanel.removeFromParent();
+				files.remove(fileName);
+			}
+			else
+			{
+				Blob removedFile = files.get(fileName);
+				RemoveFileEvent removeFileEvent = RemoveFileEvent.fire(this, removedFile, fileName);
+				if (!removeFileEvent.isCanceled())
+				{
+					filePanelWidgets.remove(fileName);
+					filePanel.removeFromParent();
+					files.remove(fileName);
+				}
 			}
 		}
 	}
@@ -235,10 +300,6 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		this.showProgressBar = showProgressBar;
 	}
 	
-	public void setUploadHandler(UploadHandler uploadHandler) {
-		this.uploadHandler = uploadHandler;
-	}
-
 	public boolean isEnabled() 
 	{
 		return enabled;
@@ -329,18 +390,15 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 		for (int i=0; i< files.length(); i++)
 		{
 			File file = files.get(i);
-			if(uploadHandler != null && !uploadHandler.onFileAdded(file))
-			{
-				//remove the file
-				files.set(i, null);
-				continue;
-			}
+			AddFileEvent addFileEvent = AddFileEvent.fire(this, file, file.getName());
 			
-			
-			boolean processed = processFile(file, file.getName());
-			if (processed && isAutoUploadFiles())
+			if(!addFileEvent.isCanceled())
 			{
-				uploadFile(file, file.getName());
+				boolean processed = processFile(file, file.getName());
+				if (processed && isAutoUploadFiles())
+				{
+					uploadFile(file, file.getName());
+				}
 			}
 		}
 	}
@@ -486,20 +544,14 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled
 	protected void uploadError(final String fileName)
 	{
 		getProgressBar(fileName).setError(true);
-		if (uploadHandler != null)
-		{
-			uploadHandler.onError(fileName);
-		}
+		UploadErrorEvent.fire(this, files.get(fileName), fileName);
 	}
 
 	protected void concludeUpload(String fileName)
 	{
 		getProgressBar(fileName).conclude();
 		getRemoveButton(fileName).getElement().getStyle().setVisibility(Visibility.HIDDEN);
-		if (uploadHandler != null)
- 		{
-			uploadHandler.onComplete(fileName);
-		}
+		UploadCompleteEvent.fire(this, files.get(fileName), fileName);
 	}
 
 	protected native JsArray<File> getFiles(NativeEvent event)/*-{

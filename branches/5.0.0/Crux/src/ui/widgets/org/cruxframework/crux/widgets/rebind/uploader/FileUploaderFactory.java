@@ -21,7 +21,15 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasEnabledFactor
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 import org.cruxframework.crux.widgets.client.uploader.FileUploader;
+import org.cruxframework.crux.widgets.rebind.event.AddFileEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.RemoveFileEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.UploadCanceledEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.UploadCompleteEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.UploadErrorEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.UploadStartEvtBind;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -35,6 +43,14 @@ import org.cruxframework.crux.widgets.client.uploader.FileUploader;
 	@TagAttribute(value="fileInputText", supportsI18N=true),
 	@TagAttribute(value="sendButtonText", supportsI18N=true),
 	@TagAttribute("url")
+})
+@TagEvents({
+	@TagEvent(AddFileEvtBind.class),
+	@TagEvent(RemoveFileEvtBind.class),
+	@TagEvent(UploadStartEvtBind.class),
+	@TagEvent(UploadCompleteEvtBind.class),
+	@TagEvent(UploadCanceledEvtBind.class),
+	@TagEvent(UploadErrorEvtBind.class)
 })
 public class FileUploaderFactory extends WidgetCreator<WidgetCreatorContext> implements HasEnabledFactory<WidgetCreatorContext>
 {
