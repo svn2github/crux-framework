@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.rebind.screen.widget;
 
 import java.util.Map;
 
+import org.cruxframework.crux.core.client.permission.Permissions;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -61,7 +62,8 @@ import com.google.gwt.dom.client.PartialSupport;
 	@TagAttribute(value="styleName", processor=WidgetCreator.StyleNameProcessor.class, supportsResources=true),
 	@TagAttribute(value="visible", type=Boolean.class),
 	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
-	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
+	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class),
+	@TagAttribute(value="viewPermission", type=String.class, processor=WidgetCreator.ViewPermissionAttributeProcessor.class)
 })
 @TagEvents({
 	@TagEvent(LoadWidgetEvtProcessor.class),
@@ -801,5 +803,26 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 				out.println(widgetName+".setStyleName("+valueExpr+");");
 			}
 		}
+	}
+	
+	/**
+	 * Process viewPermission attribute
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */	
+	public static class ViewPermissionAttributeProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public ViewPermissionAttributeProcessor(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		@Override
+        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        {
+			out.println("if (!"+Permissions.class.getCanonicalName()+".hasRole("+EscapeUtils.quote(attributeValue)+")){");
+			out.println(Permissions.class.getCanonicalName()+".markAsUnauthorizedForViewing("+context.getWidget()+");");
+			out.println("}");
+        }
 	}
 }

@@ -1,5 +1,4 @@
 <module>
-
 	<!-- Inherit the core Web Toolkit stuff.                  -->
     <inherits name="com.google.gwt.http.HTTP"/>
 	<inherits name='com.google.gwt.user.User'/>
@@ -107,6 +106,16 @@
 	</generate-with>
 	
 	<!-- Replaces -->
+
+	<!-- Specify Default implementation for Roles management -->
+    <replace-with
+        class="org.cruxframework.crux.core.client.permission.DefaultRoleManager">
+        <when-type-is class="org.cruxframework.crux.core.client.permission.RoleManager" />
+    </replace-with>
+    <replace-with
+        class="org.cruxframework.crux.core.client.permission.DefaultPermissionsUIHandler">
+        <when-type-is class="org.cruxframework.crux.core.client.permission.PermissionsUIHandler" />
+    </replace-with>
 	
 	<!-- Specify Default implementation for Collator -->
     <replace-with

@@ -15,6 +15,11 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget.creator;
 
+import org.cruxframework.crux.core.client.permission.Permissions;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
@@ -24,8 +29,29 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
  *
  */
 @TagAttributes({
-	@TagAttribute(value="enabled", type=Boolean.class)
+	@TagAttribute(value="enabled", type=Boolean.class),
+	@TagAttribute(value="editPermission", type=String.class, processor=HasEnabledFactory.EditPermissionAttributeProcessor.class)
 })	
 public interface HasEnabledFactory<C extends WidgetCreatorContext>
 {
+	/**
+	 * Process editPermission attribute
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	class EditPermissionAttributeProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public EditPermissionAttributeProcessor(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		@Override
+        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        {
+			out.println("if (!"+Permissions.class.getCanonicalName()+".hasRole("+EscapeUtils.quote(attributeValue)+")){");
+			out.println(Permissions.class.getCanonicalName()+".markAsUnauthorizedForEdition("+context.getWidget()+");");
+			out.println("}");
+        }
+	}
 }
