@@ -25,7 +25,6 @@
 	</scm>
 
 	<modules>
-		<module>../crux-parent-app</module>
 		<module>../crux-base-archetype</module>
 		<module>../crux-module-container-app</module>
 		<module>../crux-module-app</module>
