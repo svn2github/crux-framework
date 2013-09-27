@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<name>${module-name}</name>
+	<parent>
+		<groupId>org.cruxframework</groupId>
+		<artifactId>crux-parent-app</artifactId>
+		<version>5.0.0-SNAPSHOT</version>
+	</parent>
+
+	<build>
+		<plugins>
+			<!-- Generate the jar -->
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/Crux.properties</exclude>
+								<exclude>**/CruxModuleConfig.properties</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Update webapp folders -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.3</version>
+				<executions>
+					<execution>
+						<id>copy-sources</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${sourceDir}</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>crux-compiler</id>
+			<activation>
+				<property>
+					<name>include-crux-compilation</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+				<!-- Run Crux Compiler -->
+				<plugin>
+				    <artifactId>maven-antrun-plugin</artifactId>
+				    <version>1.6</version>
+				    <executions>
+				        <execution>
+					    	<id>crux-compiler</id>
+				            <phase>prepare-package</phase>
+				            <configuration>
+					    		<target>
+									<echo message="Running Crux Compiler..." />
+									<java classname="org.cruxframework.crux.tools.compile.CruxCompiler"
+										fork="true">
+										<classpath>
+											<path refid="maven.compile.classpath" />
+										</classpath>
+										<arg value="sourceDir" />
+										<arg value="${sourceDir}" />
+								
+										<arg value="webDir" />
+										<arg value="${webappDirectory}" />
+								
+										<arg value="resourcesDir" />
+										<arg value="${webinf.classes.folder}" />
+								
+										<arg value="outputDir" />
+										<arg value="${webappDirectory}" />
+								
+										<arg value="outputCharset" />
+										<arg value="UTF-8" />
+								
+										<arg value="-localWorkers" />
+										<arg value="2" />
+								
+										<arg value="-logLevel" />
+										<arg value="INFO" />
+								
+										<arg value="pageFileExtension" />
+										<arg value="html" />
+								
+										<arg value="-doNotPreCompileJavaSource" />
+								
+										<jvmarg value="-Xmx768M" />
+										<jvmarg value="-Xms256M" />
+										<jvmarg
+											value="-DCruxToolsConfig.compilerClass=org.cruxframework.crux.tools.compile.CruxModuleCompiler" />
+									</java>
+					    		</target>
+				            </configuration>
+				            <goals>
+				                <goal>run</goal>
+				            </goals>
+				       </execution>
+				   </executions>
+				</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>	
+</project>
+		
