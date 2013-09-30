@@ -57,6 +57,7 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -442,7 +443,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 	protected void createThumbnailIfSupported(Blob file, final FlowPanel filePanel) {
 		FileReader fileReader = FileReader.createIfSupported();
 		//if is supported and is image create it, otherwise return.
-		if(fileReader == null && !SUPPORTED_IMAGES_MIMETYPES.contains(file.getType()))
+		if(fileReader == null || !SUPPORTED_IMAGES_MIMETYPES.contains(file.getType()))
 		{
 			return;
 		}
