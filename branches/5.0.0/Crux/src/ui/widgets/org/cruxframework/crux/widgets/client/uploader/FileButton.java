@@ -15,8 +15,6 @@
  */
 package org.cruxframework.crux.widgets.client.uploader;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -26,6 +24,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -90,7 +89,6 @@ class FileButton extends Composite implements HasChangeHandlers
 		fileInput.setMultiple(multiple);
 	}
 
-	@Override
     public HandlerRegistration addChangeHandler(ChangeHandler handler)
     {
 	    return fileInput.addChangeHandler(handler);
@@ -101,8 +99,8 @@ class FileInput extends Widget implements HasChangeHandlers
 {
 	public FileInput()
     {
-		InputElement fileInputElement = Document.get().createFileInputElement();
-		setElement(fileInputElement);
+		FileUpload fileInput = new FileUpload();
+		setElement(fileInput.getElement());
     }
 		
 	public boolean isMultiple()
@@ -115,7 +113,6 @@ class FileInput extends Widget implements HasChangeHandlers
 		getElement().setPropertyBoolean("multiple", multiple);
 	}
 
-	@Override
     public HandlerRegistration addChangeHandler(ChangeHandler handler)
     {
 	    return addDomHandler(handler, ChangeEvent.getType());
