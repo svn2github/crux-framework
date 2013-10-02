@@ -15,6 +15,10 @@
  */
 package org.cruxframework.crux.widgets.client.uploader;
 
+import org.cruxframework.crux.widgets.client.button.Button;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -28,7 +32,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -71,12 +74,13 @@ class FileButton extends Composite implements HasChangeHandlers
 		style.setHeight(100, Unit.PCT);
 		mainPanel.add(visibleButton);
 		
-		visibleButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		visibleButton.addSelectHandler(new SelectHandler() {
+			public void onSelect(SelectEvent event) 
+			{
 				//Try createclickEvent() too.
 				NativeEvent nevent = Document.get().createFocusEvent();
 				DomEvent.fireNativeEvent(nevent, fileInput); 
-//				((InputElement) fileInput.getElement()). <InputElement>cast().click()
+				//((InputElement) fileInput.getElement()). <InputElement>cast().click()
 			}
 		});
 		
