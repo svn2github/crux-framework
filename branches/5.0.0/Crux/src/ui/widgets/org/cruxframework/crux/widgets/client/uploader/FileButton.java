@@ -15,26 +15,19 @@
  */
 package org.cruxframework.crux.widgets.client.uploader;
 
-import org.cruxframework.crux.widgets.client.button.Button;
-import org.cruxframework.crux.widgets.client.event.SelectEvent;
-import org.cruxframework.crux.widgets.client.event.SelectHandler;
-
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -44,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 class FileButton extends Composite implements HasChangeHandlers
 {
 	private FlowPanel mainPanel;
-	private Button visibleButton;
+	private Label visibleButton;
 	private FileInput fileInput;
 
 	public FileButton()
@@ -58,12 +51,12 @@ class FileButton extends Composite implements HasChangeHandlers
 		style.setPosition(Position.RELATIVE);
 		style.setTextAlign(TextAlign.RIGHT);
 		style.setOpacity(0);
-		style.setZIndex(0);
+		style.setZIndex(2);
 		style.setWidth(100, Unit.PCT);
 		style.setHeight(100, Unit.PCT);
 		mainPanel.add(fileInput);
 		
-		visibleButton = new Button();
+		visibleButton = new Label();
 		visibleButton.setStyleName("chooseButton");
 		style = visibleButton.getElement().getStyle();
 		style.setPosition(Position.ABSOLUTE);
@@ -73,16 +66,6 @@ class FileButton extends Composite implements HasChangeHandlers
 		style.setWidth(100, Unit.PCT);
 		style.setHeight(100, Unit.PCT);
 		mainPanel.add(visibleButton);
-		
-		visibleButton.addSelectHandler(new SelectHandler() {
-			public void onSelect(SelectEvent event) 
-			{
-				//Try createclickEvent() too.
-				NativeEvent nevent = Document.get().createFocusEvent();
-				DomEvent.fireNativeEvent(nevent, fileInput); 
-				//((InputElement) fileInput.getElement()). <InputElement>cast().click()
-			}
-		});
 		
 		initWidget(mainPanel);
     }
@@ -107,6 +90,7 @@ class FileButton extends Composite implements HasChangeHandlers
 		fileInput.setMultiple(multiple);
 	}
 
+	@Override
     public HandlerRegistration addChangeHandler(ChangeHandler handler)
     {
 	    return fileInput.addChangeHandler(handler);
@@ -117,10 +101,10 @@ class FileInput extends Widget implements HasChangeHandlers
 {
 	public FileInput()
     {
-		FileUpload fileInput = new FileUpload();
-		setElement(fileInput.getElement());
+		InputElement fileInputElement = Document.get().createFileInputElement();
+		setElement(fileInputElement);
     }
-	
+		
 	public boolean isMultiple()
 	{
 		return getElement().getPropertyBoolean("multiple");
@@ -131,6 +115,7 @@ class FileInput extends Widget implements HasChangeHandlers
 		getElement().setPropertyBoolean("multiple", multiple);
 	}
 
+	@Override
     public HandlerRegistration addChangeHandler(ChangeHandler handler)
     {
 	    return addDomHandler(handler, ChangeEvent.getType());
