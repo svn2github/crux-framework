@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.indexeddb;
+package org.cruxframework.crux.core.client.db.websql.polyfill;
 
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
@@ -24,19 +24,27 @@ import com.google.gwt.core.client.JsArrayString;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBDatabaseOptionalParameters extends JavaScriptObject 
+public class DBObjectStoreParameters extends JavaScriptObject 
 {
-    protected IDBDatabaseOptionalParameters() {}
+    protected DBObjectStoreParameters() {}
     
     public final native void setAutoIncrement(boolean value) /*-{
             this.autoIncrement = value;
+    }-*/;
+    
+    public final native boolean isAutoIncrement()/*-{
+    	return this.autoIncrement;
     }-*/;
     
     public final native void setKeyPath(String keyPath) /*-{
             this.keyPath = keyPath;
     }-*/;
     
-    public final void setKeyPath(String[] keyPath)
+	public final native String getStringKeyPath()/*-{
+	    return this.keyPath;
+    }-*/;
+
+	public final void setKeyPath(String[] keyPath)
     {
     	setKeyPath(JsUtils.toJsArray(keyPath));
     }
@@ -45,24 +53,24 @@ public class IDBDatabaseOptionalParameters extends JavaScriptObject
 	    this.keyPath = keyPath;
 	}-*/;
 
-    public static IDBDatabaseOptionalParameters create() 
+    public static DBObjectStoreParameters create() 
     {
-    	IDBDatabaseOptionalParameters res = JavaScriptObject.createObject().cast();
+    	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
     	res.setAutoIncrement(false);
     	return res;
     }
 
-    public static IDBDatabaseOptionalParameters create(String keyPath,boolean autoIncrement) 
+    public static DBObjectStoreParameters create(String keyPath,boolean autoIncrement) 
     {
-    	IDBDatabaseOptionalParameters res = JavaScriptObject.createObject().cast();
+    	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
     	res.setKeyPath(keyPath);
     	res.setAutoIncrement(autoIncrement);
     	return res;
     }
 
-    public static IDBDatabaseOptionalParameters create(String[] keyPath,boolean autoIncrement) 
+    public static DBObjectStoreParameters create(String[] keyPath,boolean autoIncrement) 
     {
-    	IDBDatabaseOptionalParameters res = JavaScriptObject.createObject().cast();
+    	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
     	res.setKeyPath(keyPath);
     	res.setAutoIncrement(autoIncrement);
     	return res;

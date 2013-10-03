@@ -175,6 +175,25 @@ public class DBTransaction extends JavaScriptObject
         executeRequests();
     }
 
+    protected DBError throwError(DBError error)
+    {
+    	return throwError(error.getName(), error.getMessage());
+    }
+    
+    protected DBError throwError(String errorName, String message)
+    {
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.SEVERE, "An error has occurred on transaction. Error name [" +errorName+"]. Error message ["+message+"]");
+		}
+    	abort(false);
+		DBEvent evt = DBEvent.create("error");
+		DBError error = DBError.create(errorName, message);
+		setError(error);
+		DBEvent.invoke("onerror", this, evt);
+		return error;
+    }
+	
 	private void executeRequests()
 	{
 		if (isRunning() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION))
@@ -268,11 +287,12 @@ public class DBTransaction extends JavaScriptObject
 		this.objectStore = function(objectStoreName){
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBTransaction::objectStore(Ljava/lang/String;)(objectStoreName);
 		};
-		this.onabort: null,
-		this.onerror: null,
-		this.oncomplete: null, 
+		
+		this.onabort= null;
+		this.onerror= null;
+		this.oncomplete= null;
 	}-*/;
-	
+
 	private native void fireOnComplete(DBTransaction me)/*-{
 		typeof me.oncomplete === "function" && me.oncomplete();	
 	}-*/;
@@ -324,6 +344,14 @@ public class DBTransaction extends JavaScriptObject
 		
 		return create(storeNames, strMode, db);
 	}
+	 
+	static native void registerStaticFunctions()/*-{
+		$wnd.__db_bridge__ = $wnd.__db_bridge__ || {};
+		$wnd.__db_bridge__.IDBTransaction = {};
+		$wnd.__db_bridge__.IDBTransaction.READ = "readonly";
+		$wnd.__db_bridge__.IDBTransaction.READ_WRITE = "readwrite";
+		$wnd.__db_bridge__.IDBTransaction.VERSION_TRANSACTION = "versionchange";
+	}-*/;
 	
 	public static abstract class RequestOperation
 	{
@@ -378,23 +406,4 @@ public class DBTransaction extends JavaScriptObject
 	    	dbTransaction.throwError(error);
 	    }
 	}
-	
-    protected DBError throwError(DBError error)
-    {
-    	return throwError(error.getName(), error.getMessage());
-    }
-    
-    protected DBError throwError(String errorName, String message)
-    {
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.log(Level.SEVERE, "An error has occurred on transaction. Error name [" +errorName+"]. Error message ["+message+"]");
-		}
-    	abort(false);
-		DBEvent evt = DBEvent.create("error");
-		DBError error = DBError.create(errorName, message);
-		setError(error);
-		DBEvent.invoke("onerror", this, evt);
-		return error;
-    }
 }

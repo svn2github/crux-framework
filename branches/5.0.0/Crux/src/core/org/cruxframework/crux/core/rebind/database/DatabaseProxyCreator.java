@@ -34,7 +34,7 @@ import org.cruxframework.crux.core.client.db.annotation.DatabaseDef.ObjectStoreD
 import org.cruxframework.crux.core.client.db.annotation.Store;
 import org.cruxframework.crux.core.client.db.annotation.Store.Indexed;
 import org.cruxframework.crux.core.client.db.annotation.Store.Key;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBDatabaseOptionalParameters;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStoreParameters;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBIndexParameters;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBOpenDBRequest;
@@ -408,13 +408,13 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	protected void generateObjectStoreCreation(SourcePrinter srcWriter, String keyPath, boolean autoIncrement, String objectStoreName, String objectStoreVar)
 	{
 		srcWriter.println(objectStoreVar+" = db.createObjectStore("+EscapeUtils.quote(objectStoreName)+", "+
-				IDBDatabaseOptionalParameters.class.getCanonicalName()+".create("+EscapeUtils.quote(keyPath)+", "+autoIncrement+"));");
+				IDBObjectStoreParameters.class.getCanonicalName()+".create("+EscapeUtils.quote(keyPath)+", "+autoIncrement+"));");
 	}
 	
 	protected void generateObjectStoreCreation(SourcePrinter srcWriter, String[] keyPaths, boolean autoIncrement, String objectStoreName, String objectStoreVar)
     {
 	    srcWriter.println(objectStoreVar+" = db.createObjectStore("+EscapeUtils.quote(objectStoreName)+", "+
-	    		IDBDatabaseOptionalParameters.class.getCanonicalName()+".create(new String[]{");
+	    		IDBObjectStoreParameters.class.getCanonicalName()+".create(new String[]{");
 	    boolean first = true;
 	    for (String keyPath : keyPaths)
 	    {

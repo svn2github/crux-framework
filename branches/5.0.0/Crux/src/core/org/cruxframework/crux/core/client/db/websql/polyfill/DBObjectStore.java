@@ -38,23 +38,12 @@ import com.google.gwt.user.client.Timer;
  */
 public class DBObjectStore extends JavaScriptObject
 {
-	protected DBObjectStore(){}
 	protected static Logger logger = Logger.getLogger(DBObjectStore.class.getName());
 
 	private Map<Boolean> ready = CollectionFactory.createMap();
 	private DBObjectStoreMetadata metadata;
 
-	public static DBObjectStore create(String objectStoreName, DBTransaction dbTransaction, boolean ready)
-	{
-		DBObjectStore objectStore = DBObjectStore.createObject().cast();
-		objectStore.setName(objectStoreName);
-		objectStore.setTransaction(dbTransaction);
-		objectStore.setReadyState("createObjectStore", ready);
-		Array<String> indexNames = CollectionFactory.createArray();
-		objectStore.setIndexNames(indexNames);
-		objectStore.handleObjectNativeFunctions(objectStore);
-		return objectStore;
-	}
+	protected DBObjectStore(){}
 
 	public final native String getName()/*-{
 		return this.name;
@@ -360,13 +349,12 @@ public class DBObjectStore extends JavaScriptObject
     	return request;
     }    
     
-//TODO cursor
-//    public DBRequest openCursor (range, direction)
-//    {
-//    	var cursorRequest = new idbModules.IDBRequest();
-//        var cursor = new idbModules.IDBCursor(range, direction, this, cursorRequest, "key", "value");
-//        return cursorRequest;
-//    }
+    public DBRequest openCursor (DBKeyRange range, String direction)
+    {
+    	DBRequest cursorRequest = getTransaction().createRequest(this);
+        DBCursor.create(range, direction, this, cursorRequest, "key", "value"); 
+        return cursorRequest;
+    }
     
 //TODO index    
 //    public DBIndex index(String indexName)
@@ -761,7 +749,22 @@ public class DBObjectStore extends JavaScriptObject
 		this.count = function(){
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::count()();
 		};
+		this.openCursor = function(range, direction){
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::openCursor(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBKeyRange;Ljava/lang/String;)(range, direction);
+		};
 	}-*/;
+
+	public static DBObjectStore create(String objectStoreName, DBTransaction dbTransaction, boolean ready)
+	{
+		DBObjectStore objectStore = DBObjectStore.createObject().cast();
+		objectStore.setName(objectStoreName);
+		objectStore.setTransaction(dbTransaction);
+		objectStore.setReadyState("createObjectStore", ready);
+		Array<String> indexNames = CollectionFactory.createArray();
+		objectStore.setIndexNames(indexNames);
+		objectStore.handleObjectNativeFunctions(objectStore);
+		return objectStore;
+	}
 
 	protected static interface Callback
 	{

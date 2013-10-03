@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.cruxframework.crux.core.client.collection.FastList;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayString;
 
 /**
@@ -28,6 +30,23 @@ import com.google.gwt.core.client.JsArrayString;
  */
 public class JsUtils
 {
+
+	/**
+	 * Read properties from native javascript objects. 
+	 * @param object the Object where the property will be read from. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 * @param output an array where the output will be written
+	 */
+	public static native void readPropertyValue(JavaScriptObject object, String property, JsArrayMixed output)/*-{
+		function getDescendantProp(obj, desc) {
+		    var arr = desc.split(".");
+		    while(arr.length && (obj = obj[arr.shift()]));
+		    return obj;
+		}
+
+		output.push(getDescendantProp(object, property));    
+    }-*/;
+	
 	public static String[] toArray(JsArrayString jSArray)
 	{
 		String[] result = new String[jSArray.length()];

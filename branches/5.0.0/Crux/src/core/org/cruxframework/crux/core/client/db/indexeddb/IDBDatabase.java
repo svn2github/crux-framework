@@ -77,7 +77,7 @@ public class IDBDatabase extends IDBClass
 		return this.createObjectStore(name);
 	}-*/;
 
-	public final native IDBObjectStore createObjectStore(String name, IDBDatabaseOptionalParameters params) /*-{
+	public final native IDBObjectStore createObjectStore(String name, IDBObjectStoreParameters params) /*-{
 		return this.createObjectStore(name, params);
 	}-*/;
 

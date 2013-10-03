@@ -55,7 +55,7 @@ public class DBDatabase extends JavaScriptObject
         return transaction;
     };	
     
-    public final DBObjectStore createObjectStore(final String storeName, final DBDatabaseOptionalParameters createOptions)
+    public final DBObjectStore createObjectStore(final String storeName, final DBObjectStoreParameters createOptions)
     {
 		if (versionTransaction == null)
 		{
@@ -216,14 +216,14 @@ public class DBDatabase extends JavaScriptObject
 		};
 	
 		this.createObjectStore = function(objectStoreName, createOptions){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::createObjectStore(Ljava/lang/String;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBDatabaseOptionalParameters;)(objectStoreName, createOptions);
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::createObjectStore(Ljava/lang/String;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStoreParameters;)(objectStoreName, createOptions);
 		};
 		this.deleteObjectStore = function(objectStoreName){
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::deleteObjectStore(Ljava/lang/String;)(objectStoreName);
 		};
-		this.onabort: null,
-		this.onerror: null,
-		this.onversionchange: null, 
+		this.onabort = null;
+		this.onerror = null;
+		this.onversionchange = null; 
 	}-*/;
 	
 	private void setStoreProperties(SQLResultSet storeProperties)
