@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -58,7 +59,8 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	private boolean multiTransferFromLeft = true;
 	private boolean multiTransferFromRight = true;
 	private boolean showAllTransferButtons = false;
-
+	private boolean allowHorizontalScrollbar;
+	
 	/**
 	 * TODO - Gesse - Comment this
 	 * @author Gesse S. F. Dafe
@@ -129,9 +131,10 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	 * @param height
 	 * @param styleName
 	 */
-	public TransferList()
+	public TransferList(boolean allowHorizontalScrollbar)
 	{
 		super();
+		this.allowHorizontalScrollbar = allowHorizontalScrollbar;
 		this.panel = createPanelCells();
 		initWidget(panel);
 	}
@@ -143,28 +146,56 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		HorizontalPanel panel = new HorizontalPanel();
 		panel.setStyleName(DEFAULT_STYLE_NAME);
-
-		VerticalPanel vPanelLeft = new VerticalPanel();
-		this.leftListLabel = new Label();
-		this.leftList = new ListBox(this.multiTransferFromLeft);
-		this.leftList.setStyleName("leftList");
-		vPanelLeft.add(this.leftListLabel);
-		vPanelLeft.add(this.leftList);
-		panel.add(vPanelLeft);
-
+		createLeftList(panel);
 		VerticalPanel commandsPanel = createCommands();
 		panel.add(commandsPanel);
 		panel.setCellVerticalAlignment(commandsPanel, HasVerticalAlignment.ALIGN_MIDDLE);
+		createRightList(panel);
+		return panel;
+	}
 
+	private void createRightList(HorizontalPanel panel) {
 		VerticalPanel vPanelRight = new VerticalPanel();
 		this.rightListLabel = new Label();
 		this.rightList = new ListBox(this.multiTransferFromRight);
 		this.rightList.setStyleName("rightList");
 		vPanelRight.add(this.rightListLabel);
-		vPanelRight.add(this.rightList);
+		if(allowHorizontalScrollbar)
+		{
+			SimplePanel wrapperRightPanelTop = new SimplePanel();
+			wrapperRightPanelTop.setStyleName("rightListWrapperTop");
+			SimplePanel wrapperRightPanel = new SimplePanel();
+			wrapperRightPanel.setStyleName("rightListWrapper");
+			wrapperRightPanelTop.add(wrapperRightPanel);
+			wrapperRightPanel.add(this.rightList);
+			vPanelRight.add(wrapperRightPanelTop);
+		} else
+		{
+			vPanelRight.add(this.rightList);
+		}
 		panel.add(vPanelRight);
+	}
 
-		return panel;
+	private void createLeftList(HorizontalPanel panel) {
+		VerticalPanel vPanelLeft = new VerticalPanel();
+		this.leftListLabel = new Label();
+		this.leftList = new ListBox(this.multiTransferFromLeft);
+		this.leftList.setStyleName("leftList");
+		vPanelLeft.add(this.leftListLabel);
+		if(allowHorizontalScrollbar)
+		{
+			SimplePanel wrapperLeftPanelTop = new SimplePanel();
+			wrapperLeftPanelTop.setStyleName("leftListWrapperTop");
+			SimplePanel wrapperLeftPanel = new SimplePanel();
+			wrapperLeftPanel.setStyleName("leftListWrapper");
+			wrapperLeftPanelTop.add(wrapperLeftPanel);
+			wrapperLeftPanel.add(this.leftList);
+			vPanelLeft.add(wrapperLeftPanelTop);		
+		} else
+		{
+			vPanelLeft.add(this.leftList);
+		}
+		panel.add(vPanelLeft);
 	}
 
 	/**

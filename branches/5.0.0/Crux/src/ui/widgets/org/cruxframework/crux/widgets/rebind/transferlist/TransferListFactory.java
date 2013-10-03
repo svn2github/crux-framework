@@ -37,7 +37,6 @@ import org.cruxframework.crux.widgets.client.transferlist.TransferList.ItemLocat
 import org.cruxframework.crux.widgets.rebind.event.BeforeMoveItemsEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.MoveItemsEvtBind;
 
-
 /**
  * Factory for Transfer List widget
  * @author Gesse S. F. Dafe
@@ -53,18 +52,32 @@ import org.cruxframework.crux.widgets.rebind.event.MoveItemsEvtBind;
 	@TagAttribute(value="visibleItemCount", type=Integer.class),
 	@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
 	@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true"),
-	@TagAttribute(value="showAllTransferButtons", type=Boolean.class, defaultValue="false")
+	@TagAttribute(value="showAllTransferButtons", type=Boolean.class, defaultValue="false"),
 })
+/**
+ * Adds a wrapper div to all the transferList boxes in order to
+ * add css controls like overflow.
+ * */
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="allowHorizontalScrollbar", type=Boolean.class, defaultValue="false"),
+})
+
 @TagEvents({
 	@TagEvent(BeforeMoveItemsEvtBind.class),
 	@TagEvent(MoveItemsEvtBind.class)
 })
+
 @TagChildren({
 	@TagChild(TransferListFactory.TransferListItemProcessor.class)
 })
 public class TransferListFactory extends CompositeFactory<WidgetCreatorContext>
 {
-
+	@Override
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {
+		String className = getWidgetClassName();
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+Boolean.valueOf(context.readWidgetProperty("allowHorizontalScrollbar"))+");");
+	}
+	
 	@TagConstraints(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="label", required=true),
@@ -81,7 +94,6 @@ public class TransferListFactory extends CompositeFactory<WidgetCreatorContext>
 					ItemLocation.class.getCanonicalName()+"."+context.readChildProperty("location")+"));");
 		}
 	}
-
 
 	@Override
     public WidgetCreatorContext instantiateContext()
