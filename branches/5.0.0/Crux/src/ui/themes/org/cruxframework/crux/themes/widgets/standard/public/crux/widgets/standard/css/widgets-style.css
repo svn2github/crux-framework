@@ -514,6 +514,12 @@
 /******************************************************************************
 	Transfer List
 *******************************************************************************/
+.crux-TransferList .rightListWrapperTop .rightListWrapper,
+.crux-TransferList .leftListWrapperTop .leftListWrapper
+{
+	overflow: auto;
+}
+
 .crux-TransferList .leftList, .crux-TransferList .rightList
 {
 	width: 180px;
