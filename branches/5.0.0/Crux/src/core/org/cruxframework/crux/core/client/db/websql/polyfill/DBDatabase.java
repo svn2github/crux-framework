@@ -77,8 +77,8 @@ public class DBDatabase extends JavaScriptObject
 					@Override
 					public boolean onError(SQLTransaction tx, SQLError error)
 					{
-						DBUtil.throwDOMException(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
-						return true;
+						versionTransaction.throwError(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
+						return false;
 					}
 				};
 				String sql = "CREATE TABLE \"" + storeName + "\" (key BLOB " + (createOptions.isAutoIncrement()?", inc INTEGER PRIMARY KEY AUTOINCREMENT":"PRIMARY KEY") + ", value BLOB)";
@@ -133,15 +133,16 @@ public class DBDatabase extends JavaScriptObject
 			@Override
 			public boolean onError(SQLTransaction tx, SQLError error)
 			{
-				DBUtil.throwDOMException(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
-				return true;
+				versionTransaction.throwError(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
+				return false;
 			}
 		};
 
 		int index = getObjectStoreNames().indexOf(storeName);
 		if (index < 0)
 		{
-			DBUtil.throwDOMException("Not Found", "Object store ["+storeName+"] does not exist.");
+			versionTransaction.throwError("Not Found", "Object store ["+storeName+"] does not exist.");
+			return;
 		}
 		getObjectStoreNames().remove(index);
 		versionTransaction.addToTransactionQueue(new DBTransaction.RequestOperation(){

@@ -46,7 +46,8 @@ public class DBUtil
 		{
 			return JSONNull.getInstance().toString();
 		}
-		JSONArray jsonArray = new JSONObject(object).isArray();
+		JSONObject jsonObject = new JSONObject(object);
+		JSONArray jsonArray = jsonObject.isArray();
 		if (jsonArray != null)
 		{
 			if (jsonArray.size() > 1)
@@ -58,8 +59,7 @@ public class DBUtil
 				return jsonArray.get(0).toString();
 			}
 		}
-		throwDOMException("Data Error", "Error encoding key ["+object+"]");
-		return null;
+		return jsonObject.toString();
 	}
 	
 	public static void encodeValue(JavaScriptObject object, final EncodeCallback callback)

@@ -24,6 +24,7 @@ import org.cruxframework.crux.core.client.collection.Map;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
+import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -71,7 +72,7 @@ public class DBObjectStore extends JavaScriptObject
     		public void doOperation(final SQLTransaction tx)
     		{
     			final DBTransaction.RequestOperation op = this;
-    			deriveKey(tx, object, key, new CallbackKey()
+    			deriveKey(this, tx, object, key, new CallbackKey()
 				{
 					@Override
 					public void execute(final JsArrayMixed key)
@@ -92,7 +93,7 @@ public class DBObjectStore extends JavaScriptObject
     		public void doOperation(final SQLTransaction tx)
     		{
     			final DBTransaction.RequestOperation op = this;
-    			deriveKey(tx, object, key, new CallbackKey()
+    			deriveKey(this, tx, object, key, new CallbackKey()
 				{
 					@Override
 					public void execute(final JsArrayMixed key)
@@ -120,8 +121,8 @@ public class DBObjectStore extends JavaScriptObject
 							@Override
 							public boolean onError(SQLTransaction tx, SQLError error)
 							{
-								op.onError(error);
-								return true;
+								op.throwError(error.getName(), error.getMessage());
+								return false;
 							}
 						});
 					}
@@ -173,8 +174,8 @@ public class DBObjectStore extends JavaScriptObject
 							@Override
 							public boolean onError(SQLTransaction tx, SQLError error)
 							{
-								op.onError(error);
-								return true;
+								op.throwError(error.getName(), error.getMessage());
+								return false;
 							}
 						});
 					}
@@ -217,14 +218,15 @@ public class DBObjectStore extends JavaScriptObject
 								if (rs.getRowsAffected() > 0)
 								{
 									JsArrayMixed result = JsArrayMixed.createArray().cast();
-									readPropertyValue(rs.getRows().itemObject(0), "value", result);
+									JsUtils.readPropertyValue(rs.getRows().itemObject(0), "value", result);
 									if (result.length() > 0)
 									{
 										op.setResult(DBUtil.decodeValue(result.getString(0)));
 									}
 									else
 									{
-										DBUtil.throwDOMException("Data Error", "Error reading value from object store ["+getName()+"]");
+										op.throwError("Data Error", "Error reading value from object store ["+getName()+"]");
+										return;
 									}
 								}
 								else
@@ -238,8 +240,8 @@ public class DBObjectStore extends JavaScriptObject
 							@Override
 							public boolean onError(SQLTransaction tx, SQLError error)
 							{
-								op.onError(error);
-								return true;
+								op.throwError(error.getName(), error.getMessage());
+								return false;
 							}
 						});
 					}
@@ -286,8 +288,8 @@ public class DBObjectStore extends JavaScriptObject
 							@Override
 							public boolean onError(SQLTransaction tx, SQLError error)
 							{
-								op.onError(error);
-								return true;
+								op.throwError(error.getName(), error.getMessage());
+								return false;
 							}
 						});
 					}
@@ -325,14 +327,15 @@ public class DBObjectStore extends JavaScriptObject
 							{
 								
 								JsArrayMixed result = JsArrayMixed.createArray().cast();
-								readPropertyValue(rs.getRows().itemObject(0), "total", result);
+								JsUtils.readPropertyValue(rs.getRows().itemObject(0), "total", result);
 								if (result.length() > 0)
 								{
 									op.setContentAsResult(result);
 								}
 								else
 								{
-									DBUtil.throwDOMException("Data Error", "Error counting records on object store ["+getName()+"]");
+									op.throwError("Data Error", "Error counting records on object store ["+getName()+"]");
+									return;
 								}
 								if (LogConfiguration.loggingIsEnabled())
 								{
@@ -345,8 +348,8 @@ public class DBObjectStore extends JavaScriptObject
 							@Override
 							public boolean onError(SQLTransaction tx, SQLError error)
 							{
-								op.onError(error);
-								return true;
+								op.throwError(error.getName(), error.getMessage());
+								return false;
 							}
 						});
 					}
@@ -356,6 +359,43 @@ public class DBObjectStore extends JavaScriptObject
     	
     	return request;
     }    
+    
+//TODO cursor
+//    public DBRequest openCursor (range, direction)
+//    {
+//    	var cursorRequest = new idbModules.IDBRequest();
+//        var cursor = new idbModules.IDBCursor(range, direction, this, cursorRequest, "key", "value");
+//        return cursorRequest;
+//    }
+    
+//TODO index    
+//    public DBIndex index(String indexName)
+//    {
+//        var index = new idbModules.IDBIndex(indexName, this);
+//        return index;
+//    }
+
+//TOD create index  e com chave (keyPath) composta  
+//    public DBIndex createIndex (String indexName, String keyPath, optionalParameters)
+//    {
+//        var me = this;
+//        optionalParameters = optionalParameters || {};
+//        me.__setReadyState("createIndex", false);
+//        var result = new idbModules.IDBIndex(indexName, me);
+//        me.__waitForReady(function(){
+//            result.__createIndex(indexName, keyPath, optionalParameters);
+//        }, "createObjectStore");
+//        me.indexNames.push(indexName);
+//        return result;
+//    }
+
+//TODO delete index
+//    public void deleteIndex (String indexName)
+//    {
+//        var result = new idbModules.IDBIndex(indexName, this, false);
+//        result.__deleteIndex(indexName);
+//        return result;
+//    }    
     
 	/**
 	 * Need this flag as createObjectStore is synchronous. So, we simply return when create ObjectStore is called
@@ -416,11 +456,12 @@ public class DBObjectStore extends JavaScriptObject
 
 	/**
 	 * Reads (and optionally caches) the properties like keyPath, autoincrement, etc for this objectStore
+	 * @param requestOp
 	 * @param tx
 	 * @param callback
 	 * @param waitOnProperty
 	 */
-	private void readStoreProps(final SQLTransaction tx, final Callback callback, String waitOnProperty)
+	private void readStoreProps(final DBTransaction.RequestOperation requestOp, final SQLTransaction tx, final Callback callback, String waitOnProperty)
 	{
 		waitForReady(new Callback()
 		{
@@ -447,11 +488,8 @@ public class DBObjectStore extends JavaScriptObject
 						{
 							if (rs.getRowsAffected() != 1)
 							{
-								if (LogConfiguration.loggingIsEnabled())
-								{
-									logger.log(Level.SEVERE, "Error Reading object store metadata. Store name ["+getName()+"]. No rows found on system table.");
-								}
-								DBUtil.throwDOMException("Not Found", "Error Reading object store metadata. Store name ["+getName()+"]. No rows found on system table.");
+								requestOp.throwError("Not Found", "Error Reading object store metadata. Store name ["+getName()+"]. No rows found on system table.");
+								return;
 							}
 							else
 							{
@@ -468,11 +506,7 @@ public class DBObjectStore extends JavaScriptObject
 						@Override
 						public boolean onError(SQLTransaction tx, SQLError error)
 						{
-							if (LogConfiguration.loggingIsEnabled())
-							{
-								logger.log(Level.SEVERE, "Error Reading object store metadata. Store name ["+getName()+"]. Error name ["+error.getName()+"]. Error message ["+error.getMessage()+"].");
-							}
-							DBUtil.throwDOMException(error.getName(), error.getMessage());
+							requestOp.throwError(error.getName(), "Error Reading object store metadata. Store name ["+getName()+"]. Error name ["+error.getName()+"]. Error message ["+error.getMessage()+"].");
 							return false;
 						}
 					});
@@ -484,24 +518,26 @@ public class DBObjectStore extends JavaScriptObject
 	/**
 	 * From the store properties and object, extracts the value for the key in hte object Store
 	 * If the table has auto increment, get the next in sequence
+	 * @param requestOp
 	 * @param tx
 	 * @param object
 	 * @param key
 	 * @param callback
 	 */
-	private void deriveKey(final SQLTransaction tx, final JavaScriptObject object, final JsArrayMixed key, final CallbackKey callback)
+	private void deriveKey(final DBTransaction.RequestOperation requestOp, final SQLTransaction tx, final JavaScriptObject object, final JsArrayMixed key, final CallbackKey callback)
 	{
-		readStoreProps(tx, new Callback(){
+		readStoreProps(requestOp, tx, new Callback(){
 			@Override
 			public void execute()
 			{
 				if (metadata == null)
 				{
-					DBUtil.throwDOMException("Data Error", "Could not locate defination for the table ["+getName()+"]");
+					requestOp.throwError("Data Error", "Could not locate definition for the table ["+getName()+"]");
+					return;
 				}
 				if (!StringUtils.isEmpty(metadata.getKeyPath()))
 				{
-					deriveKeyFromMetatadaKeyPath(tx, object, key, callback);
+					deriveKeyFromMetatadaKeyPath(requestOp, tx, object, key, callback);
 				}
 				else
 				{
@@ -511,18 +547,19 @@ public class DBObjectStore extends JavaScriptObject
 					}
 					else if (metadata.isAutoInc())
 					{
-						readNextAutoIncKey(tx, callback);
+						readNextAutoIncKey(requestOp, tx, callback);
 					}
 					else
 					{
-						DBUtil.throwDOMException("Data Error", "The object store ["+getName()+"] uses out-of-line keys and has no key generator and the key parameter was not provided.");
+						requestOp.throwError("Data Error", "The object store ["+getName()+"] uses out-of-line keys and has no key generator and the key parameter was not provided.");
+						return;
 					}					
 				}
 			}
 		}, null);//wait for all properties
 	}
 
-	private void readNextAutoIncKey(SQLTransaction tx, final CallbackKey callback)
+	private void readNextAutoIncKey(final DBTransaction.RequestOperation requestOp, SQLTransaction tx, final CallbackKey callback)
 	{
 		String sql = "SELECT * FROM sqlite_sequence where name like ?";
 		if (LogConfiguration.loggingIsEnabled())
@@ -554,46 +591,45 @@ public class DBObjectStore extends JavaScriptObject
 			@Override
 			public boolean onError(SQLTransaction tx, SQLError error)
 			{
-				DBUtil.throwDOMException(error.getName(), "Could not get the auto increment value for key. Message["+error.getMessage()+"]");
+				requestOp.throwError(error.getName(), "Could not get the auto increment value for key. Message["+error.getMessage()+"]");
 				return false;
 			}
 		});
 	}
 
-	private void deriveKeyFromMetatadaKeyPath(final SQLTransaction tx, final JavaScriptObject object, final JsArrayMixed key, final CallbackKey callback)
+	private void deriveKeyFromMetatadaKeyPath(final DBTransaction.RequestOperation requestOp, final SQLTransaction tx, final JavaScriptObject object, final JsArrayMixed key, final CallbackKey callback)
     {
         if (key != null && key.length() > 0)
         {
-        	DBUtil.throwDOMException("Data Error", "The object store uses in-line keys and the key parameter was provided ["+getName()+"]");
+        	requestOp.throwError("Data Error", "The object store uses in-line keys and the key parameter was provided ["+getName()+"]");
+        	return;
         }
         if (object == null)
         {
-        	DBUtil.throwDOMException("Data Error", "The object was not specified. Object Store ["+getName()+"]");
+        	requestOp.throwError("Data Error", "The object was not specified. Object Store ["+getName()+"]");
+        	return;
         }
         try 
         {
         	JsArrayMixed primaryKey = JsArrayMixed.createArray().cast();
-        	readPropertyValue(object, metadata.getKeyPath(), primaryKey);
+        	JsUtils.readPropertyValue(object, metadata.getKeyPath(), primaryKey);
         	if (primaryKey.length() > 0)
         	{
         		callback.execute(primaryKey);
         	}
         	else if (metadata.isAutoInc())
         	{
-        		readNextAutoIncKey(tx, callback);
+        		readNextAutoIncKey(requestOp, tx, callback);
         	}
         	else
         	{
-        		DBUtil.throwDOMException("Data Error", "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]");
+        		requestOp.throwError("Data Error", "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]");
+        		return;
         	}					
         } 
         catch (Exception e) 
         {
-        	if (LogConfiguration.loggingIsEnabled())
-        	{
-        		logger.log(Level.SEVERE, "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]", e);
-        	}
-        	DBUtil.throwDOMException("Data Error", "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]");
+        	requestOp.throwError("Data Error", "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]");
         }
     }
 
@@ -604,7 +640,7 @@ public class DBObjectStore extends JavaScriptObject
 			@Override
 			public void onEncode(String encoded)
 			{
-				insertData(tx, encoded, key, new SQLTransaction.SQLStatementCallback()
+				insertData(op, tx, object, encoded, key, new SQLTransaction.SQLStatementCallback()
 				{
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
@@ -624,15 +660,15 @@ public class DBObjectStore extends JavaScriptObject
 					@Override
 					public boolean onError(SQLTransaction tx, SQLError error)
 					{
-						op.onError(error);
-						return true;
+						op.throwError(error.getName(), error.getMessage());
+						return false;
 					}
 				});
 			}
 		});
     }
 
-    private void insertData(SQLTransaction tx, String encodedObject, JsArrayMixed primaryKey, 
+    private void insertData(final DBTransaction.RequestOperation requestOp, SQLTransaction tx, final JavaScriptObject object, String encodedObject, JsArrayMixed primaryKey, 
     		SQLTransaction.SQLStatementCallback success, SQLTransaction.SQLStatementErrorCallback error)
     {
     	Map<String> paramMap = CollectionFactory.createMap();
@@ -640,17 +676,29 @@ public class DBObjectStore extends JavaScriptObject
     	{
     		paramMap.put("key", DBUtil.encodeKey(primaryKey));
     	}
+
+    	JsArrayMixed indexes = DBUtil.decodeValue(metadata.getIndexList());
+    	if (indexes != null)
+    	{
+    		try
+    		{
+	    		for (int i=0; i< indexes.length(); i++)
+	    		{
+	        		JsArrayMixed indexProps = JsArrayMixed.createArray().cast();
+	        		JsUtils.readPropertyValue(indexes, "key.columnName", indexProps);
+	        		JsUtils.readPropertyValue(indexes, "key.keyPath", indexProps);
+	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexProps);
+	    			
+	    			paramMap.put(indexProps.getString(0), DBUtil.encodeKey(indexProps.getObject(2)));
+	    		}
+    		}
+    		catch (Exception e) 
+    		{
+    			requestOp.throwError("Data Error", "Error updating indexes while processing transaction request. Error Message [" +e.getMessage()+"].");
+    			return;
+			}
+    	}
     	
-//TODO terminar a parte dos indices
-//   	var indexes = JSON.parse(this.__storeProps.indexList);
-//        for (var key in indexes) {
-//            try {
-//                paramMap[indexes[key].columnName] = idbModules.Key.encode(eval("value['" + indexes[key].keyPath + "']"));
-//            } 
-//            catch (e) {
-//                error(e);
-//            }
-//        }
     	StringBuilder sqlStart = new StringBuilder("INSERT INTO ").append("\""+ getName() +"\" (");
     	StringBuilder sqlEnd = new StringBuilder(" VALUES(");
     	JsArrayMixed sqlValues = JsArrayMixed.createArray().cast();
@@ -676,16 +724,6 @@ public class DBObjectStore extends JavaScriptObject
 
 		tx.executeSQL(sql, sqlValues, success, error);
     }
-    
-	private native void readPropertyValue(JavaScriptObject object, String property, JsArrayMixed primaryKey)/*-{
-		function getDescendantProp(obj, desc) {
-		    var arr = desc.split(".");
-		    while(arr.length && (obj = obj[arr.shift()]));
-		    return obj;
-		}
-
-		primaryKey.push(getDescendantProp(object, property));    
-    }-*/;
 
 	private native void setIndexNames(Array<String> indexNames)/*-{
 	    this.indexNames = indexNames;
@@ -701,14 +739,27 @@ public class DBObjectStore extends JavaScriptObject
 
 	private native void handleObjectNativeFunctions(DBObjectStore db)/*-{
 		this.add = function(value, key){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::add()(value, keys);
+			var keys = [key];
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::add(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(value, keys);
 		};
 	
 		this.put = function(value, key){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::put()(value, keys);
+			var keys = [key];
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::put(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(value, keys);
 		};
-		this["delete"] = function(value, key){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::delete()(keys);
+		this["delete"] = function(key){
+			var keys = [key];
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::delete(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
+		};
+		this.get = function(key){
+			var keys = [key];
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::get(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
+		};
+		this.clear = function(){
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::clear()();
+		};
+		this.count = function(){
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::count()();
 		};
 	}-*/;
 

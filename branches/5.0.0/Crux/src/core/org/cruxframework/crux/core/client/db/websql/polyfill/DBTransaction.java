@@ -103,8 +103,7 @@ public class DBTransaction extends JavaScriptObject
 		this.storeNames = val;
 	}-*/;
 
-	//TODO ver o tipo disso aqui
-	final native void setError(JsArrayString val)/*-{
+	final native void setError(DBError val)/*-{
 		this.error = val;
 	}-*/;
 
@@ -115,32 +114,43 @@ public class DBTransaction extends JavaScriptObject
     
     public final void abort()
     {
-        if (!isActive())
-        {
-        	DBUtil.throwDOMException("not active", "A request was placed against a transaction which is currently not active, or which is finished.");
-        }
-        if (sqlTransaction != null)
-        {
-        	sqlTransaction.executeSQL("invalid sql statement", null, null, new SQLStatementErrorCallback()
-			{
-				@Override
-				public boolean onError(SQLTransaction tx, SQLError error)
-				{
-					return true;// tell web sql to rollback transaction
-				}
-			});
-        	
-        	sqlTransaction = null;
-        }
-        setAborted(true);
-        setActive(false);
+    	abort(true);
     }
-
+    
+    public final void abort(boolean fireEvent)
+    {
+        if (!isAborted() && isActive())
+        {
+        	if (sqlTransaction != null)
+        	{
+        		sqlTransaction.executeSQL("invalid sql statement", null, null, new SQLStatementErrorCallback()
+        		{
+        			@Override
+        			public boolean onError(SQLTransaction tx, SQLError error)
+        			{
+        				return true;// tell web sql to rollback transaction
+        			}
+        		});
+        		
+        		sqlTransaction = null;
+        	}
+        	setAborted(true);
+        	setActive(false);
+        	setRunning(false);
+        	requests.clear();
+        	if (fireEvent)
+        	{
+        		DBEvent evt = DBEvent.create("abort");
+        		DBEvent.invoke("onabort", this, evt);
+        	}
+        }
+    }
+    
 	protected DBRequest addToTransactionQueue(RequestOperation operation, JavaScriptObject source)//, args)
 	{
 		if (!isActive() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION)) 
 		{
-			DBUtil.throwDOMException("not active", "A request was placed against a transaction which is currently not active, or which is finished.");
+			throwError("not active", "A request was placed against a transaction which is currently not active, or which is finished.");
 		}
 		DBRequest request = createRequest(source);
 		pushToQueue(request, operation);//, args);       
@@ -184,7 +194,7 @@ public class DBTransaction extends JavaScriptObject
 			{
 				if (!StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION) && !isActive())
 				{
-					DBUtil.throwDOMException("not active", "A request was placed against a transaction which is currently not active, or which is finished");
+					throwError("not active", "A request was placed against a transaction which is currently not active, or which is finished");
 				}
 				
 				getDatabase().getSQLDatabase().transaction(new SQLDatabase.SQLTransactionCallback()
@@ -231,6 +241,9 @@ public class DBTransaction extends JavaScriptObject
 			{
 				setActive(false);
 				requests.clear();
+				DBEvent evt = DBEvent.create("complete");
+				DBEvent.invoke("oncomplete", this, evt);
+				
 				return;
 			}
 			
@@ -354,20 +367,34 @@ public class DBTransaction extends JavaScriptObject
 			request.setContentAsResult(object);
 		}
 
-		protected void onError(SQLError error)
-		{
-			if (LogConfiguration.loggingIsEnabled())
-			{
-				logger.log(Level.SEVERE, "An error in transaction request. Error Name [" +error.getName()+"]. Error message ["+error.getMessage()+"].");
-			}
-			request.setReadyState("done");
-			request.setError(error.getName());
-			request.setResult((String)null);
+	    protected void throwError(String errorName, String message)
+	    {
+			DBError error = DBError.create(errorName, message);
+	    	request.setReadyState("done");
+	    	request.setError(error);
+	    	request.setResult((String)null);
 			DBEvent evt = DBEvent.create("error");
 			DBEvent.invoke("onerror", request, evt);
-			dbTransaction.setActive(false);
-			dbTransaction.requests.clear();
-		}
+	    	dbTransaction.throwError(error);
+	    }
 	}
+	
+    protected DBError throwError(DBError error)
+    {
+    	return throwError(error.getName(), error.getMessage());
+    }
+    
+    protected DBError throwError(String errorName, String message)
+    {
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.SEVERE, "An error has occurred on transaction. Error name [" +errorName+"]. Error message ["+message+"]");
+		}
+    	abort(false);
+		DBEvent evt = DBEvent.create("error");
+		DBError error = DBError.create(errorName, message);
+		setError(error);
+		DBEvent.invoke("onerror", this, evt);
+		return error;
+    }
 }
-

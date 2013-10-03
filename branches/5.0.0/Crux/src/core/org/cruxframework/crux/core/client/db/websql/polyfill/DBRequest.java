@@ -62,15 +62,8 @@ public class DBRequest extends JavaScriptObject
 		this.readyState = state;
 	}-*/;
 
-	protected native void setError(String error)/*-{
-		if (error)
-		{
-			this.error = {name:error};
-		}
-		else
-		{
-			this.error = null;
-		}
+	protected native void setError(DBError error)/*-{
+		this.error = error;
 	}-*/;
 
 	public final native void setResult(JavaScriptObject object)/*-{
