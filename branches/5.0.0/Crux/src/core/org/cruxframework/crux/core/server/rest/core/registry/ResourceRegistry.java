@@ -36,6 +36,7 @@ import org.cruxframework.crux.core.server.rest.core.UriBuilder;
 import org.cruxframework.crux.core.server.rest.core.dispatch.CacheInfo;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.InvalidRestMethod;
 
@@ -125,7 +126,14 @@ public class ResourceRegistry
 		{
 			if (!method.isSynthetic())
 			{
-				RestMethodRegistrationInfo methodRegistrationInfo = processMethod(base, clazz, method, restMethodNames);
+				RestMethodRegistrationInfo methodRegistrationInfo = null;
+				try
+				{
+					methodRegistrationInfo = processMethod(base, clazz, method, restMethodNames);	
+				} catch (Exception e)
+				{
+					throw new InternalServerErrorException("Error to processMethod: " + method.toString(), "Can not execute requested service", e);
+				}
 				if (methodRegistrationInfo != null)
 				{
 					List<RestMethodRegistrationInfo> methodsForPath = validRestMethods.get(methodRegistrationInfo.pathExpression);
