@@ -85,5 +85,4 @@ public class JsUtils
 	public static native String unescape(String input)/*-{
 		return unescape(input);
 	}-*/;
-	
 }
