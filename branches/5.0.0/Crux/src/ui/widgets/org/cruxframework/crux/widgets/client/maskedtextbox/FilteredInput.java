@@ -109,9 +109,18 @@ public class FilteredInput implements KeyDownHandler, KeyPressHandler, PasteHand
 	 */
 	public void removeFilter()
 	{
-		keyDownHandlerRegistration.removeHandler();
-		keyPressHandlerRegistration.removeHandler();
-		pasteHandlerRegistration.removeHandler();
+		if(keyDownHandlerRegistration != null)
+		{
+			keyDownHandlerRegistration.removeHandler();
+		}
+		if(keyPressHandlerRegistration != null)
+		{
+			keyPressHandlerRegistration.removeHandler();
+		}
+		if(pasteHandlerRegistration != null)
+		{
+			pasteHandlerRegistration.removeHandler();
+		}
 		this.textBox = null;
 		this.maskedTextBox = null;
 	}

@@ -153,10 +153,16 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 
 		private void resetHandlers()
 		{
-			touchMoveHandler.removeHandler();
-			touchMoveHandler = null;
-			touchEndHandler.removeHandler();
-			touchEndHandler = null;
+			if(touchMoveHandler != null)
+			{
+				touchMoveHandler.removeHandler();
+				touchMoveHandler = null;
+			}
+			if(touchEndHandler != null)
+			{
+				touchEndHandler.removeHandler();
+				touchEndHandler = null;
+			}
 		}
 	}
 

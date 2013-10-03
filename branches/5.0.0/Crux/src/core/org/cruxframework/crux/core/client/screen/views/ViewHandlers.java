@@ -243,7 +243,10 @@ public class ViewHandlers
 	    	}
 	    	if (!hasOrientationOrResizeHandlers)
 	    	{
-	    		orientationChangeOrResizeHandler.removeHandler();
+	    		if(orientationChangeOrResizeHandler != null)
+	    		{
+	    			orientationChangeOrResizeHandler.removeHandler();
+	    		}
 	    		orientationChangeOrResizeHandler = null;
 	    		hasOrientationChangeOrResizeHandler = false;
 	    	}
@@ -268,7 +271,10 @@ public class ViewHandlers
 	    	}
 	    	if (!hasResizeHandlers)
 	    	{
-	    		resizeHandler.removeHandler();
+	    		if(resizeHandler != null)
+	    		{
+	    			resizeHandler.removeHandler();
+	    		}
 	    		resizeHandler = null;
 	    		hasWindowResizeHandler = false;
 	    	}
@@ -293,7 +299,10 @@ public class ViewHandlers
 	    	}
 	    	if (!hasHistoryHandlers)
 	    	{
-	    		historyHandler.removeHandler();
+	    		if(historyHandler != null)
+	    		{
+	    			historyHandler.removeHandler();
+	    		}
 	    		historyHandler = null;
 	    		hasHistoryHandler = false;
 	    	}
@@ -318,7 +327,10 @@ public class ViewHandlers
 	    	}
 	    	if (!hasCloseHandlers)
 	    	{
-	    		closeHandler.removeHandler();
+	    		if(closeHandler != null)
+	    		{
+	    			closeHandler.removeHandler();
+	    		}
 	    		closeHandler = null;
 	    		hasWindowCloseHandler = false;
 	    	}
@@ -343,7 +355,10 @@ public class ViewHandlers
 	    	}
 	    	if (!hasClosingHandlers)
 	    	{
-	    		closingHandler.removeHandler();
+	    		if(closingHandler != null)
+	    		{
+	    			closingHandler.removeHandler();
+	    		}
 	    		closingHandler = null;
 	    		hasWindowClosingHandler = false;
 	    	}
@@ -404,7 +419,10 @@ public class ViewHandlers
 		{
 			public void removeHandler() 
 			{
-				resizeHandlerRegistration.removeHandler();
+				if(resizeHandlerRegistration != null)
+				{
+					resizeHandlerRegistration.removeHandler();
+				}
 				
 				if(orientationHandler != null)
 				{

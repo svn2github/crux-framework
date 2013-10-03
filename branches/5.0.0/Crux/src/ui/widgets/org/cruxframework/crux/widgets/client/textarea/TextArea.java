@@ -111,7 +111,10 @@ public class TextArea extends com.google.gwt.user.client.ui.TextArea implements 
 		for(int i=0; i<registrations.size(); i++)
 		{
 			HandlerRegistration registration = registrations.get(i); 
-			registration.removeHandler();
+			if(registration != null)
+			{
+				registration.removeHandler();
+			}
 		}		
 		registrations.clear();
 	}

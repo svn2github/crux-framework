@@ -165,10 +165,16 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 
 		private void resetHandlers()
 		{
-			touchMoveHandler.removeHandler();
-			touchMoveHandler = null;
-			touchEndHandler.removeHandler();
-			touchEndHandler = null;
+			if(touchMoveHandler != null)
+			{
+				touchMoveHandler.removeHandler();
+				touchMoveHandler = null;
+			}
+			if(touchEndHandler != null)
+			{
+				touchEndHandler.removeHandler();
+				touchEndHandler = null;
+			}
 		}
 	}
 

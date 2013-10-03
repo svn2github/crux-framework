@@ -249,14 +249,16 @@ class StackMenuItemCaption extends Composite
 
 		private void resetHandlers()
 		{
-			if(touchMoveHandler == null)
+			if(touchMoveHandler != null)
 			{
-				return;
+				touchMoveHandler.removeHandler();
+				touchMoveHandler = null;
 			}
-			touchMoveHandler.removeHandler();
-			touchMoveHandler = null;
-			touchEndHandler.removeHandler();
-			touchEndHandler = null;
+			if(touchEndHandler != null)
+			{
+				touchEndHandler.removeHandler();
+				touchEndHandler = null;
+			}
 		}
 
 	}

@@ -299,8 +299,14 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		{
 			TapEvent.fire(this);
 		}
-		touchMoveHandler.removeHandler();
-		touchEndHandler.removeHandler();
+		if(touchMoveHandler != null)
+		{
+			touchMoveHandler.removeHandler();
+		}
+		if(touchEndHandler != null)
+		{
+			touchEndHandler.removeHandler();
+		}
 		event.preventDefault();
 	}
 

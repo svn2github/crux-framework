@@ -133,8 +133,14 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 				controller.setPosition(!controller.opened ? controller.canvasHeight : 0);
 			}
 
-			touchMoveHandler.removeHandler();
-			touchEndHandler.removeHandler();
+			if(touchMoveHandler != null)
+			{
+				touchMoveHandler.removeHandler();
+			}
+			if(touchEndHandler != null)
+			{
+				touchEndHandler.removeHandler();
+			}
 			unblockBodyTouchEvent();
 		}
 
