@@ -136,21 +136,21 @@ public class DBTransaction extends JavaScriptObject
         setActive(false);
     }
 
-	protected DBRequest addToTransactionQueue(RequestOperation operation)//, args)
+	protected DBRequest addToTransactionQueue(RequestOperation operation, JavaScriptObject source)//, args)
 	{
 		if (!isActive() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION)) 
 		{
 			DBUtil.throwDOMException("not active", "A request was placed against a transaction which is currently not active, or which is finished.");
 		}
-		DBRequest request = createRequest();
+		DBRequest request = createRequest(source);
 		pushToQueue(request, operation);//, args);       
 		return request;
 	}
 	    
-	protected DBRequest createRequest()
+	protected DBRequest createRequest(JavaScriptObject source)
 	{
 		DBRequest request = DBRequest.create();
-		request.setSource(getDatabase());
+		request.setSource(source);
 		request.setTransaction(this);
 		return request;
 	}

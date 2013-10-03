@@ -21,11 +21,15 @@ import java.util.logging.Logger;
 import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.FileReader;
 import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
+import org.cruxframework.crux.core.client.utils.FileUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -80,6 +84,20 @@ public class DBUtil
 		}
 		callback.onEncode(object.toString());
 		return;
+	}
+	
+	public static <T extends JavaScriptObject> T decodeValue(String encodedObject)
+	{
+		if (StringUtils.isEmpty(encodedObject))
+		{
+			return null;
+		}
+		if (encodedObject.startsWith("data:"))
+		{
+			return FileUtils.fromDataURI(encodedObject).cast();
+		}
+		JSONValue jsonValue = JSONParser.parseStrict(encodedObject);
+		return jsonValue.isObject().getJavaScriptObject().cast();
 	}
 	
 	public static void throwDOMException(String name, String message)

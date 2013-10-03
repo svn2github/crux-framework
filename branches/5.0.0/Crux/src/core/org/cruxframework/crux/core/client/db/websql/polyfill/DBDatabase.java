@@ -115,7 +115,7 @@ public class DBDatabase extends JavaScriptObject
 					}
 				}, errorCallback);
 			}
-		});
+		}, this);
       // The IndexedDB Specification needs us to return an Object Store immediately, but WebSQL does not create and return the store immediately
       // Hence, this can technically be unusable, and we hack around it, by setting the ready value to false
       getObjectStoreNames().add(storeName);
@@ -190,7 +190,7 @@ public class DBDatabase extends JavaScriptObject
                     }
 				}, errorCallback);
             }
-		});
+		}, this);
     }
     
 	public final native Array<String> getObjectStoreNames() /*-{

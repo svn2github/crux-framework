@@ -80,7 +80,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				});
     		}
-    	});
+    	}, this);
     	return request;
     }
 
@@ -127,7 +127,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				});
     		}
-    	});
+    	}, this);
     	return request;
     }
     
@@ -135,6 +135,7 @@ public class DBObjectStore extends JavaScriptObject
 //    {
 //    	
 //    }
+    
     public DBRequest delete(final JsArrayMixed key)
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
@@ -179,39 +180,182 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				}, null);
     		}
-    	});
+    	}, this);
     	return request;
     }
-//TODO get    
-//    IDBObjectStore.prototype.get = function(key){
-//        // TODO Key should also be a key range
-//        var me = this;
-//        return me.transaction.__addToTransactionQueue(function(tx, args, success, error){
-//            me.__waitForReady(function(){
-//                var primaryKey = idbModules.Key.encode(key);
-//                idbModules.DEBUG && console.log("Fetching", me.name, primaryKey);
-//                tx.executeSql("SELECT * FROM " + idbModules.util.quote(me.name) + " where key = ?", [primaryKey], function(tx, data){
-//                    idbModules.DEBUG && console.log("Fetched data", data);
-//                    try {
-//                        // Opera can't deal with the try-catch here.
-//                        if (0 === data.rows.length) {
-//                            return success();
-//                        }
-//                        
-//                        success(idbModules.Sca.decode(data.rows.item(0).value));
-//                    } 
-//                    catch (e) {
-//                        idbModules.DEBUG && console.log(e);
-//                        // If no result is returned, or error occurs when parsing JSON
-//                        success(undefined);
-//                    }
-//                }, function(tx, err){
-//                    error(err);
-//                });
-//            });
-//        });
-//    };
+
+ // TODO   get com keyrange public DBRequest get(final JsArrayMixed key)
+//  {
+//  	
+//  }
     
+    public DBRequest get (final JsArrayMixed key)
+    {
+    	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+		{
+			@Override
+			public void doOperation(final SQLTransaction tx)
+			{
+				final DBTransaction.RequestOperation op = this;
+				waitForReady(new Callback()
+				{
+					@Override
+					public void execute()
+					{
+						String sql = "SELECT * FROM \"" + getName() + "\" where key = ?";
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.FINE, "Retrieving record ["+key+"], on object store ["+getName()+"]. SQL ["+sql+"]");
+						}
+						final JsArrayMixed args = JsArrayMixed.createArray().cast();
+						args.push(DBUtil.encodeKey(key));
+						tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+						{
+							@Override
+							public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+							{
+								if (rs.getRowsAffected() > 0)
+								{
+									JsArrayMixed result = JsArrayMixed.createArray().cast();
+									readPropertyValue(rs.getRows().itemObject(0), "value", result);
+									if (result.length() > 0)
+									{
+										op.setResult(DBUtil.decodeValue(result.getString(0)));
+									}
+									else
+									{
+										DBUtil.throwDOMException("Data Error", "Error reading value from object store ["+getName()+"]");
+									}
+								}
+								else
+								{
+									op.setResult(null);
+								}
+								op.onSuccess();
+							}
+						}, new SQLTransaction.SQLStatementErrorCallback()
+						{
+							@Override
+							public boolean onError(SQLTransaction tx, SQLError error)
+							{
+								op.onError(error);
+								return true;
+							}
+						});
+					}
+				}, null);
+			}
+		}, this);
+    	
+    	return request;
+    }
+    
+    public DBRequest clear()
+    {
+    	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+		{
+			@Override
+			public void doOperation(final SQLTransaction tx)
+			{
+				final DBTransaction.RequestOperation op = this;
+				waitForReady(new Callback()
+				{
+					@Override
+					public void execute()
+					{
+						String sql = "DELETE FROM \"" + getName() + "\"";
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.FINE, "Removing all object store records .Object store ["+getName()+"]. SQL ["+sql+"]");
+						}
+						JsArrayMixed args = JsArrayMixed.createArray().cast();
+						tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+						{
+							@Override
+							public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+							{
+								if (LogConfiguration.loggingIsEnabled())
+								{
+									logger.log(Level.FINE, "All objects cleared from object store ["+getName()+"].");
+								}
+								op.setResult(null);
+								op.onSuccess();
+							}
+						}, new SQLTransaction.SQLStatementErrorCallback()
+						{
+							@Override
+							public boolean onError(SQLTransaction tx, SQLError error)
+							{
+								op.onError(error);
+								return true;
+							}
+						});
+					}
+				}, null);
+			}
+		}, this);
+    	
+    	return request;
+    }
+//TODO    public DBRequest count(KeyRange)
+
+    public DBRequest count()
+    {
+    	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+		{
+			@Override
+			public void doOperation(final SQLTransaction tx)
+			{
+				final DBTransaction.RequestOperation op = this;
+				waitForReady(new Callback()
+				{
+					@Override
+					public void execute()
+					{
+						String sql = "SELECT COUNT(*) AS total FROM \"" + getName() + "\"";
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.FINE, "Counting all records on object store ["+getName()+"]. SQL ["+sql+"]");
+						}
+						JsArrayMixed args = JsArrayMixed.createArray().cast();
+						tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+						{
+							@Override
+							public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+							{
+								
+								JsArrayMixed result = JsArrayMixed.createArray().cast();
+								readPropertyValue(rs.getRows().itemObject(0), "total", result);
+								if (result.length() > 0)
+								{
+									op.setContentAsResult(result);
+								}
+								else
+								{
+									DBUtil.throwDOMException("Data Error", "Error counting records on object store ["+getName()+"]");
+								}
+								if (LogConfiguration.loggingIsEnabled())
+								{
+									logger.log(Level.FINE, "There are ["+result.getNumber(0)+"] records on object store ["+getName()+"].");
+								}
+								op.onSuccess();
+							}
+						}, new SQLTransaction.SQLStatementErrorCallback()
+						{
+							@Override
+							public boolean onError(SQLTransaction tx, SQLError error)
+							{
+								op.onError(error);
+								return true;
+							}
+						});
+					}
+				}, null);
+			}
+		}, this);
+    	
+    	return request;
+    }    
     
 	/**
 	 * Need this flag as createObjectStore is synchronous. So, we simply return when create ObjectStore is called
