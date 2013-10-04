@@ -146,15 +146,20 @@ public class DBTransaction extends JavaScriptObject
         }
     }
     
-	protected DBRequest addToTransactionQueue(RequestOperation operation, JavaScriptObject source)//, args)
+	protected DBRequest addToTransactionQueue(RequestOperation operation, JavaScriptObject source, String[] supportedModes)
 	{
 		if (!isActive() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION)) 
 		{
 			throwError("not active", "A request was placed against a transaction which is currently not active, or which is finished.");
 			return null;
 		}
+		if (!isAllowedOperation(supportedModes))
+		{
+			throwError("Unsupported Operation", "The requested operation is not supported on ["+getMode()+"] transaction.");
+			return null;
+		}
 		DBRequest request = createRequest(source);
-		pushToQueue(request, operation);//, args);       
+		pushToQueue(request, operation);       
 		return request;
 	}
 	    

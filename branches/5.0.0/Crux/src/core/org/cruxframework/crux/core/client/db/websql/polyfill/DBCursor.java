@@ -89,7 +89,7 @@ public class DBCursor extends JavaScriptObject
 				{
 					find(key, tx);
 				}
-			}, this);
+			}, this, new String[]{DBTransaction.READ, DBTransaction.READ_WRITE});
 		}
 		else
 		{
@@ -127,6 +127,55 @@ public class DBCursor extends JavaScriptObject
 		}
 		fireSuccessEvent();
 	}
+	
+//	IDBCursor.prototype.update = function(valueToUpdate){
+//        var me = this,
+//            request = this.__idbObjectStore.transaction.__createRequest(function(){}); //Stub request
+//        idbModules.Sca.encode(valueToUpdate, function(encoded) {
+//            this.__idbObjectStore.__pushToQueue(request, function(tx, args, success, error){
+//                me.__find(undefined, tx, function(key, value){
+//                    var sql = "UPDATE " + idbModules.util.quote(me.__idbObjectStore.name) + " SET value = ? WHERE key = ?";
+//                    idbModules.DEBUG && console.log(sql, encoded, key);
+//                    tx.executeSql(sql, [idbModules.Sca.encode(encoded), idbModules.Key.encode(key)], function(tx, data){
+//                        if (data.rowsAffected === 1) {
+//                            success(key);
+//                        }
+//                        else {
+//                            error("No rowns with key found" + key);
+//                        }
+//                    }, function(tx, data){
+//                        error(data);
+//                    });
+//                }, function(data){
+//                    error(data);
+//                });
+//            });
+//        });
+//        return request;
+//    };
+//    
+//    IDBCursor.prototype["delete"] = function(){
+//        var me = this;
+//        return this.__idbObjectStore.transaction.__addToTransactionQueue(function(tx, args, success, error){
+//            me.__find(undefined, tx, function(key, value){
+//                var sql = "DELETE FROM  " + idbModules.util.quote(me.__idbObjectStore.name) + " WHERE key = ?";
+//                idbModules.DEBUG && console.log(sql, key);
+//                tx.executeSql(sql, [idbModules.Key.encode(key)], function(tx, data){
+//                    if (data.rowsAffected === 1) {
+//                        success(undefined);
+//                    }
+//                    else {
+//                        error("No rowns with key found" + key);
+//                    }
+//                }, function(tx, data){
+//                    error(data);
+//                });
+//            }, function(data){
+//                error(data);
+//            });
+//        });
+//    };	
+	
 	
 	public final native String getDirection()/*-{
 		return this.direction; 

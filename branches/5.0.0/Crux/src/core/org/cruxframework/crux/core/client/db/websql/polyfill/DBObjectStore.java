@@ -70,7 +70,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				});
     		}
-    	}, this);
+    	}, this, new String[]{DBTransaction.READ_WRITE});
     	return request;
     }
 
@@ -117,7 +117,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				});
     		}
-    	}, this);
+    	}, this, new String[]{DBTransaction.READ_WRITE});
     	return request;
     }
     
@@ -170,7 +170,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				}, null);
     		}
-    	}, this);
+    	}, this, new String[]{DBTransaction.READ_WRITE});
     	return request;
     }
 
@@ -236,7 +236,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				}, null);
 			}
-		}, this);
+		}, this, new String[]{DBTransaction.READ, DBTransaction.READ_WRITE});
     	
     	return request;
     }
@@ -284,7 +284,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				}, null);
 			}
-		}, this);
+		}, this, new String[]{DBTransaction.READ_WRITE});
     	
     	return request;
     }
@@ -344,7 +344,7 @@ public class DBObjectStore extends JavaScriptObject
 					}
 				}, null);
 			}
-		}, this);
+		}, this, new String[]{DBTransaction.READ, DBTransaction.READ_WRITE});
     	
     	return request;
     }    
