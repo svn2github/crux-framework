@@ -151,6 +151,7 @@ public class DBTransaction extends JavaScriptObject
 		if (!isActive() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION)) 
 		{
 			throwError("not active", "A request was placed against a transaction which is currently not active, or which is finished.");
+			return null;
 		}
 		DBRequest request = createRequest(source);
 		pushToQueue(request, operation);//, args);       
@@ -175,6 +176,19 @@ public class DBTransaction extends JavaScriptObject
         executeRequests();
     }
 
+	protected boolean isAllowedOperation(String[] supportedModes)
+	{
+		for (String supported : supportedModes)
+        {
+	        if (StringUtils.unsafeEquals(getMode(), supported))
+	        {
+	        	return true;
+	        }
+        }
+		//DBUtil.throwDOMException("ReadOnlyError", message)throwError(errorName, message)
+		return false;
+	}
+	
     protected DBError throwError(DBError error)
     {
     	return throwError(error.getName(), error.getMessage());

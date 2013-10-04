@@ -47,6 +47,41 @@ public class JsUtils
 		output.push(getDescendantProp(object, property));    
     }-*/;
 	
+	/**
+	 * Write property to native javascript objects. 
+	 * @param object the Object where the property will be written. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 * @param input an array containing the property value.
+	 * @param extractArrayContent It true, the first element from input array is used as property value.
+	 */
+	public static native void writePropertyValue(JavaScriptObject object, String property, JsArrayMixed intput, boolean extractArrayContent)/*-{
+		var obj = object;
+		var arr = property.split(".");
+		while((arr.length-1) && (obj = obj[arr.shift()]));
+	    if (obj)
+	    {
+		    if (input)
+		    {
+		    	if (extractArrayContent && input.length > 0)
+		    	{
+		    		obj[arr.shift()] = input[0];
+		    	}
+		    	else if (input.length > 0)
+		    	{
+		    		obj[arr.shift()] = input;
+		    	}
+		    	else
+		    	{
+		    		obj[arr.shift()] = null;
+		    	}
+		    }
+		    else
+		    {
+		    	obj[arr.shift()] = null;
+		    }
+	    }
+    }-*/;
+
 	public static String[] toArray(JsArrayString jSArray)
 	{
 		String[] result = new String[jSArray.length()];

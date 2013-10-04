@@ -25,6 +25,7 @@ import org.cruxframework.crux.core.client.utils.FileUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
@@ -46,6 +47,7 @@ public class DBUtil
 		{
 			return JSONNull.getInstance().toString();
 		}
+		
 		JSONObject jsonObject = new JSONObject(object);
 		JSONArray jsonArray = jsonObject.isArray();
 		if (jsonArray != null)
@@ -100,6 +102,12 @@ public class DBUtil
 		return jsonValue.isObject().getJavaScriptObject().cast();
 	}
 	
+	public static JsArrayMixed decodeKey(String string)
+    {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+
 	public static void throwDOMException(String name, String message)
 	{
 		if (LogConfiguration.loggingIsEnabled())

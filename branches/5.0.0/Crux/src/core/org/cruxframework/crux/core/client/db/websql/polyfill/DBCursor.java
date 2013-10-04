@@ -15,10 +15,18 @@
  */
 package org.cruxframework.crux.core.client.db.websql.polyfill;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.cruxframework.crux.core.client.db.websql.SQLError;
+import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
+import org.cruxframework.crux.core.client.utils.JsUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -26,6 +34,11 @@ import com.google.gwt.core.client.JsArrayMixed;
  */
 public class DBCursor extends JavaScriptObject
 {
+	protected static Logger logger = Logger.getLogger(DBCursor.class.getName());
+
+	private static final int NOT_INITIALIZED = -1;
+	private static final int CURSOR_BEGIN = 0;
+
 	protected DBCursor(){}
 	private DBObjectStore objectStore;
 	private DBKeyRange range;
@@ -33,7 +46,8 @@ public class DBCursor extends JavaScriptObject
 	private String valueColumnName;
 	private String keyColumnName;
 	private int offset = -1;
-	private JsArrayMixed lastKeyContinued;
+	private SQLResultSet resultSet;
+	private int length = -1;
 
 	public static DBCursor create(DBKeyRange range, String direction, DBObjectStore dbObjectStore, DBRequest cursorRequest, String keyColumnName, String valueColumnName)
 	{
@@ -41,7 +55,7 @@ public class DBCursor extends JavaScriptObject
 		cursor.setKeyRange(range);
 		cursor.setSource(dbObjectStore);
 		cursor.setObjectStore(dbObjectStore);
-		cursor.setDirection(direction);
+		cursor.setDirection(direction==null?"":direction);
 		cursor.setRequest(cursorRequest);
 		cursor.setKeyColumnName(keyColumnName);
 		cursor.setValueColumnName(valueColumnName);
@@ -52,18 +66,73 @@ public class DBCursor extends JavaScriptObject
 		}
 		else
 		{
-//			continueCursor();
+			cursor.continueCursor(null);
 		}
 		
 		return cursor;
 	}
 
+	public final void continueCursor(final JsArrayMixed key)
+	{
+		if (offset == NOT_INITIALIZED || key != null)
+		{
+			if (offset != NOT_INITIALIZED)
+			{
+				offset = NOT_INITIALIZED;
+				length = NOT_INITIALIZED;
+				resultSet = null;
+			}
+			objectStore.getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+			{
+				@Override
+				public void doOperation(SQLTransaction tx)
+				{
+					find(key, tx);
+				}
+			}, this);
+		}
+		else
+		{
+			offset++;
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				if (offset == length)
+				{
+					logger.log(Level.FINE, "Reached the end of cursor");
+				}
+			}
+			fireSuccessEvent();
+		}
+	}
 
+	public final void advance(int count)
+	{
+		if (offset == NOT_INITIALIZED)
+		{
+			throwError("Not Initialized", "Cursor is not initialized. Object store ["+objectStore.getName()+"]");
+			return;
+		}
+		if (count <= 0)
+		{
+			throwError("Invalid State", "Count can not be 0 or negative.");
+			return;
+		}
+		offset += count;
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			if (offset >= length)
+			{
+				logger.log(Level.FINE, "Reached the end of cursor");
+			}
+		}
+		fireSuccessEvent();
+	}
+	
 	public final native String getDirection()/*-{
 		return this.direction; 
     }-*/;
 	
-	protected void find(JsArrayMixed key, SQLTransaction tx)
+	private void find(JsArrayMixed key, SQLTransaction tx)
 	{
 		StringBuilder sql = new StringBuilder("SELECT * FROM \"").append(objectStore.getName()).append("\" WHERE ").append(keyColumnName).append(" NOT NULL");
 		JsArrayMixed sqlValues = range.getBounds();
@@ -79,13 +148,8 @@ public class DBCursor extends JavaScriptObject
 			}
 			if (key != null && key.length() > 0)
 			{
-				this.lastKeyContinued = key;
-				this.offset = 0;
-			}
-			if (lastKeyContinued != null && lastKeyContinued.length() > 0)
-			{
-				sql.append(" AND").append(keyColumnName).append(" >= ").append("?");
-				sqlValues.push(DBUtil.encodeKey(lastKeyContinued));
+				sql.append(" AND").append(keyColumnName).append(getDirection().startsWith("prev")?"<=":" >= ").append("?");
+				sqlValues.push(DBUtil.encodeKey(key));
 			}
 			if (getDirection().endsWith("unique"))
 			{
@@ -97,56 +161,78 @@ public class DBCursor extends JavaScriptObject
 				sql.append(" DESC");
 			}
 			String sqlStatement = sql.toString();
-//			tx.executeSQL(sqlStatement, sqlValues, stmtCallback, errorCallback);
+			tx.executeSQL(sqlStatement, sqlValues, new SQLTransaction.SQLStatementCallback()
+			{
+				@Override
+				public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+				{
+					resultSet = rs;
+					offset = CURSOR_BEGIN;
+					length = rs.getRowsAffected();
+					fireSuccessEvent();
+				}
+			}, new SQLTransaction.SQLStatementErrorCallback()
+			{
+				@Override
+				public boolean onError(SQLTransaction tx, SQLError error)
+				{
+					throwError(error.getName(), error.getMessage());
+					return false;
+				}
+			});
 		}
 	}
-//
-//	 IDBCursor.prototype.__find = function(key, tx, success, error){
-//	        var me = this;
-//	        var sql = ["SELECT * FROM ", idbModules.util.quote(me.__idbObjectStore.name)];
-//	        var sqlValues = [];
-//	        sql.push("WHERE ", me.__keyColumnName, " NOT NULL");
-//	        if (me.__range && (me.__range.lower || me.__range.upper)) {
-//	            sql.push("AND");
-//	            if (me.__range.lower) {
-//	                sql.push(me.__keyColumnName + (me.__range.lowerOpen ? " >" : " >= ") + " ?");
-//	                sqlValues.push(idbModules.Key.encode(me.__range.lower));
-//	            }
-//	            (me.__range.lower && me.__range.upper) && sql.push("AND");
-//	            if (me.__range.upper) {
-//	                sql.push(me.__keyColumnName + (me.__range.upperOpen ? " < " : " <= ") + " ?");
-//	                sqlValues.push(idbModules.Key.encode(me.__range.upper));
-//	            }
-//	        }
-//	        if (typeof key !== "undefined") {
-//	            me.__lastKeyContinued = key;
-//	            me.__offset = 0;
-//	        }
-//	        if (me.__lastKeyContinued !== undefined) {
-//	            sql.push("AND " + me.__keyColumnName + " >= ?");
-//	            sqlValues.push(idbModules.Key.encode(me.__lastKeyContinued));
-//	        }
-//	        sql.push("ORDER BY ", me.__keyColumnName);
-//	        sql.push("LIMIT 1 OFFSET " + me.__offset);
-//	        idbModules.DEBUG && console.log(sql.join(" "), sqlValues);
-//	        tx.executeSql(sql.join(" "), sqlValues, function(tx, data){
-//	            if (data.rows.length === 1) {
-//	                var key = idbModules.Key.decode(data.rows.item(0)[me.__keyColumnName]);
-//	                var val = me.__valueColumnName === "value" ? idbModules.Sca.decode(data.rows.item(0)[me.__valueColumnName]) : idbModules.Key.decode(data.rows.item(0)[me.__valueColumnName]);
-//	                success(key, val);
-//	            }
-//	            else {
-//	                idbModules.DEBUG && console.log("Reached end of cursors");
-//	                success(undefined, undefined);
-//	            }
-//	        }, function(tx, data){
-//	            idbModules.DEBUG && console.log("Could not execute Cursor.continue");
-//	            error(data);
-//	        });
-//	    };	
 	
+	private void fireSuccessEvent()
+	{
+		updateCursorValues();
+		DBEvent evt = DBEvent.create("success");
+		cursorRequest.setReadyState("done");
+		cursorRequest.setError(null);
+		cursorRequest.setResult(this);
+        DBEvent.invoke("onsuccess", cursorRequest, evt);
+        //TODO envolver num try cacth?? ou nao para a transacao com um erro desses?
+	}
 	
-	protected void throwError(String errorName, String message)
+	private void updateCursorValues()
+	{
+		if (offset < length)
+		{
+			JavaScriptObject dbObject = resultSet.getRows().itemObject(offset);
+
+			JsArrayMixed key = JsArrayMixed.createArray().cast();
+			JsArrayMixed value = JsArrayMixed.createArray().cast();
+
+			JsUtils.readPropertyValue(dbObject, keyColumnName, key);
+			JsUtils.readPropertyValue(dbObject, valueColumnName, value);
+
+			//Update Key
+			key = DBUtil.decodeKey(key.getString(0));
+			JsUtils.writePropertyValue(this, "key", key, true);
+			
+			//Update Value
+			if (StringUtils.unsafeEquals(valueColumnName, "value"))
+			{
+				setValue(DBUtil.decodeValue(value.getString(0)));
+			}
+			else
+			{
+				value = DBUtil.decodeKey(value.getString(0));
+				JsUtils.writePropertyValue(this, "value", value, true);
+			}
+		}
+		else
+		{
+			JsUtils.writePropertyValue(this, "key", null, false);
+			JsUtils.writePropertyValue(this, "value", null, false);
+		}
+	}
+
+	private native void setValue(JavaScriptObject val)/*-{
+	    this.value = val;
+    }-*/;
+
+	private void throwError(String errorName, String message)
     {
 		DBError error = DBError.create(errorName, message);
 		cursorRequest.setReadyState("done");
@@ -189,10 +275,4 @@ public class DBCursor extends JavaScriptObject
 	private native void setSource(JavaScriptObject src)/*-{
 	    this.source = src;
     }-*/;
-	
-	
-	public static interface CursorCallback
-	{
-		void onSuccess(JsArrayMixed key, JsArrayMixed value);
-	}
 }

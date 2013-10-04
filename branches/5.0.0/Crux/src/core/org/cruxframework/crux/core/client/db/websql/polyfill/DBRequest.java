@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db.websql.polyfill;
 
+import org.cruxframework.crux.core.client.utils.JsUtils;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 
@@ -78,7 +80,8 @@ public class DBRequest extends JavaScriptObject
 	    this.result = value;
     }-*/;
 
-	public final native void setContentAsResult(JsArrayMixed object)/*-{
-	    this.result = ((object && object.length > 0)?object[0]:null);
-    }-*/;
+	public final void setContentAsResult(JsArrayMixed object)
+	{
+		JsUtils.writePropertyValue(this, "result", object, true);
+	}
 }
