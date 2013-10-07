@@ -198,6 +198,11 @@ public class DBDatabase extends JavaScriptObject
 		return this.objectStoreNames;
 	}-*/;
 	
+	void setVersionTransaction(DBTransaction transaction)
+	{
+		versionTransaction = transaction;
+	}
+	
 	private native void setObjectStoreNames(Array<String> names) /*-{
 		this.objectStoreNames = names;
 	}-*/;

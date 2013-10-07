@@ -23,83 +23,161 @@ import org.cruxframework.crux.core.client.db.websql.SQLDatabaseFactory;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
+import org.cruxframework.crux.core.client.db.websql.SQLTransaction.SQLStatementErrorCallback;
 import org.cruxframework.crux.core.client.utils.JsUtils;
-import org.cruxframework.crux.core.client.utils.StringUtils;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DBFactory
+public class DBFactory extends JavaScriptObject
 {
 	protected static Logger logger = Logger.getLogger(DBFactory.class.getName());
 	private static int  DEFAULT_DB_SIZE = 5 * 1024 * 1024;
-	private boolean initialized;
+	private boolean initialized = false;
 	private SQLDatabase systemDatabase;
 	
-	public final void init()
+	public final DBOpenRequest open(final String name, final int version)
 	{
-		systemDatabase = SQLDatabaseFactory.openDatabase("__sysdb__", 1, "System Database", DEFAULT_DB_SIZE);
-		systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
+		final DBOpenRequest request = DBOpenRequest.create();
+		if (!initialized)
 		{
-			
+			init(new InitializationCallback()
+			{
+				@Override
+				public void onInitialize()
+				{
+					doOpen(request, name, version);
+				}
+			});
+		}
+		else
+		{
+			doOpen(request, name, version);
+		}
+		return request;
+	}
+
+	public final DBOpenRequest deleteDatabase(final String name)
+	{
+		final DBOpenRequest request = DBOpenRequest.create();
+		if (!initialized)
+		{
+			init(new InitializationCallback()
+			{
+				@Override
+				public void onInitialize()
+				{
+					doDelete(request, name);
+				}
+			});
+		}
+		else
+		{
+			doDelete(request, name);
+		}
+		return request;
+	}
+	
+	public final int cmp(JsArrayMixed key1, JsArrayMixed key2)
+	{
+		return DBUtil.encodeKey(key1).compareTo(DBUtil.encodeKey(key2));
+	}
+	
+	private final void init(final InitializationCallback callback)
+	{
+		if (!initialized)
+		{
+			systemDatabase = SQLDatabaseFactory.openDatabase("__sysdb__", 1, "System Database", DEFAULT_DB_SIZE);
+			systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
+			{
+				
+				@Override
+				public void onTransaction(SQLTransaction tx)
+				{
+					String sql = "CREATE TABLE IF NOT EXISTS dbVersions (name VARCHAR(255), version INT)";
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.FINE, "Create System table SQL ["+sql+"]");
+					}
+					JsArrayMixed args = JsArrayMixed.createArray().cast();
+					tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+					{
+						
+	
+						@Override
+						public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+						{
+							initialized = true;
+							if (LogConfiguration.loggingIsEnabled())
+							{
+								logger.log(Level.INFO, "System table created.");
+							}
+							callback.onInitialize();
+						}
+					}, null);
+				}
+			}, new SQLDatabase.SQLTransactionErrorCallback()
+			{
+				
+				@Override
+				public void onError(SQLError error)
+				{
+					DBUtil.throwDOMException("Error Data", "Could not create the systam table (__sysdb__).");
+				}
+			}, null);
+		}
+	}
+
+	private void doDelete(final DBOpenRequest request, final String name)
+    {
+		final SQLTransaction.SQLStatementErrorCallback errorCallback = getErrorCallback(request);
+	    systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
+		{
 			@Override
 			public void onTransaction(SQLTransaction tx)
 			{
-				String sql = "CREATE TABLE IF NOT EXISTS dbVersions (name VARCHAR(255), version INT)";
+				String sql = "SELECT * FROM dbVersions WHERE name = ?";
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.FINE, "Create System table SQL ["+sql+"]");
+					logger.log(Level.INFO, "Execute SQL ["+sql+"]");
 				}
-				JsArrayMixed args = JsArrayMixed.createArray().cast();
+				final JsArrayMixed args = JsArrayMixed.createArray().cast();
+				args.push(name);
 				tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
 				{
-					
-
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 					{
-						initialized = true;
-						if (LogConfiguration.loggingIsEnabled())
+						if (rs.getRowsAffected() == 0)
 						{
-							logger.log(Level.INFO, "System table created.");
+							request.setResult((String)null);
+	        				DBEvent evt = DBEvent.create("success");
+	        				DBEvent.invoke("onsuccess", request, evt);
+	        				return;
 						}
+						int version = JsUtils.readIntPropertyValue(rs.getRows().itemObject(0), "version");
+						deleteDB(request, name, version, errorCallback);
 					}
-				}, null);
+				}, errorCallback);
 			}
-		}, new SQLDatabase.SQLTransactionErrorCallback()
-		{
-			
-			@Override
-			public void onError(SQLError error)
-			{
-				DBUtil.throwDOMException("Error Data", "Could not create the systam table (__sysdb__).");
-			}
-		}, null);
-	}
+		}, null, null);
+    }
 
-	public final DBOpenRequest open(String name, final int version)
+	private void deleteDB(final DBOpenRequest request, final String name, final int version, final SQLStatementErrorCallback errorCallback)
 	{
-		final DBOpenRequest request = DBOpenRequest.create();
-		final SQLTransaction.SQLStatementErrorCallback errorCallback = new SQLTransaction.SQLStatementErrorCallback()
+    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
+    	database.transaction(new SQLDatabase.SQLTransactionCallback()
 		{
 			@Override
-			public boolean onError(SQLTransaction tx, SQLError error)
+			public void onTransaction(final SQLTransaction tx)
 			{
-				throwError(request, error.getName(), error.getMessage());
-				return false;
-			}
-		};
-		
-		systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
-		{
-			@Override
-			public void onTransaction(SQLTransaction tx)
-			{
-				String sql = "SELECT * FROM dbVersions where name = ?";
+				String sql = "SELECT * FROM __sys__";
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.INFO, "Execute SQL ["+sql+"]");
@@ -110,11 +188,94 @@ public class DBFactory
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 					{
+						int length = rs.getRowsAffected();
+						String sql;
+						final JsArrayMixed args = JsArrayMixed.createArray().cast();
+						for (int i=0; i< length; i++)
+						{
+							sql = "DROP TABLE "+name;
+							if (LogConfiguration.loggingIsEnabled())
+							{
+								logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+							}
+							tx.executeSQL(sql, args, null, errorCallback);
+						}
+						sql = "DROP TABLE __sys__";
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+						}
+						tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+						{
+							@Override
+							public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+							{
+								deleteFromDbVersions(request, name, version, errorCallback);
+							}
+						}, errorCallback);
+					}
+				}, errorCallback);
+			}
+		}, null, null);
+	}
+	
+	private void deleteFromDbVersions(final DBOpenRequest request, final String name, final int version, final SQLStatementErrorCallback errorCallback)
+	{
+		systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
+		{
+			@Override
+			public void onTransaction(SQLTransaction tx)
+			{
+				String sql = "DELETE FROM dbVersions WHERE name = ? ";
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+				}
+				final JsArrayMixed args = JsArrayMixed.createArray().cast();
+				args.push(name);
+				tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+				{
+					@Override
+					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+					{
+						request.setResult((String)null);
+						DBEvent evt = DBEvent.create("success");
+						JsUtils.writePropertyValue(evt, "newVersion", (String)null);
+						JsUtils.writePropertyValue(evt, "oldVersion", version);
+						DBEvent.invoke("onsuccess", request, evt);
+					}
+				}, errorCallback);
+				
+			}
+		}, null, null);
+	}
+	
+	private DBOpenRequest doOpen(final DBOpenRequest request, final String name, final int version)
+    {
+		final SQLTransaction.SQLStatementErrorCallback errorCallback = getErrorCallback(request);
+		
+		systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
+		{
+			@Override
+			public void onTransaction(SQLTransaction tx)
+			{
+				String sql = "SELECT * FROM dbVersions WHERE name = ?";
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+				}
+				final JsArrayMixed args = JsArrayMixed.createArray().cast();
+				args.push(name);
+				tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+				{
+					@Override
+					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+					{
 						if (rs.getRowsAffected() > 0)
 						{
 							JsArrayMixed output = JsArrayMixed.createArray().cast();
 							JsUtils.readPropertyValue(rs.getRows().itemObject(0), "version", output); 
-							openDB((int) output.getNumber(0));
+							openDB(name, (int) output.getNumber(0), version, request, errorCallback);
 						}
 						else
 						{
@@ -129,7 +290,7 @@ public class DBFactory
 								@Override
 								public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 								{
-						              openDB(0);
+						              openDB(name, 0, version, request, errorCallback);
 								}
 							}, errorCallback);
 						}
@@ -139,9 +300,115 @@ public class DBFactory
 		}, null, null);
 		
 		return request;
+    }
+	
+    private void openDB(final String name, final int oldVersion, final int newVersion, 
+    					final DBOpenRequest request, final SQLTransaction.SQLStatementErrorCallback errorCallback)
+    {
+    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
+    	request.setReadyState("done");
+    	if (newVersion <=0 || oldVersion > newVersion)
+    	{
+    		throwError(request, "Data Error", "An attempt was made to open a database using a lower version than the existing version.");
+    		return;
+    	}
+    	database.transaction(new SQLDatabase.SQLTransactionCallback()
+		{
+			@Override
+			public void onTransaction(final SQLTransaction tx)
+			{
+				String sql = "CREATE TABLE IF NOT EXISTS __sys__ (name VARCHAR(255), keyPath VARCHAR(255), autoInc BOOLEAN, indexList BLOB)";
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+				}
+				JsArrayMixed args = JsArrayMixed.createArray().cast();
+				tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+				{
+					@Override
+					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+					{
+						String sql = "SELECT * FROM __sys__";
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+						}
+						JsArrayMixed args = JsArrayMixed.createArray().cast();
+						tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+						{
+							@Override
+                            public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+                            {
+								final DBDatabase dbDatabase = DBDatabase.create(database, name, newVersion, rs);
+								request.setSource(database);
+								request.setResult(database);
+								if (oldVersion < newVersion)
+								{
+									updateDBVersionAndOpen(name, oldVersion, newVersion, request, errorCallback, dbDatabase);
+								}
+								else
+								{
+									DBEvent evt = DBEvent.create("success");
+									DBEvent.invoke("onsuccess", request, evt);
+								}
+							}
+						}, errorCallback);
+					}
+				}, errorCallback);
+			}
+		}, null, null);
+    }
+	
+	private void updateDBVersionAndOpen(final String name, final int oldVersion, final int newVersion, final DBOpenRequest request, final SQLTransaction.SQLStatementErrorCallback errorCallback, final DBDatabase dbDatabase)
+    {
+        systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
+        {
+        	@Override
+        	public void onTransaction(SQLTransaction tx)
+        	{
+        		String sql = "UPDATE dbVersions SET version = ? WHERE name = ?";
+        		if (LogConfiguration.loggingIsEnabled())
+        		{
+        			logger.log(Level.INFO, "Execute SQL ["+sql+"]");
+        		}
+        		JsArrayMixed args = JsArrayMixed.createArray().cast();
+        		args.push(newVersion);
+        		args.push(name);
+        		tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+        		{
+        			@Override
+        			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+        			{
+        				JsArrayString storeNames = JsArrayString.createArray().cast();
+        				DBTransaction transaction = DBTransaction.create(storeNames, DBTransaction.VERSION_TRANSACTION, dbDatabase);
+        				request.setTransaction(transaction);
+        				dbDatabase.setVersionTransaction(transaction);
+        				DBEvent upgradeEvt = DBEvent.create("upgradeneeded");
+        				JsUtils.writePropertyValue(upgradeEvt, "oldVersion", oldVersion);
+        				JsUtils.writePropertyValue(upgradeEvt, "newVersion", newVersion);
+        				DBEvent.invoke("onupgradeneeded", request, upgradeEvt);
+        				DBEvent successEvt = DBEvent.create("success");
+        				DBEvent.invoke("onsuccess", request, successEvt);
+        			}
+        		}, errorCallback);
+        	}
+        }, null, null);
+    }
+
+	private SQLTransaction.SQLStatementErrorCallback getErrorCallback(final DBOpenRequest request)
+	{
+		return new SQLTransaction.SQLStatementErrorCallback()
+		{
+			@Override
+			public boolean onError(SQLTransaction tx, SQLError error)
+			{
+				throwError(request, error.getName(), error.getMessage());
+				return true;
+			}
+		};
 	}
 	
-    protected DBError throwError(DBOpenRequest request, String errorName, String message)
+	private DBError throwError(DBOpenRequest request, String errorName, String message)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -155,51 +422,47 @@ public class DBFactory
 		return error;
     }
 	
-    private void openDB(int oldVersion)
-    {
-    	
-    }
-//        function openDB(oldVersion){
-//            var db = window.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
-//            req.readyState = "done";
-//            if (typeof version === "undefined") {
-//                version = oldVersion || 1;
-//            }
-//            if (version <= 0 || oldVersion > version) {
-//                idbModules.util.throwDOMException(0, "An attempt was made to open a database using a lower version than the existing version.", version);
-//            }
-//            
-//            db.transaction(function(tx){
-//                tx.executeSql("CREATE TABLE IF NOT EXISTS __sys__ (name VARCHAR(255), keyPath VARCHAR(255), autoInc BOOLEAN, indexList BLOB)", [], function(){
-//                    tx.executeSql("SELECT * FROM __sys__", [], function(tx, data){
-//                        var e = idbModules.Event("success");
-//                        req.source = req.result = new idbModules.IDBDatabase(db, name, version, data);
-//                        if (oldVersion < version) {
-//                            // DB Upgrade in progress 
-//                            sysdb.transaction(function(systx){
-//                                systx.executeSql("UPDATE dbVersions set version = ? where name = ?", [version, name], function(){
-//                                    var e = idbModules.Event("upgradeneeded");
-//                                    e.oldVersion = oldVersion;
-//                                    e.newVersion = version;
-//                                    req.transaction = req.result.__versionTransaction = new idbModules.IDBTransaction([], 2, req.source);
-//                                    idbModules.util.callback("onupgradeneeded", req, e, function(){
-//                                        var e = idbModules.Event("success");
-//                                        idbModules.util.callback("onsuccess", req, e);
-//                                    });
-//                                }, dbCreateError);
-//                            }, dbCreateError);
-//                        } else {
-//                            idbModules.util.callback("onsuccess", req, e);
-//                        }
-//                    }, dbCreateError);
-//                }, dbCreateError);
-//            }, dbCreateError);
-//        }
+	static DBFactory create()
+	{
+		DBFactory factory = DBFactory.createObject().cast();
+		return factory;
+	}
 	
-	public static void registerStaticFunctions()
+	static void registerStaticFunctions()
     {
-	    // TODO Auto-generated method stub
-	    
+	    DBFactory dbFactory = create();
+	    registerStaticFunctions(dbFactory);
     }
+	
+	private native static void registerStaticFunctions(DBFactory db)/*-{
+		$wnd.__db_bridge__ = $wnd.__db_bridge__ || {};
+		$wnd.__db_bridge__.indexedDB = {};
+		$wnd.__db_bridge__.indexedDB.open = function(value){
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBKeyRange::createNative(Lcom/google/gwt/core/client/JsArrayMixed;)([value, value, false, false]);
+		};
 
+		function convertKey(key)
+		{
+			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
+			return keys; 
+		}
+		$wnd.__db_bridge__.indexedDB.open = function(name,version){
+			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::open(Ljava/lang/String;I)(name, version);
+		};
+
+		$wnd.__db_bridge__.indexedDB.deleteDatabase = function(name){
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::deleteDatabase(Ljava/lang/String;)(name);
+		};
+		
+		$wnd.__db_bridge__.indexedDB.cmp = function(key1, key2){
+			var keys1 = convertKey(key1);
+			var keys2 = convertKey(key2);
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::cmp(Lcom/google/gwt/core/client/JsArrayMixed;Lcom/google/gwt/core/client/JsArrayMixed;)(keys1, keys2);
+		};
+    }-*/;
+
+	static interface InitializationCallback
+	{
+		void onInitialize();
+	}
 }

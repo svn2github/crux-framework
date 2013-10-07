@@ -48,6 +48,50 @@ public class JsUtils
     }-*/;
 	
 	/**
+	 * Read properties from native javascript objects. 
+	 * @param object the Object where the property will be read from. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 */
+	public static native String readStringPropertyValue(JavaScriptObject object, String property)/*-{
+	    var arr = property.split(".");
+	    while(arr.length && (object = object[arr.shift()]));
+	    return object;
+    }-*/;
+
+	/**
+	 * Read properties from native javascript objects. 
+	 * @param object the Object where the property will be read from. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 */
+	public static native int readIntPropertyValue(JavaScriptObject object, String property)/*-{
+	    var arr = property.split(".");
+	    while(arr.length && (object = object[arr.shift()]));
+	    return object;
+    }-*/;
+
+	/**
+	 * Read properties from native javascript objects. 
+	 * @param object the Object where the property will be read from. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 */
+	public static native double readDoublePropertyValue(JavaScriptObject object, String property)/*-{
+	    var arr = property.split(".");
+	    while(arr.length && (object = object[arr.shift()]));
+	    return object;
+    }-*/;
+
+	/**
+	 * Read properties from native javascript objects. 
+	 * @param object the Object where the property will be read from. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 */
+	public static native JavaScriptObject readObjectPropertyValue(JavaScriptObject object, String property)/*-{
+	    var arr = property.split(".");
+	    while(arr.length && (object = object[arr.shift()]));
+	    return object;
+    }-*/;
+
+	/**
 	 * Write property to native javascript objects. 
 	 * @param object the Object where the property will be written. 
 	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
@@ -79,6 +123,54 @@ public class JsUtils
 		    {
 		    	obj[arr.shift()] = null;
 		    }
+	    }
+    }-*/;
+
+	/**
+	 * Write property to native javascript objects. 
+	 * @param object the Object where the property will be written. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 * @param input the property value.
+	 */
+	public static native void writePropertyValue(JavaScriptObject object, String property, String input)/*-{
+		var obj = object;
+		var arr = property.split(".");
+		while((arr.length-1) && (obj = obj[arr.shift()]));
+	    if (obj)
+	    {
+    		obj[arr.shift()] = input;
+	    }
+    }-*/;
+
+	/**
+	 * Write property to native javascript objects. 
+	 * @param object the Object where the property will be written. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 * @param input the property value.
+	 */
+	public static native void writePropertyValue(JavaScriptObject object, String property, double input)/*-{
+		var obj = object;
+		var arr = property.split(".");
+		while((arr.length-1) && (obj = obj[arr.shift()]));
+	    if (obj)
+	    {
+    		obj[arr.shift()] = input;
+	    }
+    }-*/;
+
+	/**
+	 * Write property to native javascript objects. 
+	 * @param object the Object where the property will be written. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 * @param input the property value.
+	 */
+	public static native void writePropertyValue(JavaScriptObject object, String property, JavaScriptObject input)/*-{
+		var obj = object;
+		var arr = property.split(".");
+		while((arr.length-1) && (obj = obj[arr.shift()]));
+	    if (obj)
+	    {
+    		obj[arr.shift()] = input;
 	    }
     }-*/;
 
