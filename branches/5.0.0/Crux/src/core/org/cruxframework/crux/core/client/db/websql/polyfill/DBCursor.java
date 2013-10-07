@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
+import org.cruxframework.crux.core.client.db.websql.polyfill.DBUtil.EncodeCallback;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
@@ -59,6 +60,7 @@ public class DBCursor extends JavaScriptObject
 		cursor.setRequest(cursorRequest);
 		cursor.setKeyColumnName(keyColumnName);
 		cursor.setValueColumnName(valueColumnName);
+		cursor.handleObjectNativeFunctions(cursor);
 		
 		if (!dbObjectStore.getTransaction().isActive())
 		{
@@ -128,54 +130,130 @@ public class DBCursor extends JavaScriptObject
 		fireSuccessEvent();
 	}
 	
-//	IDBCursor.prototype.update = function(valueToUpdate){
-//        var me = this,
-//            request = this.__idbObjectStore.transaction.__createRequest(function(){}); //Stub request
-//        idbModules.Sca.encode(valueToUpdate, function(encoded) {
-//            this.__idbObjectStore.__pushToQueue(request, function(tx, args, success, error){
-//                me.__find(undefined, tx, function(key, value){
-//                    var sql = "UPDATE " + idbModules.util.quote(me.__idbObjectStore.name) + " SET value = ? WHERE key = ?";
-//                    idbModules.DEBUG && console.log(sql, encoded, key);
-//                    tx.executeSql(sql, [idbModules.Sca.encode(encoded), idbModules.Key.encode(key)], function(tx, data){
-//                        if (data.rowsAffected === 1) {
-//                            success(key);
-//                        }
-//                        else {
-//                            error("No rowns with key found" + key);
-//                        }
-//                    }, function(tx, data){
-//                        error(data);
-//                    });
-//                }, function(data){
-//                    error(data);
-//                });
-//            });
-//        });
-//        return request;
-//    };
-//    
-//    IDBCursor.prototype["delete"] = function(){
-//        var me = this;
-//        return this.__idbObjectStore.transaction.__addToTransactionQueue(function(tx, args, success, error){
-//            me.__find(undefined, tx, function(key, value){
-//                var sql = "DELETE FROM  " + idbModules.util.quote(me.__idbObjectStore.name) + " WHERE key = ?";
-//                idbModules.DEBUG && console.log(sql, key);
-//                tx.executeSql(sql, [idbModules.Key.encode(key)], function(tx, data){
-//                    if (data.rowsAffected === 1) {
-//                        success(undefined);
-//                    }
-//                    else {
-//                        error("No rowns with key found" + key);
-//                    }
-//                }, function(tx, data){
-//                    error(data);
-//                });
-//            }, function(data){
-//                error(data);
-//            });
-//        });
-//    };	
-	
+	public final DBRequest update(final JavaScriptObject valueToUpdate)
+	{
+		if (offset == NOT_INITIALIZED)
+		{
+			throwError("Not Initialized", "Cursor is not initialized. Object store ["+objectStore.getName()+"]");
+			return null;
+		}
+		if (offset >= length)
+		{
+			throwError("Out Of Range", "Can not update cursors. It is out of range. Object store ["+objectStore.getName()+"]");
+			return null;
+		}
+		final DBCursor me = this;
+		DBRequest request = objectStore.getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+		{
+			@Override
+			public void doOperation(final SQLTransaction tx)
+			{
+				DBUtil.encodeValue(valueToUpdate, new EncodeCallback()
+				{
+					@Override
+					public void onEncode(String encoded)
+					{
+						String sql = new StringBuilder("UPDATE \"").append(objectStore.getName()).append("\" SET value = ? WHERE key = ?").toString(); 
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.FINE, "UPDATE SQL ["+sql+"]");
+						}
+						final JsArrayMixed key = JsArrayMixed.createArray().cast();
+						JsUtils.readPropertyValue(me, "key", key);
+						
+						final JsArrayMixed args = JsArrayMixed.createArray().cast();
+						args.push(encoded);
+						args.push(DBUtil.encodeKey(key));
+						
+						tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+						{
+							@Override
+							public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+							{
+								if (rs.getRowsAffected() == 1)
+								{
+									fireSuccessUpdateEvent(key);
+								}
+								else
+								{
+									throwError("Data Error", "No rowns with key found");
+									return;
+								}
+							}
+
+						}, new SQLTransaction.SQLStatementErrorCallback()
+						{
+							@Override
+							public boolean onError(SQLTransaction tx, SQLError error)
+							{
+								throwError(error.getName(), error.getMessage());
+								return false;
+							}
+						});
+					}
+				});
+			}
+		}, this, new String[]{DBTransaction.READ_WRITE});
+		return request;
+	}
+
+	public final DBRequest delete()
+	{
+		if (offset == NOT_INITIALIZED)
+		{
+			throwError("Not Initialized", "Cursor is not initialized. Object store ["+objectStore.getName()+"]");
+			return null;
+		}
+		if (offset >= length)
+		{
+			throwError("Out Of Range", "Can not update cursors. It is out of range. Object store ["+objectStore.getName()+"]");
+			return null;
+		}
+		final DBCursor me = this;
+		DBRequest request = objectStore.getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+		{
+			@Override
+			public void doOperation(SQLTransaction tx)
+			{
+				String sql = new StringBuilder("DELETE FROM  \"").append(objectStore.getName()).append("\" WHERE key = ?").toString(); 
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "DELETE SQL ["+sql+"]");
+				}
+				final JsArrayMixed key = JsArrayMixed.createArray().cast();
+				JsUtils.readPropertyValue(me, "key", key);
+				
+				final JsArrayMixed args = JsArrayMixed.createArray().cast();
+				args.push(DBUtil.encodeKey(key));
+				tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+				{
+					@Override
+					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+					{
+						if (rs.getRowsAffected() == 1)
+						{
+							fireSuccessUpdateEvent(null);
+						}
+						else
+						{
+							throwError("Data Error", "No rowns with key found");
+							return;
+						}
+					}
+
+				}, new SQLTransaction.SQLStatementErrorCallback()
+				{
+					@Override
+					public boolean onError(SQLTransaction tx, SQLError error)
+					{
+						throwError(error.getName(), error.getMessage());
+						return false;
+					}
+				});
+			}
+		}, this, new String[]{DBTransaction.READ_WRITE});
+		return request;
+	}
 	
 	public final native String getDirection()/*-{
 		return this.direction; 
@@ -232,6 +310,14 @@ public class DBCursor extends JavaScriptObject
 		}
 	}
 	
+	private void fireSuccessUpdateEvent(JsArrayMixed key)
+	{
+		DBEvent evt = DBEvent.create("success");
+		cursorRequest.setReadyState("done");
+		cursorRequest.setError(null);
+		JsUtils.writePropertyValue(cursorRequest, "result", key, true);
+        DBEvent.invoke("onsuccess", cursorRequest, evt);
+	}
 	private void fireSuccessEvent()
 	{
 		updateCursorValues();
@@ -240,7 +326,6 @@ public class DBCursor extends JavaScriptObject
 		cursorRequest.setError(null);
 		cursorRequest.setResult(this);
         DBEvent.invoke("onsuccess", cursorRequest, evt);
-        //TODO envolver num try cacth?? ou nao para a transacao com um erro desses?
 	}
 	
 	private void updateCursorValues()
@@ -251,6 +336,7 @@ public class DBCursor extends JavaScriptObject
 
 			JsArrayMixed key = JsArrayMixed.createArray().cast();
 			JsArrayMixed value = JsArrayMixed.createArray().cast();
+			JsArrayMixed primaryKey = JsArrayMixed.createArray().cast();
 
 			JsUtils.readPropertyValue(dbObject, keyColumnName, key);
 			JsUtils.readPropertyValue(dbObject, valueColumnName, value);
@@ -260,20 +346,29 @@ public class DBCursor extends JavaScriptObject
 			JsUtils.writePropertyValue(this, "key", key, true);
 			
 			//Update Value
+			JavaScriptObject decodeValue = DBUtil.decodeValue(value.getString(0));
 			if (StringUtils.unsafeEquals(valueColumnName, "value"))
 			{
-				setValue(DBUtil.decodeValue(value.getString(0)));
+				setValue(decodeValue);
 			}
 			else
 			{
 				value = DBUtil.decodeKey(value.getString(0));
 				JsUtils.writePropertyValue(this, "value", value, true);
 			}
+
+			//Update Primary Key
+			if (!StringUtils.isEmpty(objectStore.metadata.getKeyPath()))
+			{
+				JsUtils.readPropertyValue(decodeValue, objectStore.metadata.getKeyPath(), primaryKey);
+				JsUtils.writePropertyValue(this, "primaryKey", primaryKey, true);
+			}
 		}
 		else
 		{
 			JsUtils.writePropertyValue(this, "key", null, false);
 			JsUtils.writePropertyValue(this, "value", null, false);
+			JsUtils.writePropertyValue(this, "primaryKey", null, false);
 		}
 	}
 
@@ -324,4 +419,30 @@ public class DBCursor extends JavaScriptObject
 	private native void setSource(JavaScriptObject src)/*-{
 	    this.source = src;
     }-*/;
+	
+	private native void handleObjectNativeFunctions(DBCursor db)/*-{
+		function convertKey(key)
+		{
+			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
+			return keys; 
+		}
+		
+		this.update = function(value)
+		{
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::update(Lcom/google/gwt/core/client/JavaScriptObject;)(value);
+		};
+	
+		this.advance = function(count){
+			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::advance(I)(count);
+		};
+		this["delete"] = function(){
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::delete()();
+		};
+		this["continue"] = function(key){
+			var keys = convertKey(key);
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::continueCursor(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
+		};
+		this.key = this.value = this.primaryKey = null;
+	}-*/;
+	
 }

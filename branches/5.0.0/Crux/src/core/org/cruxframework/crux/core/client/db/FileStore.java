@@ -30,11 +30,6 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectDeleteEve
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 import org.cruxframework.crux.core.client.file.Blob;
-import org.cruxframework.crux.core.client.file.FileReader;
-import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
-import org.cruxframework.crux.core.client.utils.FileUtils;
-
-import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -59,27 +54,27 @@ public class FileStore extends DBObject
 
 	public void add(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback)
 	{
-		if (NativeDBHandler.usesWebSQL())
-		{
-			FileReader fileReader = FileReader.createIfSupported();
-			assert(fileReader != null):"Unsupported browser";
-			fileReader.readAsDataURL(file, new ReaderStringCallback()
-			{
-				@Override
-				public void onComplete(String result)
-				{
-					FileInfo fileInfo = FileInfo.createObject().cast();
-					fileInfo.setFileData(result);
-					IDBObjectStoreRequest storeRequest = idbObjectStore.add(fileInfo, fileName);
-					handleWriteCallback(callback, storeRequest);
-				}
-			});
-		}
-		else
-		{
+//		if (NativeDBHandler.usesWebSQL())
+//		{
+//			FileReader fileReader = FileReader.createIfSupported();
+//			assert(fileReader != null):"Unsupported browser";
+//			fileReader.readAsDataURL(file, new ReaderStringCallback()
+//			{
+//				@Override
+//				public void onComplete(String result)
+//				{
+//					FileInfo fileInfo = FileInfo.createObject().cast();
+//					fileInfo.setFileData(result);
+//					IDBObjectStoreRequest storeRequest = idbObjectStore.add(fileInfo, fileName);
+//					handleWriteCallback(callback, storeRequest);
+//				}
+//			});
+//		}
+//		else
+//		{
 			IDBObjectStoreRequest storeRequest = idbObjectStore.add(file, fileName);
 			handleWriteCallback(callback, storeRequest);
-		}
+//		}
 	}
 
 	public void put(Blob file, String fileName)
@@ -89,27 +84,27 @@ public class FileStore extends DBObject
 
 	public void put(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback)
 	{
-		if (NativeDBHandler.usesWebSQL())
-		{
-			FileReader fileReader = FileReader.createIfSupported();
-			assert(fileReader != null):"Unsupported browser";
-			fileReader.readAsDataURL(file, new ReaderStringCallback()
-			{
-				@Override
-				public void onComplete(String result)
-				{
-					FileInfo fileInfo = FileInfo.createObject().cast();
-					fileInfo.setFileData(result);
-					IDBObjectStoreRequest storeRequest = idbObjectStore.put(fileInfo, fileName);
-					handleWriteCallback(callback, storeRequest);
-				}
-			});
-		}
-		else
-		{
+//		if (NativeDBHandler.usesWebSQL())
+//		{
+//			FileReader fileReader = FileReader.createIfSupported();
+//			assert(fileReader != null):"Unsupported browser";
+//			fileReader.readAsDataURL(file, new ReaderStringCallback()
+//			{
+//				@Override
+//				public void onComplete(String result)
+//				{
+//					FileInfo fileInfo = FileInfo.createObject().cast();
+//					fileInfo.setFileData(result);
+//					IDBObjectStoreRequest storeRequest = idbObjectStore.put(fileInfo, fileName);
+//					handleWriteCallback(callback, storeRequest);
+//				}
+//			});
+//		}
+//		else
+//		{
 			IDBObjectStoreRequest storeRequest = idbObjectStore.put(file, fileName);
 			handleWriteCallback(callback, storeRequest);
-		}
+//		}
 	}
 
 	public void get(String key, DatabaseRetrieveCallback<Blob> callback)
@@ -358,15 +353,15 @@ public class FileStore extends DBObject
 						try
 						{
 							Blob file;
-							if (NativeDBHandler.usesWebSQL())
-							{
-								FileInfo fileInfo = event.getObject().cast();
-								file = FileUtils.fromDataURI(fileInfo.getFileData());
-							}
-							else
-							{
+//							if (NativeDBHandler.usesWebSQL())
+//							{
+//								FileInfo fileInfo = event.getObject().cast();
+//								file = FileUtils.fromDataURI(fileInfo.getFileData());
+//							}
+//							else
+//							{
 								file = event.getObject().cast();
-							}
+//							}
 							callback.onSuccess(file);
 							callback.setDb(null);
 						}
@@ -380,18 +375,18 @@ public class FileStore extends DBObject
 		}
 	}
 
-	static class FileInfo extends JavaScriptObject
-	{
-		protected FileInfo(){}
-
-		public final native String getFileData()/*-{
-			return this.fileData;
-		}-*/;
-
-		public final native void setFileData(String data)/*-{
-			this.fileData = data;
-		}-*/;
-	}
+//	static class FileInfo extends JavaScriptObject
+//	{
+//		protected FileInfo(){}
+//
+//		public final native String getFileData()/*-{
+//			return this.fileData;
+//		}-*/;
+//
+//		public final native void setFileData(String data)/*-{
+//			this.fileData = data;
+//		}-*/;
+//	}
 	
 	static class FileKeyRangeFactory implements KeyRangeFactory<String>
 	{

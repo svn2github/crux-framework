@@ -24,16 +24,16 @@ import com.google.gwt.dom.client.PartialSupport;
 @PartialSupport
 public class SQLDatabaseFactory
 {
-	public static SQLDatabase openDatabaseNative(String name, String version, String displayName, double estimatedSize)
+	public static SQLDatabase openDatabase(String name, int version, String displayName, double estimatedSize)
 	{
-		return openDatabaseNative(name, version, displayName, estimatedSize, null);
+		return openDatabase(name, version, displayName, estimatedSize, null);
 	}
 
-	public static native SQLDatabase openDatabaseNative(String name, String version, String displayName, double estimatedSize, DatabaseCallback creationCallback)/*-{
+	public static native SQLDatabase openDatabase(String name, int version, String displayName, double estimatedSize, DatabaseCallback creationCallback)/*-{
 		return $wnd.openDatabase(name, version, displayName, estimatedSize, function(db){
 			if (creationCallback)
 			{
-				creationCallback.@org.cruxframework.crux.core.client.db.websql.SQLDatabaseFactory.DatabaseCallback::(Lorg/cruxframework/crux/core/client/db/websql/SQLDatabase;)(db);
+				creationCallback.@org.cruxframework.crux.core.client.db.websql.SQLDatabaseFactory.DatabaseCallback::onCreated(Lorg/cruxframework/crux/core/client/db/websql/SQLDatabase;)(db);
 			}
 		});
 	}-*/;

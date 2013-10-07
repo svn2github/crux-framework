@@ -57,7 +57,7 @@ public class SQLDatabase extends JavaScriptObject
 		});
 	}-*/;
 
-	public final native void changeVersion(String oldVersion, String newVersion, SQLTransactionCallback transactionCallback, SQLTransactionErrorCallback transactionErrorCallback, SQLCallback successCallback)/*-{
+	public final native void changeVersion(int oldVersion, int newVersion, SQLTransactionCallback transactionCallback, SQLTransactionErrorCallback transactionErrorCallback, SQLCallback successCallback)/*-{
 		this.changeVersion(oldVersion, newVersion, function(tx){
 			transactionCallback.@org.cruxframework.crux.core.client.db.websql.SQLDatabase.SQLTransactionCallback::onTransaction(Lorg/cruxframework/crux/core/client/db/websql/SQLTransaction;)(tx);
 		}, function(error){
@@ -73,7 +73,7 @@ public class SQLDatabase extends JavaScriptObject
 		});
 	}-*/;
 
-	public final native String getVersion()/*-{
+	public final native int getVersion()/*-{
 		return this.version;
 	}-*/;
 	

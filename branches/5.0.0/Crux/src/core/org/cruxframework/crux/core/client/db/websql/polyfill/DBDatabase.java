@@ -235,11 +235,11 @@ public class DBDatabase extends JavaScriptObject
 		this.name = name;
 	}-*/;
 
-	private native void setVersion(String version)/*-{
+	private native void setVersion(int version)/*-{
 		this.version = version;
 	}-*/;
 	
-	public static DBDatabase create(SQLDatabase db, String name, String version, SQLResultSet storeProperties)
+	public static DBDatabase create(SQLDatabase db, String name, int version, SQLResultSet storeProperties)
 	{
 		DBDatabase database = createObject().cast();
 		database.setName(name);

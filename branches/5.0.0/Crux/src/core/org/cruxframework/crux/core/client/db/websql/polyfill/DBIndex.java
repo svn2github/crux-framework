@@ -13,20 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.websql;
+package org.cruxframework.crux.core.client.db.websql.polyfill;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface WebSQLResources extends ClientBundle
+public class DBIndex extends JavaScriptObject
 {
-	@Source("indexeddbshim.js")
-	ExternalTextResource indexeddbshim();
-
-	@Source("indexeddbshim_debug.js")
-	ExternalTextResource indexeddbshimDebug();
+	protected DBIndex (){}
+	
+	
+	
 }

@@ -19,20 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
-import org.cruxframework.crux.core.client.db.websql.WebSQLResources;
+import org.cruxframework.crux.core.client.db.websql.polyfill.DBBridge;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.core.client.ScriptInjector.FromString;
 import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -44,12 +37,12 @@ class NativeDBHandler
 	protected static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
 	private static boolean nativeDBInitialized = false; 
 	private static boolean nativeDBInitializing = false;
-	private static boolean debugMode = false;
+	private static boolean preferWebSQL = true;//TODO debug
 
 	public static interface Callback
 	{
 		void onSuccess();
-		void onError(Exception e);
+		void onError(Throwable e);
 	}
 	
 	public static boolean isInitialized()
@@ -71,7 +64,7 @@ class NativeDBHandler
 	    	}
 	    	else
 	    	{
-	    		if (IDBFactory.isSupported() && !debugMode)
+	    		if (!DBBridge.isWebSQLSupported() || (IDBFactory.isSupported() && !preferWebSQL))
 	    		{
 					nativeDBInitialized = true;
 					callback.onSuccess();
@@ -90,72 +83,39 @@ class NativeDBHandler
      */
     public static boolean isSupported()
     {
-    	return IDBFactory.isSupported() || isWebSQLSupported();
+    	return IDBFactory.isSupported() || DBBridge.isWebSQLSupported();
     }
-    
-    /**
-	 * 
-	 * @return
-	 */
-	public static native boolean isWebSQLSupported()/*-{
-		var sqlsupport = !!$wnd.openDatabase;
-		return sqlsupport;
-	}-*/;
 
 	private static void initializeWebSQL(final Callback callback)
     {
 	    nativeDBInitializing = true;
-	    WebSQLResources resources = GWT.create(WebSQLResources.class);
 
 	    try
 	    {
-	    	ResourceCallback<TextResource> resourceCallback = new ResourceCallback<TextResource>()
-	    	{
-	    		@Override
-	    		public void onSuccess(TextResource resource)
-	    		{
-	    			FromString injector = ScriptInjector.fromString(resource.getText());
-	    			injector.setWindow(getWindow());
-	    			injector.setRemoveTag(!debugMode);
-	    			injector.inject();
-	    			Scheduler.get().scheduleDeferred(new ScheduledCommand()
-	    			{
-	    				@Override
-	    				public void execute()
-	    				{
-	    					nativeDBInitialized = true;
-	    					nativeDBInitializing = false;
-	    	    			if (debugMode)
-	    	    			{
-	    	    				forceWebSQLUsage();
-	    	    			}
-	    					if (LogConfiguration.loggingIsEnabled())
-	    					{
-	    						DBMessages messages = GWT.create(DBMessages.class);
-	    						logger.log(Level.INFO, messages.databaseUsingWebSQL());
-	    					}
-	    					callback.onSuccess();
-	    				}
-	    			});
-	    		}
-
-	    		@Override
-	    		public void onError(ResourceException e)
-	    		{
+	    	DBBridge.installSQLBridge(new DBBridge.Callback()
+			{
+				@Override
+				public void onSuccess()
+				{
+					nativeDBInitialized = true;
+					nativeDBInitializing = false;
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						DBMessages messages = GWT.create(DBMessages.class);
+						logger.log(Level.INFO, messages.databaseUsingWebSQL());
+					}
+					callback.onSuccess();
+				}
+				
+				@Override
+				public void onError(Throwable e)
+				{
 	    			nativeDBInitializing = false;
 	    			callback.onError(e);
-	    		}
-	    	};
-	    	if (debugMode)
-	    	{
-	    		resources.indexeddbshimDebug().getText(resourceCallback);
-	    	}
-	    	else
-	    	{
-	    		resources.indexeddbshim().getText(resourceCallback);
-	    	}
+				}
+			});
 	    }
-	    catch (ResourceException e)
+	    catch (Exception e)
 	    {
 	    	nativeDBInitializing = false;
 	    	callback.onError(e);
@@ -186,21 +146,4 @@ class NativeDBHandler
 	    	}
 	    }, 10);
     }
-	
-	private static native JavaScriptObject getWindow()/*-{
-	    return $wnd;
-	}-*/;
-
-    private static native void forceWebSQLUsage()/*-{
-    	$wnd.shimIndexedDB.__useShim();
-    }-*/;
-    
-    static native boolean usesWebSQL()/*-{
-		if ($wnd.shimIndexedDB)
-		{
-			return true;
-		}
-		return false;
-	}-*/;
-    
 }

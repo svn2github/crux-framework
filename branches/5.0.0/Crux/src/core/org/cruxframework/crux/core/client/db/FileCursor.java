@@ -15,12 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import org.cruxframework.crux.core.client.db.FileStore.FileInfo;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 import org.cruxframework.crux.core.client.file.Blob;
-import org.cruxframework.crux.core.client.file.FileReader;
-import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
-import org.cruxframework.crux.core.client.utils.FileUtils;
 
 import com.google.gwt.core.client.JsArrayMixed;
 
@@ -30,12 +26,12 @@ import com.google.gwt.core.client.JsArrayMixed;
  */
 public class FileCursor extends Cursor<String, Blob>
 {
-	private boolean usesWebSQL;
+//	private boolean usesWebSQL;
 
 	protected FileCursor(IDBCursorWithValue idbCursor)
     {
 	    super(idbCursor);
-		usesWebSQL = NativeDBHandler.usesWebSQL();
+//		usesWebSQL = NativeDBHandler.usesWebSQL();
     }
 
 	@Override
@@ -49,25 +45,25 @@ public class FileCursor extends Cursor<String, Blob>
 	@Override
     public void update(final Blob file)
     {
-		if (usesWebSQL)
-		{
-			FileReader fileReader = FileReader.createIfSupported();
-			assert(fileReader != null):"Unsupported browser";
-			fileReader.readAsDataURL(file, new ReaderStringCallback()
-			{
-				@Override
-				public void onComplete(String result)
-				{
-					FileInfo fileInfo = FileInfo.createObject().cast();
-					fileInfo.setFileData(result);
-					idbCursor.update(file);
-				}
-			});
-		}
-		else
-		{
+//		if (usesWebSQL)
+//		{
+//			FileReader fileReader = FileReader.createIfSupported();
+//			assert(fileReader != null):"Unsupported browser";
+//			fileReader.readAsDataURL(file, new ReaderStringCallback()
+//			{
+//				@Override
+//				public void onComplete(String result)
+//				{
+//					FileInfo fileInfo = FileInfo.createObject().cast();
+//					fileInfo.setFileData(result);
+//					idbCursor.update(file);
+//				}
+//			});
+//		}
+//		else
+//		{
 			idbCursor.update(file);
-		}
+//		}
     }
 
 	@Override
@@ -79,11 +75,11 @@ public class FileCursor extends Cursor<String, Blob>
 	@Override
     public Blob getValue()
     {
-		if (usesWebSQL)
-		{
-		    FileInfo fileInfo = idbCursor.getValue().cast();
-			return FileUtils.fromDataURI(fileInfo.getFileData());
-		}
+//		if (usesWebSQL)
+//		{
+//		    FileInfo fileInfo = idbCursor.getValue().cast();
+//			return FileUtils.fromDataURI(fileInfo.getFileData());
+//		}
 	    return idbCursor.getValue().cast();
     }
 

@@ -40,8 +40,8 @@ public class DBObjectStore extends JavaScriptObject
 {
 	protected static Logger logger = Logger.getLogger(DBObjectStore.class.getName());
 
+	protected DBObjectStoreMetadata metadata;
 	private Map<Boolean> ready = CollectionFactory.createMap();
-	private DBObjectStoreMetadata metadata;
 
 	protected DBObjectStore(){}
 
@@ -726,21 +726,27 @@ public class DBObjectStore extends JavaScriptObject
     }-*/;
 
 	private native void handleObjectNativeFunctions(DBObjectStore db)/*-{
+		function convertKey(key)
+		{
+			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
+			return keys; 
+		}
+		
 		this.add = function(value, key){
-			var keys = [key];
+			var keys = convertKey(key);
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::add(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(value, keys);
 		};
 	
 		this.put = function(value, key){
-			var keys = [key];
+			var keys = convertKey(key);
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::put(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(value, keys);
 		};
 		this["delete"] = function(key){
-			var keys = [key];
+			var keys = convertKey(key);
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::delete(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
 		};
 		this.get = function(key){
-			var keys = [key];
+			var keys = convertKey(key);
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::get(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
 		};
 		this.clear = function(){

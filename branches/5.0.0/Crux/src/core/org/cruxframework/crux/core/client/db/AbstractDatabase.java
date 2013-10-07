@@ -416,7 +416,7 @@ public abstract class AbstractDatabase implements Database
 			}
 			
 			@Override
-			public void onError(Exception e)
+			public void onError(Throwable e)
 			{
 				if (LogConfiguration.loggingIsEnabled())
 				{
