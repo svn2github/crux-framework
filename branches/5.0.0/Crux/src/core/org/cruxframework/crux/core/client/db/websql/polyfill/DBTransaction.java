@@ -227,7 +227,6 @@ public class DBTransaction extends JavaScriptObject
 			return;
 		}
 		setRunning(true);
-		final DBTransaction me = this;
 		Scheduler.get().scheduleDeferred(new ScheduledCommand()
 		{
 			@Override
@@ -238,7 +237,7 @@ public class DBTransaction extends JavaScriptObject
 					throwError("not active", "A request was placed against a transaction which is currently not active, or which is finished");
 				}
 				
-				getDatabase().getSQLDatabase().transaction(new SQLDatabase.SQLTransactionCallback()
+				SQLDatabase.SQLTransactionCallback transactionCallback = new SQLDatabase.SQLTransactionCallback()
 				{
 					@Override
 					public void onTransaction(SQLTransaction tx)
@@ -247,7 +246,8 @@ public class DBTransaction extends JavaScriptObject
 						executeRequest(0);
 					}
 
-				}, new SQLDatabase.SQLTransactionErrorCallback()
+				};
+				SQLDatabase.SQLTransactionErrorCallback transactionErrorCallback = new SQLDatabase.SQLTransactionErrorCallback()
 				{
 					@Override
 					public void onError(SQLError error)
@@ -256,9 +256,10 @@ public class DBTransaction extends JavaScriptObject
 						{
 							logger.log(Level.SEVERE, "An error in transaction. Error name [" +error.getName()+"]. Error message ["+error.getMessage()+"]");
 						}
-						fireOnError(me);
+						throwError(error.getName(), error.getMessage());
 					}
-				}, new SQLDatabase.SQLCallback()
+				};
+				SQLDatabase.SQLCallback successCallback = new SQLDatabase.SQLCallback()
 				{
 					@Override
 					public void onSuccess()
@@ -267,9 +268,18 @@ public class DBTransaction extends JavaScriptObject
 						{
 							logger.log(Level.FINE, "Transaction completed.");
 						}
-						fireOnComplete(me);
+						fireOnComplete();
+						setRunning(false);
 					}
-				});
+				};
+				if (StringUtils.unsafeEquals(READ, getMode()))
+				{
+					getDatabase().getSQLDatabase().readTransaction(transactionCallback, transactionErrorCallback, successCallback);
+				}
+				else
+				{
+					getDatabase().getSQLDatabase().transaction(transactionCallback, transactionErrorCallback, successCallback);
+				}
 			}
 		});
 	}
@@ -280,11 +290,7 @@ public class DBTransaction extends JavaScriptObject
 		{
 			if (requestIdx >= getRequests().size())
 			{
-				setActive(false);
-				getRequests().clear();
-				DBEvent evt = DBEvent.create("complete");
-				DBEvent.invoke("oncomplete", this, evt);
-				
+//				fireOnComplete();
 				return;
 			}
 			
@@ -297,7 +303,7 @@ public class DBTransaction extends JavaScriptObject
 			{
 				logger.log(Level.SEVERE, "An exception occured in transaction. Error message ["+e.getMessage()+"]", e);
 			}
-			fireOnError(this);
+			throwError("Request Error", e.getMessage());
 		}
     }
 	
@@ -315,14 +321,14 @@ public class DBTransaction extends JavaScriptObject
 		this.oncomplete= null;
 	}-*/;
 
-	private final native void fireOnComplete(DBTransaction me)/*-{
-		typeof me.oncomplete === "function" && me.oncomplete();	
-	}-*/;
-	
-	
-	private final native void fireOnError(DBTransaction me)/*-{
-		typeof me.onerror === "function" && me.onerror();	
-	}-*/;
+	private void fireOnComplete()
+	{
+		setActive(false);
+		setRunning(false);
+		getRequests().clear();
+		DBEvent evt = DBEvent.create("complete");
+		DBEvent.invoke("oncomplete", this, evt);
+	}
 	
 	public static DBTransaction create(JsArrayString storeNames, String mode, DBDatabase db)
 	{

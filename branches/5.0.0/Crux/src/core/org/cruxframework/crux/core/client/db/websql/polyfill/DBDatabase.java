@@ -24,6 +24,7 @@ import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSetRowList;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
+import org.cruxframework.crux.core.client.utils.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
@@ -176,7 +177,7 @@ public class DBDatabase extends JavaScriptObject
 					@Override
                     public void onSuccess(SQLTransaction tx, SQLResultSet rs)
                     {
-						if (rs.getRowsAffected() > 0)
+						if (rs.getRows().length() > 0)
 						{
 							String sql = "DROP TABLE \""+storeName+"\"";
 							if (LogConfiguration.loggingIsEnabled())
@@ -272,11 +273,11 @@ public class DBDatabase extends JavaScriptObject
 		database.setName(name);
 		database.setVersion(version);
 		Array<String> storeNames = Array.createArray().cast();
-		int rowsAffected = storeProperties.getRowsAffected();
+		int length = storeProperties.getRows().length();
 		SQLResultSetRowList rows = storeProperties.getRows();
-		for (int i=0; i < rowsAffected; i++)
+		for (int i=0; i < length; i++)
 		{
-			storeNames.add(rows.itemString(i));
+			storeNames.add(JsUtils.readStringPropertyValue(rows.itemObject(i), "name"));
 		}
 		database.setStoreProperties(storeProperties);
 		database.setObjectStoreNames(storeNames);

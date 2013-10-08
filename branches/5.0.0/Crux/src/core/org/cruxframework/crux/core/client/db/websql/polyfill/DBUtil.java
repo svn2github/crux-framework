@@ -84,7 +84,7 @@ public class DBUtil
 				}
 			});
 		}
-		callback.onEncode(object.toString());
+		callback.onEncode(new JSONObject(object).toString());
 		return;
 	}
 	

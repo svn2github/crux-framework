@@ -153,7 +153,7 @@ public class DBFactory
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 					{
-						if (rs.getRowsAffected() == 0)
+						if (rs.getRows().length() == 0)
 						{
 							request.setResult((String)null);
 	        				DBEvent evt = DBEvent.create("success");
@@ -187,7 +187,7 @@ public class DBFactory
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 					{
-						int length = rs.getRowsAffected();
+						int length = rs.getRows().length();
 						String sql;
 						final JsArrayMixed args = JsArrayMixed.createArray().cast();
 						for (int i=0; i< length; i++)
@@ -270,7 +270,7 @@ public class DBFactory
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 					{
-						if (rs.getRowsAffected() > 0)
+						if (rs.getRows().length() > 0)
 						{
 							JsArrayMixed output = JsArrayMixed.createArray().cast();
 							JsUtils.readPropertyValue(rs.getRows().itemObject(0), "version", output); 
@@ -289,7 +289,7 @@ public class DBFactory
 								@Override
 								public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 								{
-						              openDB(name, 0, version, request, errorCallback);
+									openDB(name, 0, version, request, errorCallback);
 								}
 							}, errorCallback);
 						}
@@ -339,8 +339,8 @@ public class DBFactory
                             public void onSuccess(SQLTransaction tx, SQLResultSet rs)
                             {
 								final DBDatabase dbDatabase = DBDatabase.create(database, name, newVersion, rs);
-								request.setSource(database);
-								request.setResult(database);
+								request.setSource(dbDatabase);
+								request.setResult(dbDatabase);
 								if (oldVersion < newVersion)
 								{
 									updateDBVersionAndOpen(name, oldVersion, newVersion, request, errorCallback, dbDatabase);
@@ -440,6 +440,7 @@ public class DBFactory
 
 		function convertKey(key)
 		{
+			if (!key) return null;
 			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
 			return keys; 
 		}

@@ -165,7 +165,7 @@ public class DBCursor extends JavaScriptObject
 						String sql = new StringBuilder("UPDATE \"").append(getObjectStore().getName()).append("\" SET value = ? WHERE key = ?").toString(); 
 						if (LogConfiguration.loggingIsEnabled())
 						{
-							logger.log(Level.FINE, "UPDATE SQL ["+sql+"]");
+							logger.log(Level.FINE, "Running SQL ["+sql+"]");
 						}
 						final JsArrayMixed key = JsArrayMixed.createArray().cast();
 						JsUtils.readPropertyValue(me, "key", key);
@@ -309,7 +309,7 @@ public class DBCursor extends JavaScriptObject
 				{
 					setResultSet(rs);
 					setOffset(CURSOR_BEGIN);
-					setLength(rs.getRowsAffected());
+					setLength(rs.getRows().length());
 					fireSuccessEvent();
 				}
 			}, new SQLTransaction.SQLStatementErrorCallback()
@@ -479,6 +479,7 @@ public class DBCursor extends JavaScriptObject
 	private native void handleObjectNativeFunctions(DBCursor db)/*-{
 		function convertKey(key)
 		{
+			if (!key) return null;
 			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
 			return keys; 
 		}

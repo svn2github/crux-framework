@@ -27,7 +27,7 @@ public class SQLTransaction extends JavaScriptObject
 	protected SQLTransaction(){}
 	
 	public final native void executeSQL(String sqlStatement, JsArrayMixed args, SQLStatementCallback stmtCallback, SQLStatementErrorCallback errorCallback)/*-{
-		this.executeSQL(sqlStatement, args, function(tx,rs){
+		this.executeSql(sqlStatement, args, function(tx,rs){
 			if (stmtCallback)
 			{
 				stmtCallback.@org.cruxframework.crux.core.client.db.websql.SQLTransaction.SQLStatementCallback::onSuccess(Lorg/cruxframework/crux/core/client/db/websql/SQLTransaction;Lorg/cruxframework/crux/core/client/db/websql/SQLResultSet;)(tx,rs);

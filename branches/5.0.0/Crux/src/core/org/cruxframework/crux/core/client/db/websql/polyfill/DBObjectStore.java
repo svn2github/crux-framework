@@ -94,7 +94,7 @@ public class DBObjectStore extends JavaScriptObject
 					@Override
 					public void execute(final JsArrayMixed key)
 					{
-					    String sql = "DELETE FROM \"" + getName() + "\" where key = ?";
+					    String sql = "DELETE FROM \"" + getName() + "\" WHERE key = ?";
 						if (LogConfiguration.loggingIsEnabled())
 						{
 							logger.log(Level.FINE, "Removing old record ["+key+"], on object store ["+getName()+"]. SQL ["+sql+"]");
@@ -151,7 +151,7 @@ public class DBObjectStore extends JavaScriptObject
 					@Override
 					public void execute()
 					{
-					    String sql = "DELETE FROM \"" + getName() + "\" where key = ?";
+					    String sql = "DELETE FROM \"" + getName() + "\" WHERE key = ?";
 						if (LogConfiguration.loggingIsEnabled())
 						{
 							logger.log(Level.FINE, "Removing old record ["+key+"], on object store ["+getName()+"]. SQL ["+sql+"]");
@@ -209,7 +209,7 @@ public class DBObjectStore extends JavaScriptObject
 					@Override
 					public void execute()
 					{
-						String sql = "SELECT * FROM \"" + getName() + "\" where key = ?";
+						String sql = "SELECT * FROM \"" + getName() + "\" WHERE key = ?";
 						if (LogConfiguration.loggingIsEnabled())
 						{
 							logger.log(Level.FINE, "Retrieving record ["+key+"], on object store ["+getName()+"]. SQL ["+sql+"]");
@@ -221,7 +221,7 @@ public class DBObjectStore extends JavaScriptObject
 							@Override
 							public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 							{
-								if (rs.getRowsAffected() > 0)
+								if (rs.getRows().length() > 0)
 								{
 									JsArrayMixed result = JsArrayMixed.createArray().cast();
 									JsUtils.readPropertyValue(rs.getRows().itemObject(0), "value", result);
@@ -503,7 +503,7 @@ public class DBObjectStore extends JavaScriptObject
 				}
 				else
 				{
-					String sql = "SELECT * FROM __sys__ where name = ?";
+					String sql = "SELECT * FROM __sys__ WHERE name = ?";
 					JsArrayMixed args = JsArrayMixed.createArray().cast();
 					args.push(getName());
 					tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
@@ -511,7 +511,7 @@ public class DBObjectStore extends JavaScriptObject
 						@Override
 						public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 						{
-							if (rs.getRowsAffected() != 1)
+							if (rs.getRows().length() != 1)
 							{
 								requestOp.throwError("Not Found", "Error Reading object store metadata. Store name ["+getName()+"]. No rows found on system table.");
 								return;
@@ -587,10 +587,10 @@ public class DBObjectStore extends JavaScriptObject
 
 	private void readNextAutoIncKey(final DBTransaction.RequestOperation requestOp, SQLTransaction tx, final CallbackKey callback)
 	{
-		String sql = "SELECT * FROM sqlite_sequence where name like ?";
+		String sql = "SELECT * FROM sqlite_sequence WHERE name LIKE ?";
 		if (LogConfiguration.loggingIsEnabled())
 		{
-			logger.log(Level.FINE, "Reading next value from sequence. SQL["+sql+"].");
+			logger.log(Level.FINE, "Running SQL["+sql+"].");
 		}
 		JsArrayMixed args = JsArrayMixed.createArray().cast();
 		args.push(getName());
@@ -601,7 +601,7 @@ public class DBObjectStore extends JavaScriptObject
 			{
 				JsArrayMixed key = JsArrayMixed.createArray().cast();
 
-				if (rs.getRowsAffected() != 1)
+				if (rs.getRows().length() != 1)
 				{
 					key.push(0);//TODO melhor reportar erro?
 				}
@@ -778,6 +778,7 @@ public class DBObjectStore extends JavaScriptObject
 	private native void handleObjectNativeFunctions(DBObjectStore db)/*-{
 		function convertKey(key)
 		{
+			if (!key) return null;
 			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
 			return keys; 
 		}
