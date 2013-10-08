@@ -135,6 +135,8 @@ public class AppCacheLinker extends AbstractLinker
 		String selectionScriptText;
 		StringBuffer buffer = readFileToStringBuffer(getSelectionScriptTemplate(logger, context), logger);
 		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts);
+		//fix for some browsers like IE that cannot see the $doc variable outside the iframe tag.  
+		selectionScriptText = selectionScriptText.replace("$doc", "document");
 		selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
 		return selectionScriptText;
 	}
