@@ -40,7 +40,7 @@ public class DBRequest extends JavaScriptObject
         this.readyState = "pending";
 	}-*/;
 	
-	protected native void setTransaction(DBTransaction dbTransaction)/*-{
+	protected final native void setTransaction(DBTransaction dbTransaction)/*-{
 		this.transaction = dbTransaction;
     }-*/;
 
@@ -48,7 +48,7 @@ public class DBRequest extends JavaScriptObject
 		return this.transaction;
 	}-*/;
 
-	protected native void setSource(JavaScriptObject src)/*-{
+	protected final native void setSource(JavaScriptObject src)/*-{
 		this.source = src;
     }-*/;
 	
@@ -60,27 +60,27 @@ public class DBRequest extends JavaScriptObject
 		return this.readyState;
 	}-*/;
 	
-	protected native void setReadyState(String state)/*-{
+	protected final native void setReadyState(String state)/*-{
 		this.readyState = state;
 	}-*/;
 
-	protected native void setError(DBError error)/*-{
+	protected final native void setError(DBError error)/*-{
 		this.error = error;
 	}-*/;
 
-	public final native void setResult(JavaScriptObject object)/*-{
+	protected final native void setResult(JavaScriptObject object)/*-{
 	    this.result = object;
     }-*/;
 
-	public final native void setResult(String value)/*-{
+	protected final native void setResult(String value)/*-{
 	    this.result = value;
     }-*/;
 
-	public final native void setResult(double value)/*-{
+	protected final native void setResult(double value)/*-{
 	    this.result = value;
     }-*/;
 
-	public final void setContentAsResult(JsArrayMixed object)
+	protected final void setContentAsResult(JsArrayMixed object)
 	{
 		JsUtils.writePropertyValue(this, "result", object, true);
 	}
