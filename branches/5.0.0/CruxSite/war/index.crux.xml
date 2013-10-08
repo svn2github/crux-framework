@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
+>
+	<head>
+		<title>Crux Framework</title>
+		<meta name="fragment" content="!" />
+	</head>
+	
+	<body>
+		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
+		
+		<c:screen useController="mainController" useView="**/views/*" 
+			smallViewport="user-scalable=no, width=320" 
+			largeViewport="user-scalable=no, width=device-width, height=device-height"
+			useResource="xStandardResources,siteResources"/>
+
+		<crux:topMenuDisposal id="menuDisposal" defaultView="home">
+			<crux:menuEntry targetView="home" label="Home"/>
+			<crux:menuEntry targetView="info" label="Saiba Mais"/>
+			<crux:menuEntry targetView="quickstart" label="Quick Start"/>
+			<crux:menuEntry targetView="exemplos" label="Exemplos"/>
+			<crux:menuEntry targetView="downloads" label="Downloads"/>
+		</crux:topMenuDisposal>
+	</body>
+</html>

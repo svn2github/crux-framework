@@ -1,0 +1,262 @@
+@url urlMountainBg mountainBg;
+HTML
+{
+/* 	background-image: urlMountainBg; */
+/* 	background-repeat: no-repeat; */
+/* 	background-position: bottom; */
+/* 	background-size: 100%; */
+	height: 100%;
+}
+@url urlNoiseBg noiseBg;
+BODY
+{
+	background-image: urlNoiseBg;
+	background-color: #E5E5E5;
+	min-height: 100%;
+}
+
+@external viewContainer;
+.viewContainer
+{
+	padding-bottom: 20px;
+}
+
+@url urlTopMenuDisposalHeaderLogo topMenuDisposalHeaderLogo;
+@external crux-TopMenuDisposal, disposalWrapper, headerPanel, showMenuButton, menuPanel, menuEntry, contentPanel, gwt-MenuBar;
+.disposalWrapper
+{
+	text-align: center;
+}
+.crux-TopMenuDisposal .headerPanel
+{
+	background-color: #00242C !important;
+	background-image: urlTopMenuDisposalHeaderLogo;
+	background-repeat: no-repeat;
+	background-position: center top;
+	border-bottom: solid 6px #7E979B;
+	height: 224px;
+	border-bottom: solid 6px #7e979b;
+	margin-bottom: 8px;
+	box-shadow: 0px 1px #005070, 0px 2px #F0F0F0;
+}
+.crux-TopMenuDisposal .menuPanel
+{
+	text-align: center;
+	padding-top: 180px;
+}
+.crux-TopMenuDisposal .gwt-MenuBar
+{
+	background: transparent !important;
+	display: inline-block;
+	margin-left: 100px;
+}
+.crux-TopMenuDisposal .gwt-MenuBar TABLE
+{
+	border-spacing: 0;
+}
+.crux-TopMenuDisposal .menuEntry
+{
+	background: transparent !important;
+	color: white;
+	font-weight: normal;
+	font-size: 14px;
+	padding-left: 30px;
+	border-left: solid 1px #95C410;
+	padding-right: 30px;
+	border-right: solid 1px #6b9210;
+	height: 30px;
+	cursor: pointer;
+}
+.crux-TopMenuDisposal .gwt-MenuBar TABLE TR TD:first-child
+{
+	border-left: solid 0px;
+}
+.crux-TopMenuDisposal .gwt-MenuBar TABLE TR TD:last-child
+{
+	border-right: solid 0px;
+}
+.crux-TopMenuDisposal .contentPanel
+{
+	width: 898px !important;
+	display: inline-block;
+	min-height: 400px;
+}
+
+@external crux-PromoBanner, title, text, leftArrow, rightArrow, leftArrow-disabled, rightArrow-disabled, bullet, bullet-active;
+@external crux-HorizontalSwapPanel;
+@sprite .crux-PromoBanner .rightArrow
+{
+	width: 44px;
+	height: 65px;
+	gwt-image: "bannerRightArrow";
+	cursor: pointer;
+}
+@sprite .crux-PromoBanner .leftArrow
+{
+	width: 40px;
+	height: 65px;
+	gwt-image: "bannerLeftArrow";
+	cursor: pointer;
+}
+.crux-PromoBanner .leftArrow-disabled, .crux-PromoBanner .rightArrow-disabled
+{
+	opacity: .5;
+}
+.crux-PromoBanner .bullet
+{
+	width: 10px;
+	height: 10px;
+	background: rgba(0, 0, 0, 0.5);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.2) inset;
+	border: 1px solid white;
+	border-radius: 10px;
+	margin-right: 15px;
+	float: left;
+	cursor: pointer;
+	margin-top: 15px;
+}
+.crux-PromoBanner .bullet-active
+{
+	box-shadow: 0 0 3px rgba(255,255,255,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
+	background: white !important;
+}
+.crux-PromoBanner DIV
+{
+	outline: none;
+}
+.crux-PromoBanner .title
+{
+	font-size: 30px;
+	color: #222;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	font-weight: bold;
+	margin-left: 30px;
+	margin-top: 20px;
+}
+.crux-PromoBanner .text
+{
+	background-attachment: scroll;
+	color: #153A42;
+	font-size: 24px;
+	margin-left: 30px;
+	margin-top: 20px;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
+	width: 380px;
+}
+
+@url urlViewTextPanelBg viewTextPanelBg;
+@external viewTextPanel;
+.viewTextPanel 
+{
+	background-image: urlViewTextPanelBg;
+	background-size: 100% 100%;
+	min-height: 200px;
+	background-repeat: no-repeat;
+	margin-left: 5px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	padding: 20px;
+	text-align: left;
+}
+
+.viewTextPanel, .viewTextPanel h1, .viewTextPanel h2, .viewTextPanel p 
+{
+	color: #153A42;
+	text-shadow: rgba(255, 255, 255, 1) 0px 1px 0px;
+	font-weight: normal;
+}
+.viewTextPanel h1
+{
+	color: #155a62;
+	font-size: 18px;
+	font-weight: bold;
+}
+.viewTextPanel h2
+{
+	font-size: 14px;
+	font-weight: bold;
+	color: #155a62;
+}
+.viewTextPanel p
+{
+	font-size: 14px;
+}
+
+@external itemSlot, infoButton;
+.itemSlot 
+{
+	width: 300px !important;
+	height: 200px !important;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 5px 2px rgba(0,0,0,0.15);
+	border-radius: 4px;
+	border: solid 0;
+	text-align: center;
+	color: white;
+	font-size: 17px;
+	-webkit-transition: all 0.3s linear;
+	display: inline-block;
+	margin: 25px;
+	position: relative;
+}
+.itemSlot:hover
+{
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.9);
+}
+.infoButton
+{
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	height: 50%;
+	width: 100%;
+	border: solid 0px;
+	background-color: rgba(255,255,255,0.9);
+	bottom: 0px;
+	position: absolute;
+	left: 0px;
+	border-top: solid 1px rgba(255,255,255,1);
+	box-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+	cursor: pointer;
+	color: #055a72;
+	font-family: Helvetica;
+	text-shadow: rgba(255,255,255,0.496094) 0 1px 0;
+	font-weight: normal;
+	font-size: 18px;
+}
+
+@external infoSlot, fastInfo, javaInfo, crossInfo, aboutInfo;
+.infoSlot
+{
+	background-position: -400px -10px !important;
+	background-size: 800px !important;
+}
+@sprite .fastInfo{
+	gwt-image: "bannerFast";	
+}
+@sprite .javaInfo{
+	gwt-image: "bannerJava";	
+}
+@sprite .crossInfo{
+	gwt-image: "bannerCrossDevice";	
+}
+@sprite .aboutInfo{
+	gwt-image: "bannerSocial";	
+}
+
+@external appSlot, helloApp, helloCrossDevApp, siteApp, showcaseApp;
+.appSlot{
+	background-position: 0px 0px !important;
+	background-size: 100% auto !important;
+}
+
+@sprite .helloApp{
+	gwt-image: "codeBg";	
+}
+@sprite .helloCrossDevApp{
+	gwt-image: "codeBg";	
+}
+@sprite .siteApp{
+	gwt-image: "codeBg";	
+}
+@sprite .showcaseApp{
+	gwt-image: "codeBg";	
+}

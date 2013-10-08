@@ -1,0 +1,58 @@
+@url urlTopMenuDisposalHeaderLogo topMenuDisposalHeaderLogo; 
+@external crux-TopMenuDisposal, headerPanel, showMenuButton, menuPanel, menuEntry;
+.crux-TopMenuDisposal .headerPanel
+{
+	background-color: #003C47 !important;
+	background-image: urlTopMenuDisposalHeaderLogo;
+	background-repeat: no-repeat;
+	background-position: right 10px;
+	border-bottom: solid 3px #C0D406;
+	background-size: 75%; 
+	box-shadow: 0px 1px 0px #639700;
+	margin-bottom: 1px;
+}
+.crux-TopMenuDisposal .menuPanel .menuEntry
+{
+	width: 100%;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	border-radius: 0px !important;
+	background-image: -webkit-linear-gradient(#85b603,rgba(133,182,2,1.0) 38%, #6ca000);
+	border: solid 0px;
+	border-bottom: 1px solid rgba(82, 129, 0, 1);
+	cursor: pointer;
+}
+
+@external crux-PromoBanner, title, text, leftArrow, rightArrow, leftArrow-disabled, rightArrow-disabled, bullet, bullet-active;
+@external crux-HorizontalSwapPanel;
+.crux-PromoBanner DIV
+{
+	background-size: cover !important;
+	background-position: center !important;
+}
+.crux-PromoBanner
+{
+	box-shadow: 0 5px #7e979b, 0 6px #005070, 0 7px #F0F0F0;
+	margin-bottom: 8px !important;
+}
+.crux-PromoBanner .title
+{
+	font-size: 22px;
+	color: #222;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	margin-left: 10px;
+	margin-top: 65px;
+}
+.crux-PromoBanner .text
+{
+	background-attachment: scroll;
+	color: #153A42;
+	font-size: 15px;
+	margin-left: 10px;
+	margin-top: 8px;
+	text-align: justify;
+	text-shadow: rgba(255, 255, 255, 0.496094) 0px 1px 0px;
+	width: 95%;
+}
+
+
