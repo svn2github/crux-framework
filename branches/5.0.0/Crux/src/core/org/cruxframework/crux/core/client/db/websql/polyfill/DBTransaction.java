@@ -18,7 +18,7 @@ package org.cruxframework.crux.core.client.db.websql.polyfill;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.db.websql.SQLDatabase;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
@@ -42,46 +42,33 @@ public class DBTransaction extends JavaScriptObject
     static final String READ_WRITE = "readwrite";
     static final String VERSION_TRANSACTION = "versionchange";
  
-	protected static Logger logger = Logger.getLogger(DBTransaction.class.getName());
+	private static Logger logger = Logger.getLogger(DBTransaction.class.getName());
 
-	private FastList<RequestOperation> requests = new FastList<RequestOperation>();
-	private SQLTransaction sqlTransaction;
-	private boolean active;
-	private boolean running;
-	private boolean aborted;
-
-	
 	protected DBTransaction(){}
 	
-	public final boolean isRunning()
-	{
+	public native final boolean isRunning()/*-{
 		return this.running;
-	}
+	}-*/;
 	
-	void setRunning(boolean val)
-	{
+	final native void setRunning(boolean val)/*-{
 		this.running = val;
-	}
+	}-*/;
 	
-	public final boolean isActive()
-	{
+	public native final boolean isActive()/*-{
 		return this.active;
-	}
+	}-*/;
 	
-	void setActive(boolean val)
-	{
+	final native void setActive(boolean val)/*-{
 		this.active = val;
-	}
+	}-*/;
 	
-	public final boolean isAborted()
-	{
+	public native final boolean isAborted()/*-{
 		return this.aborted;
-	}
+	}-*/;
 
-	void setAborted(boolean val)
-	{
+	final native void setAborted(boolean val)/*-{
 		this.aborted = val;
-	}
+	}-*/;
 
 	public final native String getMode()/*-{
 		return this.mode;
@@ -107,23 +94,39 @@ public class DBTransaction extends JavaScriptObject
 		this.error = val;
 	}-*/;
 
-    public final DBObjectStore objectStore(String objectStoreName)
+	final native SQLTransaction getSQLTransaction()/*-{
+		return this.sqlTransaction;
+	}-*/;
+
+	final native void setSQLTransaction(SQLTransaction tx)/*-{
+		this.sqlTransaction = tx;
+	}-*/;
+	
+	final native Array<RequestOperation> getRequests()/*-{
+		return this.requests;
+	}-*/;
+	
+	final native void setRequests(Array<RequestOperation> r)/*-{
+		this.requests = r;
+	}-*/;
+	
+    public static DBObjectStore objectStore(DBTransaction db, String objectStoreName)
     {
-        return DBObjectStore.create(objectStoreName, this, true);
+        return DBObjectStore.create(objectStoreName, db, true);
     }
     
-    public final void abort()
+    public static void abort(DBTransaction db)
     {
-    	abort(true);
+    	db.abort(true);
     }
     
     public final void abort(boolean fireEvent)
     {
         if (!isAborted() && isActive())
         {
-        	if (sqlTransaction != null)
+        	if (getSQLTransaction() != null)
         	{
-        		sqlTransaction.executeSQL("invalid sql statement", null, null, new SQLStatementErrorCallback()
+        		getSQLTransaction().executeSQL("invalid sql statement", null, null, new SQLStatementErrorCallback()
         		{
         			@Override
         			public boolean onError(SQLTransaction tx, SQLError error)
@@ -132,12 +135,12 @@ public class DBTransaction extends JavaScriptObject
         			}
         		});
         		
-        		sqlTransaction = null;
+        		setSQLTransaction(null);
         	}
         	setAborted(true);
         	setActive(false);
         	setRunning(false);
-        	requests.clear();
+        	getRequests().clear();
         	if (fireEvent)
         	{
         		DBEvent evt = DBEvent.create("abort");
@@ -146,7 +149,7 @@ public class DBTransaction extends JavaScriptObject
         }
     }
     
-	protected DBRequest addToTransactionQueue(RequestOperation operation, JavaScriptObject source, String[] supportedModes)
+	protected final DBRequest addToTransactionQueue(RequestOperation operation, JavaScriptObject source, String[] supportedModes)
 	{
 		if (!isActive() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION)) 
 		{
@@ -163,7 +166,7 @@ public class DBTransaction extends JavaScriptObject
 		return request;
 	}
 	    
-	protected DBRequest createRequest(JavaScriptObject source)
+	protected final DBRequest createRequest(JavaScriptObject source)
 	{
 		DBRequest request = DBRequest.create();
 		request.setSource(source);
@@ -171,17 +174,17 @@ public class DBTransaction extends JavaScriptObject
 		return request;
 	}
 	
-	protected void pushToQueue(DBRequest request, RequestOperation operation)//args 
+	protected final void pushToQueue(DBRequest request, RequestOperation operation)//args 
 	{		
-		requests.add(operation);
+		getRequests().add(operation);
 		operation.setTransaction(this);
-		operation.setRequestIndex(requests.size()-1);
+		operation.setRequestIndex(getRequests().size()-1);
 		operation.setRequest(request);
         // Start the queue for executing the requests
         executeRequests();
     }
 
-	protected boolean isAllowedOperation(String[] supportedModes)
+	protected final boolean isAllowedOperation(String[] supportedModes)
 	{
 		for (String supported : supportedModes)
         {
@@ -194,12 +197,12 @@ public class DBTransaction extends JavaScriptObject
 		return false;
 	}
 	
-    protected DBError throwError(DBError error)
+    protected final DBError throwError(DBError error)
     {
     	return throwError(error.getName(), error.getMessage());
     }
     
-    protected DBError throwError(String errorName, String message)
+    protected final DBError throwError(String errorName, String message)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -213,7 +216,7 @@ public class DBTransaction extends JavaScriptObject
 		return error;
     }
 	
-	private void executeRequests()
+	private final void executeRequests()
 	{
 		if (isRunning() && !StringUtils.unsafeEquals(getMode(), VERSION_TRANSACTION))
 		{
@@ -240,7 +243,7 @@ public class DBTransaction extends JavaScriptObject
 					@Override
 					public void onTransaction(SQLTransaction tx)
 					{
-						sqlTransaction = tx;
+						setSQLTransaction(tx);
 						executeRequest(0);
 					}
 
@@ -271,22 +274,22 @@ public class DBTransaction extends JavaScriptObject
 		});
 	}
 	
-	private void executeRequest(int requestIdx)
+	private final void executeRequest(int requestIdx)
     {
 		try
 		{
-			if (requestIdx >= requests.size())
+			if (requestIdx >= getRequests().size())
 			{
 				setActive(false);
-				requests.clear();
+				getRequests().clear();
 				DBEvent evt = DBEvent.create("complete");
 				DBEvent.invoke("oncomplete", this, evt);
 				
 				return;
 			}
 			
-			final RequestOperation op = requests.get(requestIdx);
-			op.doOperation(sqlTransaction);
+			final RequestOperation op = getRequests().get(requestIdx);
+			op.doOperation(getSQLTransaction());
 		}
 		catch (Exception e) 
 		{
@@ -298,13 +301,13 @@ public class DBTransaction extends JavaScriptObject
 		}
     }
 	
-	private native void handleObjectNativeFunctions(DBTransaction db)/*-{
+	private final native void handleObjectNativeFunctions(DBTransaction db)/*-{
 		this.abort = function(){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBTransaction::abort()();
+			@org.cruxframework.crux.core.client.db.websql.polyfill.DBTransaction::abort(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBTransaction;)(db);
 		};
 
 		this.objectStore = function(objectStoreName){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBTransaction::objectStore(Ljava/lang/String;)(objectStoreName);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBTransaction::objectStore(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBTransaction;Ljava/lang/String;)(db,objectStoreName);
 		};
 		
 		this.onabort= null;
@@ -312,12 +315,12 @@ public class DBTransaction extends JavaScriptObject
 		this.oncomplete= null;
 	}-*/;
 
-	private native void fireOnComplete(DBTransaction me)/*-{
+	private final native void fireOnComplete(DBTransaction me)/*-{
 		typeof me.oncomplete === "function" && me.oncomplete();	
 	}-*/;
 	
 	
-	private native void fireOnError(DBTransaction me)/*-{
+	private final native void fireOnError(DBTransaction me)/*-{
 		typeof me.onerror === "function" && me.onerror();	
 	}-*/;
 	
@@ -340,6 +343,8 @@ public class DBTransaction extends JavaScriptObject
 		transaction.setMode(mode);
 		transaction.setDatabase(db);
 		transaction.setError(null);
+		Array<RequestOperation> requests = Array.createArray().cast();
+		transaction.setRequests(requests);
 		transaction.handleObjectNativeFunctions(transaction);
 		return transaction;
 	}
