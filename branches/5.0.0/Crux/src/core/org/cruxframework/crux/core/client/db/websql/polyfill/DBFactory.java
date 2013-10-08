@@ -26,7 +26,6 @@ import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction.SQLStatementErrorCallback;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -35,7 +34,7 @@ import com.google.gwt.logging.client.LogConfiguration;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DBFactory extends JavaScriptObject
+public class DBFactory
 {
 	protected static Logger logger = Logger.getLogger(DBFactory.class.getName());
 	private static int  DEFAULT_DB_SIZE = 5 * 1024 * 1024;
@@ -424,7 +423,7 @@ public class DBFactory extends JavaScriptObject
 	
 	static DBFactory create()
 	{
-		DBFactory factory = DBFactory.createObject().cast();
+		DBFactory factory = new DBFactory();
 		return factory;
 	}
 	
