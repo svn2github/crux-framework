@@ -28,6 +28,22 @@ function __MODULE_FUNC__() {
     }
     throw null;
   }
+  
+	function autoResize(iframe) 
+	{
+		var body = document.body, 
+			html = document.documentElement;
+
+		var newHeight = //Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight ),
+						//html.clientHeight,
+						"100%";
+			newWidth = //Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
+					   //html.clientWidth;
+					   "100%";
+		
+		iframe.height = (newHeight) + "px";
+		iframe.width  = (newWidth) + "px";
+	}
 
   // --------------- PROPERTY PROVIDERS --------------- 
 
@@ -64,7 +80,14 @@ function __MODULE_FUNC__() {
 		wrapFrame.style.width = '100%';
 		wrapFrame.width = '100%';
 		wrapFrame.height = '100%';
+		wrapFrame.style.border = "none";
+		wrapFrame.onload = autoResize(wrapFrame);
 	    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
+	   
+	    var meta = document.createElement('meta');
+	    meta.name="viewport";
+	    meta.content = "user-scalable=no, width=device-width, height=device-height";
+	    document.getElementsByTagName('head')[0].appendChild(meta);
 //	}
 //	else 
 //	if (window.applicationCache)
