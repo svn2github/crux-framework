@@ -34,6 +34,7 @@ public abstract class BeginEndExecutor
 	private int maxIntervalBetweenStartAndEnd;
 	private long lastExec = new Date().getTime();
 	boolean isRunning = false;
+	private boolean doEndActionExecuted = false;
 	
 	/**
 	 * Creates an executor that only executes the first and the last
@@ -73,9 +74,22 @@ public abstract class BeginEndExecutor
 
 		if(!isRunning)
 		{
-			isRunning = true;
-			doBeginAction();
-			timer.schedule(maxIntervalBetweenStartAndEnd);
+			if (doEndActionExecuted)
+			{
+				long delta = now - lastExec;
+				if(delta > maxIntervalBetweenStartAndEnd)
+				{
+					isRunning = true;
+					doBeginAction();
+					timer.schedule(maxIntervalBetweenStartAndEnd);
+				}
+			}
+			else
+			{
+				isRunning = true;
+				doBeginAction();
+				timer.schedule(maxIntervalBetweenStartAndEnd);
+			}
 		}
 		else
 		{
@@ -94,6 +108,7 @@ public abstract class BeginEndExecutor
 			{
 				doEndAction();
 				isRunning = false;
+				doEndActionExecuted = true;
 			}
 		}
 		
