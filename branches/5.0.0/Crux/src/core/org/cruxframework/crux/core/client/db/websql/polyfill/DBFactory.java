@@ -36,7 +36,7 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class DBFactory
 {
-	protected static Logger logger = Logger.getLogger(DBFactory.class.getName());
+	private static Logger logger = Logger.getLogger(DBFactory.class.getName());
 	private static int  DEFAULT_DB_SIZE = 5 * 1024 * 1024;
 	private boolean initialized = false;
 	private SQLDatabase systemDatabase;
@@ -436,9 +436,7 @@ public class DBFactory
 	private native static void registerStaticFunctions(DBFactory db)/*-{
 		$wnd.__db_bridge__ = $wnd.__db_bridge__ || {};
 		$wnd.__db_bridge__.indexedDB = {};
-		$wnd.__db_bridge__.indexedDB.open = function(value){
-			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBKeyRange::createNative(Lcom/google/gwt/core/client/JsArrayMixed;)([value, value, false, false]);
-		};
+		$wnd.__db_bridge__.indexedDB.useSQL = true;
 
 		function convertKey(key)
 		{
@@ -446,7 +444,7 @@ public class DBFactory
 			return keys; 
 		}
 		$wnd.__db_bridge__.indexedDB.open = function(name,version){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::open(Ljava/lang/String;I)(name, version);
+			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::open(Ljava/lang/String;I)(name, version);
 		};
 
 		$wnd.__db_bridge__.indexedDB.deleteDatabase = function(name){

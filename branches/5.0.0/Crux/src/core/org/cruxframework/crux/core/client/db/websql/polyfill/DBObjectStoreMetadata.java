@@ -57,8 +57,3 @@ public class DBObjectStoreMetadata extends JavaScriptObject
 		return this.keyPath;
 	}-*/;
 }
-//"name": data.rows.item(0).name,
-//"indexList": data.rows.item(0).indexList,
-//"autoInc": data.rows.item(0).autoInc,
-//"keyPath": data.rows.item(0).keyPath
-

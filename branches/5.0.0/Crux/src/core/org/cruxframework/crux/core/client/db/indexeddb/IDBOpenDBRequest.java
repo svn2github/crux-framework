@@ -24,7 +24,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEv
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBOpenDBRequest extends IDBRequest<IDBFactory>
+public class IDBOpenDBRequest extends IDBRequest<IDBDatabase>
 {
 	protected IDBOpenDBRequest(){}
 	

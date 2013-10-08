@@ -38,10 +38,7 @@ import com.google.gwt.user.client.Timer;
  */
 public class DBObjectStore extends JavaScriptObject
 {
-	protected static Logger logger = Logger.getLogger(DBObjectStore.class.getName());
-
-	protected DBObjectStoreMetadata metadata;
-	private Map<Boolean> ready = CollectionFactory.createMap();
+	private static Logger logger = Logger.getLogger(DBObjectStore.class.getName());
 
 	protected DBObjectStore(){}
 
@@ -53,7 +50,12 @@ public class DBObjectStore extends JavaScriptObject
 	    return this.transaction;
     }-*/;
 	
-    public DBRequest add(final JavaScriptObject object, final JsArrayMixed key)
+    static final DBRequest add(DBObjectStore db, final JavaScriptObject object, final JsArrayMixed key)
+    {
+    	return db.add(object, key);
+    }
+    
+    final DBRequest add(final JavaScriptObject object, final JsArrayMixed key)
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
     	{
@@ -73,8 +75,13 @@ public class DBObjectStore extends JavaScriptObject
     	}, this, new String[]{DBTransaction.READ_WRITE});
     	return request;
     }
+    
+    static final DBRequest put(DBObjectStore db, final JavaScriptObject object, final JsArrayMixed key)
+    {
+    	return db.put(object, key);
+    }
 
-    public DBRequest put(final JavaScriptObject object, final JsArrayMixed key)
+    final DBRequest put(final JavaScriptObject object, final JsArrayMixed key)
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
     	{
@@ -126,7 +133,12 @@ public class DBObjectStore extends JavaScriptObject
 //    	
 //    }
     
-    public DBRequest delete(final JsArrayMixed key)
+    static final DBRequest delete(DBObjectStore db, JsArrayMixed key)
+    {
+    	return db.delete(key);
+    }
+    
+    final DBRequest delete(final JsArrayMixed key)
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
     	{
@@ -179,7 +191,12 @@ public class DBObjectStore extends JavaScriptObject
 //  	
 //  }
     
-    public DBRequest get (final JsArrayMixed key)
+    static final DBRequest get (DBObjectStore db, final JsArrayMixed key)
+    {
+    	return db.get(key);
+    }
+    
+    final DBRequest get (final JsArrayMixed key)
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
 		{
@@ -241,7 +258,12 @@ public class DBObjectStore extends JavaScriptObject
     	return request;
     }
     
-    public DBRequest clear()
+    static final DBRequest clear(DBObjectStore db)
+    {
+    	return db.clear();
+    }
+    
+    final DBRequest clear()
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
 		{
@@ -290,7 +312,12 @@ public class DBObjectStore extends JavaScriptObject
     }
 //TODO    public DBRequest count(KeyRange)
 
-    public DBRequest count()
+    static final DBRequest count(DBObjectStore db)
+    {
+    	return db.count();
+    }
+    
+    final DBRequest count()
     {
     	DBRequest request = getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
 		{
@@ -349,7 +376,12 @@ public class DBObjectStore extends JavaScriptObject
     	return request;
     }    
     
-    public DBRequest openCursor (DBKeyRange range, String direction)
+    static final DBRequest openCursor (DBObjectStore db, DBKeyRange range, String direction)
+    {
+    	return db.openCursor(range, direction);
+    }
+    
+    final DBRequest openCursor (DBKeyRange range, String direction)
     {
     	DBRequest cursorRequest = getTransaction().createRequest(this);
         DBCursor.create(range, direction, this, cursorRequest, "key", "value"); 
@@ -385,15 +417,19 @@ public class DBObjectStore extends JavaScriptObject
 //        return result;
 //    }    
     
+	native final DBObjectStoreMetadata getMetadata()/*-{
+		return this.metadata;
+	}-*/;
+
 	/**
 	 * Need this flag as createObjectStore is synchronous. So, we simply return when create ObjectStore is called
 	 * but do the processing in the background. All other operations should wait till ready is set
 	 * @param key
 	 * @param value
 	 */
-	protected void setReadyState(String key, Boolean value)
+	final void setReadyState(String key, Boolean value)
 	{
-		ready.put(key, value);
+		getReadyProperties().put(key, value);
 	}
 
 	/**
@@ -401,19 +437,20 @@ public class DBObjectStore extends JavaScriptObject
 	 * @param callback
 	 * @param key
 	 */
-	protected void waitForReady(final Callback callback, final String key)
+	private void waitForReady(final Callback callback, final String key)
 	{
 		boolean ready = true;
+		Map<Boolean> readyProperties = getReadyProperties();
 		if (key != null) 
 		{
-			ready = (this.ready.containsKey(key) ? this.ready.get(key) : true);
+			ready = (readyProperties.containsKey(key) ? readyProperties.get(key) : true);
 		}
 		else 
 		{
-			Array<String> keys = this.ready.keys();
+			Array<String> keys = readyProperties.keys();
 			for (int i=0; i< keys.size(); i++) 
 			{
-				if (!this.ready.get(keys.get(i))) 
+				if (!readyProperties.get(keys.get(i))) 
 				{
 					ready = false;
 					break;
@@ -456,7 +493,7 @@ public class DBObjectStore extends JavaScriptObject
 			@Override
 			public void execute()
 			{
-				if (metadata != null)
+				if (getMetadata() != null)
 				{
 					if (LogConfiguration.loggingIsEnabled())
 					{
@@ -481,7 +518,8 @@ public class DBObjectStore extends JavaScriptObject
 							}
 							else
 							{
-								metadata = rs.getRows().itemObject(0).cast();
+								DBObjectStoreMetadata metadata = rs.getRows().itemObject(0).cast();
+								setMetadata(metadata);
 								if (LogConfiguration.loggingIsEnabled())
 								{
 									logger.log(Level.FINE, "Reading object store metadata from database. Store name ["+getName()+"]. Result cached.");
@@ -518,12 +556,12 @@ public class DBObjectStore extends JavaScriptObject
 			@Override
 			public void execute()
 			{
-				if (metadata == null)
+				if (getMetadata() == null)
 				{
 					requestOp.throwError("Data Error", "Could not locate definition for the table ["+getName()+"]");
 					return;
 				}
-				if (!StringUtils.isEmpty(metadata.getKeyPath()))
+				if (!StringUtils.isEmpty(getMetadata().getKeyPath()))
 				{
 					deriveKeyFromMetatadaKeyPath(requestOp, tx, object, key, callback);
 				}
@@ -533,7 +571,7 @@ public class DBObjectStore extends JavaScriptObject
 					{
 						callback.execute(key);
 					}
-					else if (metadata.isAutoInc())
+					else if (getMetadata().isAutoInc())
 					{
 						readNextAutoIncKey(requestOp, tx, callback);
 					}
@@ -600,24 +638,24 @@ public class DBObjectStore extends JavaScriptObject
         try 
         {
         	JsArrayMixed primaryKey = JsArrayMixed.createArray().cast();
-        	JsUtils.readPropertyValue(object, metadata.getKeyPath(), primaryKey);
+        	JsUtils.readPropertyValue(object, getMetadata().getKeyPath(), primaryKey);
         	if (primaryKey.length() > 0)
         	{
         		callback.execute(primaryKey);
         	}
-        	else if (metadata.isAutoInc())
+        	else if (getMetadata().isAutoInc())
         	{
         		readNextAutoIncKey(requestOp, tx, callback);
         	}
         	else
         	{
-        		requestOp.throwError("Data Error", "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]");
+        		requestOp.throwError("Data Error", "Could not evaluate key from keyPath ["+getMetadata().getKeyPath()+"] on object store ["+getName()+"]");
         		return;
         	}					
         } 
         catch (Exception e) 
         {
-        	requestOp.throwError("Data Error", "Could not evaluate key from keyPath ["+metadata.getKeyPath()+"] on object store ["+getName()+"]");
+        	requestOp.throwError("Data Error", "Could not evaluate key from keyPath ["+getMetadata().getKeyPath()+"] on object store ["+getName()+"]");
         }
     }
 
@@ -665,7 +703,7 @@ public class DBObjectStore extends JavaScriptObject
     		paramMap.put("key", DBUtil.encodeKey(primaryKey));
     	}
 
-    	JsArrayMixed indexes = DBUtil.decodeValue(metadata.getIndexList());
+    	JsArrayMixed indexes = DBUtil.decodeValue(getMetadata().getIndexList());
     	if (indexes != null)
     	{
     		try
@@ -725,6 +763,18 @@ public class DBObjectStore extends JavaScriptObject
 	    this.name = objectStoreName;
     }-*/;
 
+	private native final void setMetadata(DBObjectStoreMetadata meta)/*-{
+		this.metadata = meta;
+	}-*/;
+	
+	private native Map<Boolean> getReadyProperties()/*-{
+		return this.ready;
+	}-*/;
+	
+	private native void setReadyProperties(Map<Boolean> r)/*-{
+		this.ready = r;
+	}-*/;
+	
 	private native void handleObjectNativeFunctions(DBObjectStore db)/*-{
 		function convertKey(key)
 		{
@@ -734,29 +784,29 @@ public class DBObjectStore extends JavaScriptObject
 		
 		this.add = function(value, key){
 			var keys = convertKey(key);
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::add(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(value, keys);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::add(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(db, value, keys);
 		};
 	
 		this.put = function(value, key){
 			var keys = convertKey(key);
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::put(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(value, keys);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::put(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(db, value, keys);
 		};
 		this["delete"] = function(key){
 			var keys = convertKey(key);
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::delete(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::delete(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JsArrayMixed;)(db, keys);
 		};
 		this.get = function(key){
 			var keys = convertKey(key);
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::get(Lcom/google/gwt/core/client/JsArrayMixed;)(keys);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::get(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JsArrayMixed;)(db, keys);
 		};
 		this.clear = function(){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::clear()();
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::clear(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;)(db);
 		};
 		this.count = function(){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::count()();
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::count(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;)(db);
 		};
 		this.openCursor = function(range, direction){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::openCursor(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBKeyRange;Ljava/lang/String;)(range, direction);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::openCursor(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBKeyRange;Ljava/lang/String;)(db, range, direction);
 		};
 	}-*/;
 
@@ -764,6 +814,8 @@ public class DBObjectStore extends JavaScriptObject
 	{
 		DBObjectStore objectStore = DBObjectStore.createObject().cast();
 		objectStore.setName(objectStoreName);
+		Map<Boolean> readyProp = CollectionFactory.createMap();
+		objectStore.setReadyProperties(readyProp);
 		objectStore.setTransaction(dbTransaction);
 		objectStore.setReadyState("createObjectStore", ready);
 		Array<String> indexNames = CollectionFactory.createArray();
@@ -772,12 +824,12 @@ public class DBObjectStore extends JavaScriptObject
 		return objectStore;
 	}
 
-	protected static interface Callback
+	private static interface Callback
 	{
 		void execute();
 	}
 
-	protected static interface CallbackKey
+	private static interface CallbackKey
 	{
 		void execute(JsArrayMixed key);
 	}

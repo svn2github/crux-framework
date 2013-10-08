@@ -38,12 +38,12 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class DBTransaction extends JavaScriptObject
 {
-    static final String READ = "readonly";
+	private static Logger logger = Logger.getLogger(DBTransaction.class.getName());
+
+	static final String READ = "readonly";
     static final String READ_WRITE = "readwrite";
     static final String VERSION_TRANSACTION = "versionchange";
  
-	private static Logger logger = Logger.getLogger(DBTransaction.class.getName());
-
 	protected DBTransaction(){}
 	
 	public native final boolean isRunning()/*-{

@@ -25,14 +25,16 @@ import com.google.gwt.dom.client.PartialSupport;
  *
  */
 @PartialSupport
-public class IDBFactory extends JavaScriptObject 
+public class IDBFactory 
 {
 	private static boolean initialized = false;
+	private static JavaScriptObject indexedDBContext;
 
-	private static native void init() /*-{
-	    $wnd.IDBKeyRange = $wnd.IDBKeyRange || $wnd.webkitIDBKeyRange;
-	    $wnd.indexedDB = $wnd.indexedDB || $wnd.mozIndexedDB || $wnd.webkitIndexedDB;
-	}-*/;
+	public static void init(JavaScriptObject context)
+	{
+		indexedDBContext = context;
+		initialized = true;
+	}
 	
     protected IDBFactory() {}
 
@@ -40,49 +42,91 @@ public class IDBFactory extends JavaScriptObject
     {
     	if (!initialized)
     	{
-    		init();
-    		initialized = true;
+    		init(getDefaultContext());
     	}
     	return create();
     }
     
-    private static native IDBFactory create() /*-{
-		return $wnd.indexedDB;
-    }-*/;
+    private static IDBFactory create()
+    {
+    	return new IDBFactory();
+    };
 
-    public final native IDBOpenDBRequest open(String name) /*-{
-		return this.open(name);
-    }-*/;
+    public final IDBOpenDBRequest open(String name) 
+    {
+		return this.open(indexedDBContext, name);
+    }
+
+    public final IDBOpenDBRequest open(String name, int version)
+    {
+    	return this.open(indexedDBContext, name, version);
+    }
+
+    public final IDBDeleteDBRequest deleteDatabase(String name)
+    {
+    	return this.deleteDatabase(indexedDBContext, name);
+    }
     
-    public final native IDBOpenDBRequest open(String name, int version) /*-{
-		return this.open(name, version);
-	}-*/;
+    public final int cmp(JavaScriptObject o1, JavaScriptObject o2)
+    {
+    	return this.cmp(indexedDBContext, o1, o2);
+    }
 
-    public final native IDBDeleteDBRequest deleteDatabase(String name) /*-{
-		return this.deleteDatabase(name);
-    }-*/;
+    public final int cmp(String o1, String o2)
+    {
+    	return this.cmp(indexedDBContext, o1, o2);
+    }
+
+    public final int cmp(int o1, int o2)
+    {
+    	return this.cmp(indexedDBContext, o1, o2);
+    }
     
-    public final native int cmp(JavaScriptObject o1, JavaScriptObject o2) /*-{
-		return this.cmp(o1,o2);
-    }-*/;
-
-    public final native int cmp(String o1, String o2) /*-{
-		return this.cmp(o1,o2);
-	}-*/;
-
-    public final native int cmp(int o1, int o2) /*-{
-		return this.cmp(o1,o2);
-	}-*/;
-    
-    public final native int cmp(double o1, double o2) /*-{
-		return this.cmp(o1,o2);
-	}-*/;
+    public final int cmp(double o1, double o2)
+    {
+    	return this.cmp(indexedDBContext, o1, o2);
+    }
 
     public final int cmp(Date o1, Date o2)
     {
 		return this.cmp(o1.getTime(),o2.getTime());
 	};
+	
+	private native IDBOpenDBRequest open(JavaScriptObject indexedDBContext, String name) /*-{
+		return indexedDBContext.open(name);
+    }-*/;
+    
+    private native IDBOpenDBRequest open(JavaScriptObject indexedDBContext, String name, int version) /*-{
+		return indexedDBContext.open(name, version);
+	}-*/;
+    
+    private native IDBDeleteDBRequest deleteDatabase(JavaScriptObject indexedDBContext, String name) /*-{
+		return indexedDBContext.deleteDatabase(name);
+    }-*/;
+    
+    private native int cmp(JavaScriptObject indexedDBContext, JavaScriptObject o1, JavaScriptObject o2) /*-{
+		return indexedDBContext.cmp(o1,o2);
+    }-*/;
+    
+    private native int cmp(JavaScriptObject indexedDBContext, String o1, String o2) /*-{
+		return indexedDBContext.cmp(o1,o2);
+	}-*/;
+    
+    private native int cmp(JavaScriptObject indexedDBContext, int o1, int o2) /*-{
+		return indexedDBContext.cmp(o1,o2);
+	}-*/;
+    
+    private native int cmp(JavaScriptObject indexedDBContext, double o1, double o2) /*-{
+		return indexedDBContext.cmp(o1,o2);
+	}-*/;
 
+    private static native JavaScriptObject getDefaultContext()/*-{
+	    $wnd.IDBKeyRange = $wnd.IDBKeyRange || $wnd.webkitIDBKeyRange;
+	    $wnd.indexedDB = $wnd.indexedDB || $wnd.mozIndexedDB || $wnd.webkitIndexedDB;
+		
+		return $wnd.indexedDB;
+    }-*/;
+    
 	public static native boolean isSupported()/*-{
 	    var IDBKeyRange = $wnd.IDBKeyRange || $wnd.webkitIDBKeyRange;
 	    var indexedDB = $wnd.indexedDB || $wnd.mozIndexedDB || $wnd.webkitIndexedDB;
@@ -92,3 +136,4 @@ public class IDBFactory extends JavaScriptObject
 		return false;
 	}-*/;
 }
+

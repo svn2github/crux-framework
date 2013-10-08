@@ -23,7 +23,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteE
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBDeleteDBRequest extends IDBRequest<IDBFactory>
+public class IDBDeleteDBRequest extends IDBRequest<IDBDatabase>
 {
 	protected IDBDeleteDBRequest(){}
 	

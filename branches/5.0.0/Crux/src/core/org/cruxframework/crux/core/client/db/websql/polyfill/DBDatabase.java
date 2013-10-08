@@ -36,39 +36,45 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class DBDatabase extends JavaScriptObject
 {
-	protected static Logger logger = Logger.getLogger(DBDatabase.class.getName());
-
-	private SQLDatabase sqlDatabase;
-	private SQLResultSet storeProperties;
-	private DBTransaction versionTransaction;
+	private static Logger logger = Logger.getLogger(DBDatabase.class.getName());
 
 	protected DBDatabase(){}
 
-    public final void close()
+    static void close()
     {
         // Don't do anything... the database automatically closes
     }
+
+    static final DBTransaction transaction (DBDatabase db, JsArrayString storeNames, String mode)
+    {
+    	return db.transaction(storeNames, mode);
+    }
     
-    public final DBTransaction transaction (JsArrayString storeNames, String mode)
+    final DBTransaction transaction (JsArrayString storeNames, String mode)
     {
         DBTransaction transaction = DBTransaction.create(storeNames, mode, this);
         return transaction;
     };	
     
-    public final DBObjectStore createObjectStore(final String storeName, final DBObjectStoreParameters createOptions)
+    static final DBObjectStore createObjectStore(DBDatabase db, String storeName, DBObjectStoreParameters createOptions)
     {
-		if (versionTransaction == null)
+    	return db.createObjectStore(storeName, createOptions);
+    }
+    
+    final DBObjectStore createObjectStore(final String storeName, final DBObjectStoreParameters createOptions)
+    {
+		if (getVersionTransaction() == null)
 		{
 			DBUtil.throwDOMException("Invalid State", "Database can create object stores only on a versionchange transaction");
 		}
-    	final DBObjectStore result = DBObjectStore.create(storeName, versionTransaction, false);
-    	versionTransaction.addToTransactionQueue(new DBTransaction.RequestOperation()
+    	final DBObjectStore result = DBObjectStore.create(storeName, getVersionTransaction(), false);
+    	getVersionTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
 		{
 			@Override
 			public void doOperation(SQLTransaction tx)
 			{
 				final DBTransaction.RequestOperation op = this;
-				if (versionTransaction == null)
+				if (getVersionTransaction() == null)
 				{
 					DBUtil.throwDOMException("Invalid State", "Invalid State error");
 				}
@@ -77,7 +83,7 @@ public class DBDatabase extends JavaScriptObject
 					@Override
 					public boolean onError(SQLTransaction tx, SQLError error)
 					{
-						versionTransaction.throwError(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
+						getVersionTransaction().throwError(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
 						return false;
 					}
 				};
@@ -122,9 +128,14 @@ public class DBDatabase extends JavaScriptObject
       return result;
     }
 
-    public final void deleteObjectStore(final String storeName)
+    static final void deleteObjectStore(DBDatabase db, final String storeName)
     {
-		if (versionTransaction == null)
+    	db.deleteObjectStore(storeName);
+    }
+    
+    final void deleteObjectStore(final String storeName)
+    {
+		if (getVersionTransaction() == null)
 		{
 			DBUtil.throwDOMException("Invalid State", "Database can delete object stores only on a versionchange transaction");
 		}
@@ -133,7 +144,7 @@ public class DBDatabase extends JavaScriptObject
 			@Override
 			public boolean onError(SQLTransaction tx, SQLError error)
 			{
-				versionTransaction.throwError(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
+				getVersionTransaction().throwError(error.getName(), "Could not create new object store. Error name["+error.getName()+"]. Error Message["+error.getMessage()+"]");
 				return false;
 			}
 		};
@@ -141,15 +152,15 @@ public class DBDatabase extends JavaScriptObject
 		int index = getObjectStoreNames().indexOf(storeName);
 		if (index < 0)
 		{
-			versionTransaction.throwError("Not Found", "Object store ["+storeName+"] does not exist.");
+			getVersionTransaction().throwError("Not Found", "Object store ["+storeName+"] does not exist.");
 			return;
 		}
 		getObjectStoreNames().remove(index);
-		versionTransaction.addToTransactionQueue(new DBTransaction.RequestOperation(){
+		getVersionTransaction().addToTransactionQueue(new DBTransaction.RequestOperation(){
 			@Override
             public void doOperation(SQLTransaction tx)
             {
-				if (versionTransaction == null)
+				if (getVersionTransaction() == null)
 				{
 					DBUtil.throwDOMException("Invalid State", "Invalid State error");
 				}
@@ -198,44 +209,46 @@ public class DBDatabase extends JavaScriptObject
 		return this.objectStoreNames;
 	}-*/;
 	
-	void setVersionTransaction(DBTransaction transaction)
-	{
-		versionTransaction = transaction;
-	}
-	
+    native final DBTransaction getVersionTransaction()/*-{
+    	return this.versionTransaction;
+    }-*/;
+    
+    
+    native final void setVersionTransaction(DBTransaction t)/*-{
+    	this.versionTransaction = t;
+    }-*/;
+    
 	private native void setObjectStoreNames(Array<String> names) /*-{
 		this.objectStoreNames = names;
 	}-*/;
 	
-	SQLDatabase getSQLDatabase()
-	{
-		return sqlDatabase;
-	}
-	
 	private native void handleObjectNativeFunctions(DBDatabase db)/*-{
 		this.transaction = function(storeNames, mode){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::transaction(Lcom/google/gwt/core/client/JsArrayString;Ljava/lang/String;)(storeNames, mode);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::transaction(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBDatabase;Lcom/google/gwt/core/client/JsArrayString;Ljava/lang/String;)(db, storeNames, mode);
 		};
 		this.close = function(){
-			db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::close()();
+			@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::close()();
 		};
 	
 		this.createObjectStore = function(objectStoreName, createOptions){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::createObjectStore(Ljava/lang/String;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStoreParameters;)(objectStoreName, createOptions);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::createObjectStore(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBDatabase;Ljava/lang/String;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStoreParameters;)(db, objectStoreName, createOptions);
 		};
 		this.deleteObjectStore = function(objectStoreName){
-			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::deleteObjectStore(Ljava/lang/String;)(objectStoreName);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::deleteObjectStore(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBDatabase;Ljava/lang/String;)(db, objectStoreName);
 		};
 		this.onabort = null;
 		this.onerror = null;
 		this.onversionchange = null; 
 	}-*/;
 	
-	private void setStoreProperties(SQLResultSet storeProperties)
-	{
+	private native void setStoreProperties(SQLResultSet storeProperties)/*-{
 		this.storeProperties = storeProperties;
-	}
+	}-*/;
 
+	private native SQLResultSet getStoreProperties()/*-{
+		return this.storeProperties;
+	}-*/;
+	
 	private native void setName(String name)/*-{
 		this.name = name;
 	}-*/;
@@ -244,9 +257,18 @@ public class DBDatabase extends JavaScriptObject
 		this.version = version;
 	}-*/;
 	
+    native final SQLDatabase getSQLDatabase()/*-{
+		return this.sqlDatabase;
+	}-*/;
+	
+	private native void setSQLDatabase(SQLDatabase db)/*-{
+		this.sqlDatabase = db;
+	}-*/;
+
 	public static DBDatabase create(SQLDatabase db, String name, int version, SQLResultSet storeProperties)
 	{
 		DBDatabase database = createObject().cast();
+		database.setSQLDatabase(db);
 		database.setName(name);
 		database.setVersion(version);
 		Array<String> storeNames = Array.createArray().cast();

@@ -18,7 +18,10 @@ package org.cruxframework.crux.core.client.db.websql.polyfill;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -28,32 +31,33 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class DBBridge
 {
-	protected static Logger logger = Logger.getLogger(DBBridge.class.getName());
+	private static Logger logger = Logger.getLogger(DBBridge.class.getName());
 
 	public static void installSQLBridge(final Callback callback)
 	{
-		GWT.runAsync(new RunAsyncCallback()
-		{
-			@Override
-			public void onSuccess()
-			{
+//		GWT.runAsync(new RunAsyncCallback()
+//		{
+//			@Override
+//			public void onSuccess()
+//			{
 				DBTransaction.registerStaticFunctions();
 				DBKeyRange.registerStaticFunctions();
 				DBFactory.registerStaticFunctions();
 				DBBridge.enableBridge();
+				IDBFactory.init(getIDBContext());
 				callback.onSuccess();
-			}
-			
-			@Override
-			public void onFailure(Throwable reason)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, "Error loading Database Web SQL engine. Error message ["+reason.getMessage()+"]");
-				}
-				callback.onError(reason);
-			}
-		});
+//			}
+//			
+//			@Override
+//			public void onFailure(Throwable reason)
+//			{
+//				if (LogConfiguration.loggingIsEnabled())
+//				{
+//					logger.log(Level.SEVERE, "Error loading Database Web SQL engine. Error message ["+reason.getMessage()+"]");
+//				}
+//				callback.onError(reason);
+//			}
+//		});
 	}
     
     /**
@@ -71,6 +75,11 @@ public class DBBridge
 	    $wnd.IDBTransaction = $wnd.__db_bridge__.IDBTransaction;
     }-*/;
 
+	static native JavaScriptObject getIDBContext()/*-{
+		return $wnd.__db_bridge__.indexedDB;
+	}-*/;
+	
+	
 	public static interface Callback
 	{
 		void onSuccess();

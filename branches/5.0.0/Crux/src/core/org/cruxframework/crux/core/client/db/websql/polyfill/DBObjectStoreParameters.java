@@ -29,7 +29,7 @@ public class DBObjectStoreParameters extends JavaScriptObject
     protected DBObjectStoreParameters() {}
     
     public final native void setAutoIncrement(boolean value) /*-{
-            this.autoIncrement = value;
+        this.autoIncrement = value;
     }-*/;
     
     public final native boolean isAutoIncrement()/*-{
@@ -37,7 +37,7 @@ public class DBObjectStoreParameters extends JavaScriptObject
     }-*/;
     
     public final native void setKeyPath(String keyPath) /*-{
-            this.keyPath = keyPath;
+		this.keyPath = keyPath;
     }-*/;
     
 	public final native String getStringKeyPath()/*-{
