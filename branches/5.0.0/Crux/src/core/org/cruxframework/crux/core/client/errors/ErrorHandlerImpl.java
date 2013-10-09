@@ -21,9 +21,13 @@ import java.util.logging.Logger;
 import org.cruxframework.crux.core.client.Crux;
 
 
+
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -81,4 +85,15 @@ public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
     {
 		handleError(t.getMessage(), t);
     }
+
+	@Override
+	//TODO: when calling this handler, threat required widgets when they implement HasData.
+	public Widget handleValidationError(Widget widget, String errorMessage) 
+	{
+		widget.addStyleName("error");
+		FlowPanel errorMsgPanel = new FlowPanel();
+		errorMsgPanel.setStyleName("errorMsg");
+		widget.getElement().appendChild(errorMsgPanel.getElement());
+		return errorMsgPanel;
+	}
 }

@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.errors;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * An ValidationErrorHandler is called to report errors caused by a bad use of 
  * the application (typically validations over the screen state, based in business rules, 
@@ -31,6 +33,7 @@ package org.cruxframework.crux.core.client.errors;
  * </pre>
 
  * @author Thiago da Rosa de Bustamante
+ * @author Samuel Almeida Cardoso
  */
 public interface ValidationErrorHandler
 {
@@ -38,4 +41,11 @@ public interface ValidationErrorHandler
 	 * @param errorMessage The error message.
 	 */
 	void handleValidationError(String errorMessage);
+	
+	/**Handle a validation error inside a widget
+	 * @param errorMessage The error message.
+	 * @param widget the corresponding widget to be marked as invalid
+	 * @return the widget appended to the errorElement
+	 */
+	Widget handleValidationError(Widget widget, String errorMessage);
 }
