@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
@@ -156,6 +158,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println(FastMap.class.getCanonicalName()+"<String> __currentEtags = new "+FastMap.class.getCanonicalName()+"<String>();");
 		}
 		srcWriter.println("private String __hostPath;");
+		srcWriter.println("private static Logger __log = Logger.getLogger("+getProxyQualifiedName()+".class.getName());");
 	}
 
 	@Override
@@ -367,7 +370,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
 			srcWriter.println(callbackParameterName+".onSuccess(result);");
 			srcWriter.println("}catch (Exception e){");
-			srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage())));");
+			srcWriter.println("__log.log(Level.ALL, e.getMessage(), e.getCause());");
+			//srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage())));");
 			srcWriter.println("}");
 			srcWriter.println("}else {");
 			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
@@ -502,6 +506,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	protected String[] getImports()
 	{
 		return new String[] { 
+				Level.class.getCanonicalName(),
+				Logger.class.getCanonicalName(),
 				RequestBuilder.class.getCanonicalName(), 
 				RequestCallback.class.getCanonicalName(),
 				Request.class.getCanonicalName(), 
