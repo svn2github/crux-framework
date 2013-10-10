@@ -289,7 +289,9 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			{
 				srcWriter.println("JSONValue exId = jsonObject.get(\"exId\");");
 				srcWriter.println("if (exId == null){");
-				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), jsonObject.get(\"message\").isString().stringValue()));");
+				srcWriter.println("String jsonErrorMsg = jsonObject.get(\"message\");");
+				srcWriter.println("String stringJsonErrorMsg = jsonErrorMsg != null ? jsonErrorMsg.isString().stringValue() : null;");
+				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), stringJsonErrorMsg));");
 				srcWriter.println("} else {");
 				srcWriter.println("String hash = exId.isString().stringValue();");
 				boolean first = true;
