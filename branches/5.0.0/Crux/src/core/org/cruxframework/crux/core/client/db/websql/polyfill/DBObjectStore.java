@@ -66,9 +66,9 @@ public class DBObjectStore extends JavaScriptObject
     			deriveKey(this, tx, object, key, new CallbackKey()
 				{
 					@Override
-					public void execute(final JsArrayMixed key)
+					public void execute(final JsArrayMixed key, boolean generatedKey)
 					{
-						insertObject(object, tx, op, key);
+						insertObject(object, tx, op, key, generatedKey);
 					}
 				});
     		}
@@ -92,7 +92,7 @@ public class DBObjectStore extends JavaScriptObject
     			deriveKey(this, tx, object, key, new CallbackKey()
 				{
 					@Override
-					public void execute(final JsArrayMixed key)
+					public void execute(final JsArrayMixed key, final boolean generatedKey)
 					{
 					    String sql = "DELETE FROM \"" + getName() + "\" WHERE key = ?";
 						if (LogConfiguration.loggingIsEnabled())
@@ -110,13 +110,17 @@ public class DBObjectStore extends JavaScriptObject
 								{
 									logger.log(Level.FINE, "Object was " +(rs.getRowsAffected()>0?"updated":"inserted")+" into the table ["+getName()+"]");
 								}
-								insertObject(object, tx, op, key);
+								insertObject(object, tx, op, key, generatedKey);
 							}
 						}, new SQLTransaction.SQLStatementErrorCallback()
 						{
 							@Override
 							public boolean onError(SQLTransaction tx, SQLError error)
 							{
+								if (generatedKey)
+								{
+									clearGeneratedKey(object);
+								}
 								op.throwError(error.getName(), error.getMessage());
 								return false;
 							}
@@ -569,7 +573,7 @@ public class DBObjectStore extends JavaScriptObject
 				{
 					if (key != null && key.length() > 0)
 					{
-						callback.execute(key);
+						callback.execute(key, false);
 					}
 					else if (getMetadata().isAutoInc())
 					{
@@ -603,14 +607,15 @@ public class DBObjectStore extends JavaScriptObject
 
 				if (rs.getRows().length() != 1)
 				{
-					key.push(0);//TODO melhor reportar erro?
+					key.push(0);
 				}
 				else
 				{
-					key.push(rs.getRows().itemDouble(0));
+					int seq = JsUtils.readIntPropertyValue(rs.getRows().itemObject(0), "seq");
+					key.push(seq);
 				}
 
-				callback.execute(key);
+				callback.execute(key, true);
 			}
 		}, new SQLTransaction.SQLStatementErrorCallback()
 		{
@@ -638,10 +643,10 @@ public class DBObjectStore extends JavaScriptObject
         try 
         {
         	JsArrayMixed primaryKey = JsArrayMixed.createArray().cast();
-        	JsUtils.readPropertyValue(object, getMetadata().getKeyPath(), primaryKey);
+        	JsUtils.readPropertyValue(object, getMetadata().getKeyPath(), primaryKey, false);
         	if (primaryKey.length() > 0)
         	{
-        		callback.execute(primaryKey);
+        		callback.execute(primaryKey, false);
         	}
         	else if (getMetadata().isAutoInc())
         	{
@@ -659,8 +664,26 @@ public class DBObjectStore extends JavaScriptObject
         }
     }
 
-	private void insertObject(final JavaScriptObject object, final SQLTransaction tx, final DBTransaction.RequestOperation op, final JsArrayMixed key)
+	private void clearGeneratedKey(final JavaScriptObject object)
     {
+        String keyPath = getMetadata().getKeyPath();
+        if (!StringUtils.isEmpty(keyPath))
+        {
+        	JsUtils.writePropertyValue(object, keyPath, (String)null);
+        }//TODO nao permitir chave complexa (prop1.prop2) coom autoIncrement e nem chave composta
+    }
+
+	private void insertObject(final JavaScriptObject object, final SQLTransaction tx, final DBTransaction.RequestOperation op, 
+			final JsArrayMixed key, final boolean generatedKey)
+    {
+        if (generatedKey)
+        {
+        	String keyPath = getMetadata().getKeyPath();
+        	if (!StringUtils.isEmpty(keyPath))
+        	{
+        		JsUtils.writePropertyValue(object, keyPath, key.getNumber(0));
+        	}
+        }
         DBUtil.encodeValue(object, new DBUtil.EncodeCallback()
 		{
 			@Override
@@ -686,6 +709,10 @@ public class DBObjectStore extends JavaScriptObject
 					@Override
 					public boolean onError(SQLTransaction tx, SQLError error)
 					{
+						if (generatedKey)
+						{
+							clearGeneratedKey(object);
+						}
 						op.throwError(error.getName(), error.getMessage());
 						return false;
 					}
@@ -713,9 +740,10 @@ public class DBObjectStore extends JavaScriptObject
 	        		JsArrayMixed indexProps = JsArrayMixed.createArray().cast();
 	        		JsUtils.readPropertyValue(indexes, "key.columnName", indexProps);
 	        		JsUtils.readPropertyValue(indexes, "key.keyPath", indexProps);
-	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexProps);
+	        		JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
+	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexKey);
 	    			
-	    			paramMap.put(indexProps.getString(0), DBUtil.encodeKey(indexProps.getObject(2)));
+	    			paramMap.put(indexProps.getString(0), DBUtil.encodeKey(indexKey));
 	    		}
     		}
     		catch (Exception e) 
@@ -739,7 +767,7 @@ public class DBObjectStore extends JavaScriptObject
     	}
     	
 		sqlStart.append("value)");
-		sqlEnd.append("?");
+		sqlEnd.append("?)");
 		sqlValues.push(encodedObject);
     	
         String sql = sqlStart.toString()+" "+sqlEnd.toString() ;
@@ -776,28 +804,21 @@ public class DBObjectStore extends JavaScriptObject
 	}-*/;
 	
 	private native void handleObjectNativeFunctions(DBObjectStore db)/*-{
-		function convertKey(key)
-		{
-			if (!key) return null;
-			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
-			return keys; 
-		}
-		
 		this.add = function(value, key){
-			var keys = convertKey(key);
+			var keys = $wnd.__db_bridge__.convertKey(key);
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::add(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(db, value, keys);
 		};
 	
 		this.put = function(value, key){
-			var keys = convertKey(key);
+			var keys = $wnd.__db_bridge__.convertKey(key);
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::put(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JsArrayMixed;)(db, value, keys);
 		};
 		this["delete"] = function(key){
-			var keys = convertKey(key);
+			var keys = $wnd.__db_bridge__.convertKey(key);
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::delete(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JsArrayMixed;)(db, keys);
 		};
 		this.get = function(key){
-			var keys = convertKey(key);
+			var keys = $wnd.__db_bridge__.convertKey(key);
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::get(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lcom/google/gwt/core/client/JsArrayMixed;)(db, keys);
 		};
 		this.clear = function(){
@@ -832,6 +853,6 @@ public class DBObjectStore extends JavaScriptObject
 
 	private static interface CallbackKey
 	{
-		void execute(JsArrayMixed key);
+		void execute(JsArrayMixed key, boolean generatedKey);
 	}
 }

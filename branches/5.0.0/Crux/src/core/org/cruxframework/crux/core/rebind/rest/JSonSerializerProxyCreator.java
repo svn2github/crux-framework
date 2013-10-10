@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonIgnore;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
@@ -157,6 +158,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				JSONNumber.class.getCanonicalName(),
 				JSONBoolean.class.getCanonicalName(), 
 				JSONString.class.getCanonicalName(),
+				JsUtils.class.getCanonicalName(),
 				GWT.class.getCanonicalName()
 		};
 		return imports;
@@ -203,7 +205,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			}
 			if (objectClassType.isAssignableTo(javascriptObjectType))
 			{
-				srcWriter.println(resultObjectVar+" = ("+resultSourceName+")"+jsonValueVar+".isObject().getJavaScriptObject();");
+				srcWriter.println(resultObjectVar+" = ("+resultSourceName+")JsUtils.fromJSONValue("+jsonValueVar+");");
 			}
 			else if (isCollection(objectClassType))
 			{
@@ -243,7 +245,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			}
 			if (objectClassType.isAssignableTo(javascriptObjectType))
 			{
-				srcWriter.println(resultJSONValueVar+" = new JSONObject("+objectVar+");");
+				srcWriter.println(resultJSONValueVar+" = JsUtils.toJSONValue("+objectVar+");");
 			}
 			else if (isCollection(objectClassType))
 			{

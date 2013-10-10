@@ -436,14 +436,7 @@ public class DBFactory
 	private native static void registerStaticFunctions(DBFactory db)/*-{
 		$wnd.__db_bridge__ = $wnd.__db_bridge__ || {};
 		$wnd.__db_bridge__.indexedDB = {};
-		$wnd.__db_bridge__.indexedDB.useSQL = true;
-
-		function convertKey(key)
-		{
-			if (!key) return null;
-			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
-			return keys; 
-		}
+		
 		$wnd.__db_bridge__.indexedDB.open = function(name,version){
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::open(Ljava/lang/String;I)(name, version);
 		};
@@ -453,8 +446,8 @@ public class DBFactory
 		};
 		
 		$wnd.__db_bridge__.indexedDB.cmp = function(key1, key2){
-			var keys1 = convertKey(key1);
-			var keys2 = convertKey(key2);
+			var keys1 = $wnd.__db_bridge__.convertKey(key1);
+			var keys2 = $wnd.__db_bridge__.convertKey(key2);
 			return db.@org.cruxframework.crux.core.client.db.websql.polyfill.DBFactory::cmp(Lcom/google/gwt/core/client/JsArrayMixed;Lcom/google/gwt/core/client/JsArrayMixed;)(keys1, keys2);
 		};
     }-*/;

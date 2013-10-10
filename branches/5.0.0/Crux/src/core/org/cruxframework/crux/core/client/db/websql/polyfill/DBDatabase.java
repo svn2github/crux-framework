@@ -104,7 +104,7 @@ public class DBDatabase extends JavaScriptObject
 						args.push(storeName);
 						args.push(createOptions.getStringKeyPath()); // TODO tratar chave multipla
 						args.push(createOptions.isAutoIncrement());
-						args.push(JavaScriptObject.createObject());
+						args.push(DBUtil.encodeKey(JavaScriptObject.createArray()));
 						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?)";
 						if (LogConfiguration.loggingIsEnabled())
 						{

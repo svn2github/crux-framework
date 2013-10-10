@@ -46,6 +46,10 @@ public class DBObjectStoreMetadata extends JavaScriptObject
 	}-*/;
 	
 	public final native boolean isAutoInc()/*-{
+		if (typeof this.autoInc == "string")
+		{
+			return (this.autoInc == 'true');
+		}
 		return this.autoInc;
 	}-*/;
 

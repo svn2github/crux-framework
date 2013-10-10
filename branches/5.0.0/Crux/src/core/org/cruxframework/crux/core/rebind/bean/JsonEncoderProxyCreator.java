@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.cruxframework.crux.core.client.bean.JsonEncoder;
+import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.rest.JSonSerializerProxyCreator;
@@ -72,7 +73,7 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 		srcWriter.println("if (result == null || result.isNull() != null || result.isObject() == null){");
 		srcWriter.println("return null;");
 		srcWriter.println("}");
-		srcWriter.println("return result.isObject().getJavaScriptObject();");
+		srcWriter.println("return JsUtils.fromJSONValue(result);");
 		srcWriter.println("}");
 		srcWriter.println();
 
@@ -94,7 +95,7 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 		srcWriter.println();
 
 		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " fromJavaScriptObject(JavaScriptObject object){");
-		srcWriter.println("JSONObject jsonValue= new JSONObject(object);");
+		srcWriter.println("JSONValue jsonValue= JsUtils.toJSONValue(object);");
 		srcWriter.println("return "+serializerVariable+".decode(jsonValue);");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -120,6 +121,7 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 				JSONValue.class.getCanonicalName(), 
 				JSONObject.class.getCanonicalName(), 
 				JavaScriptObject.class.getCanonicalName(), 
+				JsUtils.class.getCanonicalName(), 
 				JSONParser.class.getCanonicalName()
 		};
 	}

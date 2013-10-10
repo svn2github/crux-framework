@@ -276,9 +276,10 @@ public class DBCursor extends JavaScriptObject
 	private void find(JsArrayMixed key, SQLTransaction tx)
 	{
 		StringBuilder sql = new StringBuilder("SELECT * FROM \"").append(getObjectStore().getName()).append("\" WHERE ").append(getKeyColumnName()).append(" NOT NULL");
+		JsArrayMixed sqlValues;
 		if (getKeyRange() != null)
 		{
-			JsArrayMixed sqlValues = getKeyRange().getBounds();
+			sqlValues = getKeyRange().getBounds();
 			if (getKeyRange().hasLowerBound())
 			{
 				sql.append(" AND ").append(getKeyColumnName()).append(getKeyRange().isLowerOpen()?" > ":" >= ").append("?");
@@ -301,27 +302,31 @@ public class DBCursor extends JavaScriptObject
 			{
 				sql.append(" DESC");
 			}
-			String sqlStatement = sql.toString();
-			tx.executeSQL(sqlStatement, sqlValues, new SQLTransaction.SQLStatementCallback()
-			{
-				@Override
-				public void onSuccess(SQLTransaction tx, SQLResultSet rs)
-				{
-					setResultSet(rs);
-					setOffset(CURSOR_BEGIN);
-					setLength(rs.getRows().length());
-					fireSuccessEvent();
-				}
-			}, new SQLTransaction.SQLStatementErrorCallback()
-			{
-				@Override
-				public boolean onError(SQLTransaction tx, SQLError error)
-				{
-					throwError(error.getName(), error.getMessage());
-					return false;
-				}
-			});
 		}
+		else
+		{
+			sqlValues = JsArrayMixed.createArray().cast();
+		}
+		String sqlStatement = sql.toString();
+		tx.executeSQL(sqlStatement, sqlValues, new SQLTransaction.SQLStatementCallback()
+		{
+			@Override
+			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+			{
+				setResultSet(rs);
+				setOffset(CURSOR_BEGIN);
+				setLength(rs.getRows().length());
+				fireSuccessEvent();
+			}
+		}, new SQLTransaction.SQLStatementErrorCallback()
+		{
+			@Override
+			public boolean onError(SQLTransaction tx, SQLError error)
+			{
+				throwError(error.getName(), error.getMessage());
+				return false;
+			}
+		});
 	}
 	
 	private void fireSuccessUpdateEvent(JsArrayMixed key)
@@ -340,7 +345,14 @@ public class DBCursor extends JavaScriptObject
 		DBRequest cursorRequest = getCursorRequest();
 		cursorRequest.setReadyState("done");
 		cursorRequest.setError(null);
-		cursorRequest.setResult(this);
+		if (getOffset() < getLength())
+		{
+			cursorRequest.setResult(this);
+		}
+		else
+		{
+			cursorRequest.setResult((String) null);
+		}
         DBEvent.invoke("onsuccess", cursorRequest, evt);
 	}
 	
@@ -477,13 +489,6 @@ public class DBCursor extends JavaScriptObject
     }-*/;
 	
 	private native void handleObjectNativeFunctions(DBCursor db)/*-{
-		function convertKey(key)
-		{
-			if (!key) return null;
-			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
-			return keys; 
-		}
-		
 		this.update = function(value)
 		{
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::update(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBCursor;Lcom/google/gwt/core/client/JavaScriptObject;)(db, value);
@@ -496,7 +501,7 @@ public class DBCursor extends JavaScriptObject
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::delete(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBCursor;)(db);
 		};
 		this["continue"] = function(key){
-			var keys = convertKey(key);
+			var keys = $wnd.__db_bridge__.convertKey(key);
 			@org.cruxframework.crux.core.client.db.websql.polyfill.DBCursor::continueCursor(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBCursor;Lcom/google/gwt/core/client/JsArrayMixed;)(db, keys);
 		};
 		this.key = this.value = this.primaryKey = null;

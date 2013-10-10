@@ -110,7 +110,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 			srcWriter.println("return "+idbCursorVariable+".getValue();");
 		}
 		else
-		{
+		{//TODO impedir o usuario de definir uma objectStore que armazene array (objectStore.put(key, array))
 			srcWriter.println("return "+serializerVariable+".decode(new JSONObject("+idbCursorVariable+".getValue()));");
 		}
 		srcWriter.println("}");

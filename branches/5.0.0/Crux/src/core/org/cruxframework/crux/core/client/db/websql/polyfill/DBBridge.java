@@ -35,29 +35,30 @@ public class DBBridge
 
 	public static void installSQLBridge(final Callback callback)
 	{
-//		GWT.runAsync(new RunAsyncCallback()
-//		{
-//			@Override
-//			public void onSuccess()
-//			{
+		GWT.runAsync(new RunAsyncCallback()
+		{
+			@Override
+			public void onSuccess()
+			{
+				DBBridge.registerStaticFunctions();
 				DBTransaction.registerStaticFunctions();
 				DBKeyRange.registerStaticFunctions();
 				DBFactory.registerStaticFunctions();
 				DBBridge.enableBridge();
 				IDBFactory.init(getIDBContext());
 				callback.onSuccess();
-//			}
-//			
-//			@Override
-//			public void onFailure(Throwable reason)
-//			{
-//				if (LogConfiguration.loggingIsEnabled())
-//				{
-//					logger.log(Level.SEVERE, "Error loading Database Web SQL engine. Error message ["+reason.getMessage()+"]");
-//				}
-//				callback.onError(reason);
-//			}
-//		});
+			}
+			
+			@Override
+			public void onFailure(Throwable reason)
+			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.SEVERE, "Error loading Database Web SQL engine. Error message ["+reason.getMessage()+"]");
+				}
+				callback.onError(reason);
+			}
+		});
 	}
     
     /**
@@ -65,10 +66,8 @@ public class DBBridge
 	 * @return
 	 */
 	public static native boolean isWebSQLSupported()/*-{
-		//TODO: remove when bridge is ready 
-		return false;
-		//var sqlsupport = !!$wnd.openDatabase;
-		//return sqlsupport;
+		var sqlsupport = !!$wnd.openDatabase;
+		return sqlsupport;
 	}-*/;
 	
 	static native void enableBridge()/*-{
@@ -81,6 +80,15 @@ public class DBBridge
 		return $wnd.__db_bridge__.indexedDB;
 	}-*/;
 	
+	private native static void registerStaticFunctions()/*-{
+		$wnd.__db_bridge__ = $wnd.__db_bridge__ || {};
+		$wnd.__db_bridge__.convertKey = function(key)
+		{
+			if (!key) return null;
+			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
+			return keys; 
+		};
+	}-*/;
 	
 	public static interface Callback
 	{

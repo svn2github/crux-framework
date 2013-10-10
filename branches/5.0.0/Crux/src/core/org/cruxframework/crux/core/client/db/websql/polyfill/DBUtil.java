@@ -22,13 +22,13 @@ import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.FileReader;
 import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
 import org.cruxframework.crux.core.client.utils.FileUtils;
+import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -48,7 +48,7 @@ public class DBUtil
 			return JSONNull.getInstance().toString();
 		}
 		
-		JSONObject jsonObject = new JSONObject(object);
+		JSONValue jsonObject = JsUtils.toJSONValue(object);
 		JSONArray jsonArray = jsonObject.isArray();
 		if (jsonArray != null)
 		{
@@ -84,7 +84,7 @@ public class DBUtil
 				}
 			});
 		}
-		callback.onEncode(new JSONObject(object).toString());
+		callback.onEncode(JsUtils.toJSONValue(object).toString());
 		return;
 	}
 	
@@ -99,13 +99,21 @@ public class DBUtil
 			return FileUtils.fromDataURI(encodedObject).cast();
 		}
 		JSONValue jsonValue = JSONParser.parseStrict(encodedObject);
-		return jsonValue.isObject().getJavaScriptObject().cast();
+		return JsUtils.fromJSONValue(jsonValue).cast();
 	}
 	
-	public static JsArrayMixed decodeKey(String string)
+	public static JsArrayMixed decodeKey(String encodedKey)
     {
-	    // TODO Auto-generated method stub
-	    return null;
+		if (StringUtils.isEmpty(encodedKey))
+		{
+			return null;
+		}
+		JSONValue jsonValue = JSONParser.parseStrict(encodedKey);
+		if (jsonValue.isArray() == null)
+		{
+			jsonValue = new JSONArray().set(0, jsonValue);
+		}
+	    return JsUtils.fromJSONValue(jsonValue).cast();
     }
 
 	public static void throwDOMException(String name, String message)
