@@ -65,8 +65,10 @@ public class DBBridge
 	 * @return
 	 */
 	public static native boolean isWebSQLSupported()/*-{
-		var sqlsupport = !!$wnd.openDatabase;
-		return sqlsupport;
+		//TODO: remove when bridge is ready 
+		return false;
+		//var sqlsupport = !!$wnd.openDatabase;
+		//return sqlsupport;
 	}-*/;
 	
 	static native void enableBridge()/*-{
