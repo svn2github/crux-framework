@@ -36,6 +36,8 @@ import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -538,18 +540,34 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		{
 			if (method.getAnnotation(JsonIgnore.class) == null)
 			{
-				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-				JType returnType = method.getReturnType();
-				String serializerName = getSerializerForType(returnType); 
-				boolean primitive = returnType.isPrimitive() != null;
-				if (!primitive)
+				//jackson support to allow inner objects
+				if (method.getAnnotation(JsonSubTypes.class) != null)
 				{
-					srcWriter.println("if ("+objectVar+"."+method.getName()+"() != null){");
-				}
-				srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
-				if (!primitive)
-				{
-					srcWriter.println("}");
+					for(Type type : (method.getAnnotation(JsonSubTypes.class).value()))
+					{
+						//Exemplo:
+						//type.name() -> parametrosAutenticarUsuario1DTO
+						//type.value() -> br.com.mca.comissionamento.seguranca.client.dto.ParametrosAutenticarUsuario1DTO 
+						
+						//chavear serializerName
+						//srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+						//tratar o json decode tb!
+					}
+				} else {
+					String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+					JType returnType = method.getReturnType();
+					
+					String serializerName = getSerializerForType(returnType); 
+					boolean primitive = returnType.isPrimitive() != null;
+					if (!primitive)
+					{
+						srcWriter.println("if ("+objectVar+"."+method.getName()+"() != null){");
+					}
+					srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+					if (!primitive)
+					{
+						srcWriter.println("}");
+					}
 				}
 			}
 		}
