@@ -103,6 +103,42 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 
+@url urlTopMenuDisposalShowMenuButton topMenuDisposalShowMenuButton; 
+@external crux-TopMenuDisposal, headerPanel, showMenuButton, menuPanel, menuEntry;
+.crux-TopMenuDisposal .showMenuButton
+{
+	background-image: urlTopMenuDisposalShowMenuButton;
+	background-repeat: no-repeat;
+	height: 40px;
+	width: 40px;
+	background-size: 25%;
+	margin-top: 10px;
+	margin-left: 0px;
+	background-position: center;
+	background-color: transparent;
+	border: none;
+	float: left;
+	-webkit-user-select: none;
+	outline: none;
+}
+.crux-TopMenuDisposal .headerPanel
+{
+	height: 60px;
+	color: #FFFFFF;
+	background-color: #606060;
+	text-shadow: 0 1px 0 #000000;
+	-webkit-user-select: none;
+	text-align: center;
+}
+.crux-TopMenuDisposal .menuPanel .menuEntry
+{
+	width: 100%;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	border-radius: 0px !important;
+	border-top: 0px;
+}
+
 @external gwt-TextBox;
 .gwt-TextBox
 {

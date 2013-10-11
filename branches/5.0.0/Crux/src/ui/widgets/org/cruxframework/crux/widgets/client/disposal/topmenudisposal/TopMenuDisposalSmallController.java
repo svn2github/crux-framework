@@ -16,6 +16,7 @@
 package org.cruxframework.crux.widgets.client.disposal.topmenudisposal;
 
 import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
@@ -24,6 +25,8 @@ import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
@@ -35,6 +38,7 @@ public class TopMenuDisposalSmallController extends DeviceAdaptiveController imp
 	private HorizontalSwapPanel swapPanel;
 	private FlowPanel menuPanel;
 	private SimpleViewContainer viewContainer;
+	private String lastVisitedView = null;
 	
 	@Override
 	public void addMenuEntry(String label, final String targetView)
@@ -49,6 +53,7 @@ public class TopMenuDisposalSmallController extends DeviceAdaptiveController imp
 			{
 				viewContainer.showView(targetView);
 				swapPanel.transitTo(viewContainer, Direction.FORWARD);
+				Window.scrollTo(0, 0);
 			}
 		});
 		
@@ -58,15 +63,51 @@ public class TopMenuDisposalSmallController extends DeviceAdaptiveController imp
 	@Override
 	protected void init()
 	{
-		viewContainer = new SimpleViewContainer();
+		viewContainer = getChildWidget("viewContainer");
 		swapPanel = getChildWidget("swapPanel");
 		menuPanel = getChildWidget("menuPanel");
+		menuPanel.removeFromParent();
 		setStyleName("crux-TopMenuDisposal");
 	}
 
-	@Override
-	public void showMenu()
+	@Expose
+	public void onShowMenu(TouchStartEvent evt)
 	{
-		swapPanel.transitTo(menuPanel, Direction.BACKWARDS);
+		evt.preventDefault();
+		evt.stopPropagation();
+		showMenu();
+	}
+
+	@Override
+	public void showMenu() 
+	{
+		if(swapPanel.getCurrentWidget().equals(menuPanel) && lastVisitedView != null)
+		{
+			showView(lastVisitedView);
+		}
+		else
+		{
+			swapPanel.transitTo(menuPanel, Direction.BACKWARDS);
+		}
+	}
+
+	@Override
+	public void showView(String viewName) 
+	{
+		viewContainer.showView(viewName);
+		swapPanel.transitTo(viewContainer, Direction.FORWARD);
+		lastVisitedView = viewName;
+		Window.scrollTo(0, 0);
+	}
+
+	@Override
+	public void setDefaultView(String viewName) 
+	{
+		if(lastVisitedView == null)
+		{
+			viewContainer.showView(viewName);
+			lastVisitedView = viewName;
+			Window.scrollTo(0, 0);
+		}
 	}
 }

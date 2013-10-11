@@ -33,4 +33,6 @@ public interface TopMenuDisposal extends DeviceAdaptive
 {
 	void showMenu();
 	void addMenuEntry(String label, String targetView);
+	void showView(String viewName);
+	void setDefaultView(String viewName);
 }

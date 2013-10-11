@@ -19,6 +19,7 @@ import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.DataResource;
 
 /**
  * @author Gesse Dafe
@@ -29,4 +30,7 @@ public interface XStandardResourcesSmall extends ClientBundle
 {
 	@Source("cssXStandardSmall.css")
 	CssXStandardSmall css();
+	
+	@Source("top-menu-disposal-menu-btn.png")
+	DataResource topMenuDisposalShowMenuButton();
 }

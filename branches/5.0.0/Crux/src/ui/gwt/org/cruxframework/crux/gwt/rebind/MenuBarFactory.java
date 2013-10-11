@@ -118,11 +118,17 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		}
 	}
 	
+	@TagConstraints(tagName="caption")
+	@TagChildren({
+		@TagChild(CaptionTypeProcessor.class)
+	})
+	public static class CaptionProcessor extends WidgetChildProcessor<MenuBarContext> {}
+	
 	@TagChildren({
 		@TagChild(TextCaptionProcessor.class),
 		@TagChild(HtmlCaptionProcessor.class)
 	})
-	public static class CaptionProcessor extends ChoiceChildProcessor<MenuBarContext> {}
+	public static class CaptionTypeProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 
 	@TagConstraints(tagName="textCaption")
 	@TagAttributesDeclaration({
@@ -149,11 +155,17 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		}
 	}
 
+	@TagConstraints(tagName="content", type=HTMLTag.class)
+	@TagChildren({
+		@TagChild(MenuChildrenTypeProcessor.class)
+	})
+	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBarContext> {}
+	
 	@TagChildren({
 		@TagChild(CommandProcessor.class),
 		@TagChild(SubMenuProcessor.class)
 	})
-	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBarContext> {}
+	public static class MenuChildrenTypeProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 	
 	@TagConstraints(tagName="command")
 	@TagAttributesDeclaration({

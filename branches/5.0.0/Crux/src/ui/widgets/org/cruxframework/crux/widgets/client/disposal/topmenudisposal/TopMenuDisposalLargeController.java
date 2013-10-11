@@ -21,6 +21,7 @@ import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
@@ -43,6 +44,7 @@ public class TopMenuDisposalLargeController extends DeviceAdaptiveController imp
 			@Override
 			public void execute() {
 				viewContainer.showView(targetView, targetView);
+				Window.scrollTo(0, 0);
 			}
 		});
 		menuBar.addItem(menuItem);
@@ -60,5 +62,19 @@ public class TopMenuDisposalLargeController extends DeviceAdaptiveController imp
 	public void showMenu()
 	{
 		// nothing to do
+	}
+
+	@Override
+	public void showView(String viewName) 
+	{
+		viewContainer.showView(viewName);
+		Window.scrollTo(0, 0);
+	}
+
+	@Override
+	public void setDefaultView(String viewName) 
+	{
+		viewContainer.showView(viewName);
+		Window.scrollTo(0, 0);
 	}
 }

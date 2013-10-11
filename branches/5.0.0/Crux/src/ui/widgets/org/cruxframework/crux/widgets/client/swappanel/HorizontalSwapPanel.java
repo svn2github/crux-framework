@@ -273,13 +273,17 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 
 	private void freezeContainerHeight() 
 	{
-		contentPanel.getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
+		int currentContentHeight = currentPanel.getElement().getOffsetHeight();
+		if(currentContentHeight > 0)
+		{
+			contentPanel.getElement().getStyle().setHeight(currentContentHeight, Unit.PX);
+		}
 	}
 	
 	private void concludeSlide(final Callback completeCallback) 
 	{
-		final int HEIGHT_TRANSITION_DURATION = 200;
-		int currentPanelHeight = currentPanel.getElement().getOffsetHeight();
+		final int HEIGHT_TRANSITION_DURATION = 80;
+		int currentPanelHeight = currentPanel.getWidget() != null ? currentPanel.getWidget().getOffsetHeight() : currentPanel.getOffsetHeight();
 		if (contentPanel.getOffsetHeight() != currentPanelHeight)
 		{
 			Animation.setHeight(contentPanel, currentPanelHeight, HEIGHT_TRANSITION_DURATION, new Callback()
