@@ -109,9 +109,12 @@ public class DBUtil
 			return null;
 		}
 		JSONValue jsonValue = JSONParser.parseStrict(encodedKey);
-		if (jsonValue.isArray() == null)
+		JSONArray array = jsonValue.isArray();
+		if (array == null)
 		{
-			jsonValue = new JSONArray().set(0, jsonValue);
+			array = new JSONArray();
+			array.set(0, jsonValue);
+			jsonValue = array;
 		}
 	    return JsUtils.fromJSONValue(jsonValue).cast();
     }

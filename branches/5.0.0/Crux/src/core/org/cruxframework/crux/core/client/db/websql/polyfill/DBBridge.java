@@ -26,13 +26,19 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
+ * Makes a bridge between IndexedDB api and SQL lite implementation for browsers that does not
+ * support IndexedDB API, like androids and iOS devices.
+ * 
  * @author Thiago da Rosa de Bustamante
- *
  */
 public class DBBridge
 {
 	private static Logger logger = Logger.getLogger(DBBridge.class.getName());
 
+	/**
+	 * Load and install the bridge code 
+	 * @param callback Called when the bridge is loaded and installed in current page.
+	 */
 	public static void installSQLBridge(final Callback callback)
 	{
 		GWT.runAsync(new RunAsyncCallback()
@@ -62,8 +68,8 @@ public class DBBridge
 	}
     
     /**
-	 * 
-	 * @return
+	 * Check if current browser support SQL lite database. If not supported, bridge can not be used.
+	 * @return true if supported
 	 */
 	public static native boolean isWebSQLSupported()/*-{
 		var sqlsupport = !!$wnd.openDatabase;
@@ -90,9 +96,21 @@ public class DBBridge
 		};
 	}-*/;
 	
+	/**
+	 * Callback used to detect when bridge is completely loaded.
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	public static interface Callback
 	{
+		/**
+		 * Called when bridge is loaded successfully 
+		 */
 		void onSuccess();
+		/**
+		 * Called when an error occurred in bridge loading process
+		 * @param e the error
+		 */
 		void onError(Throwable e);
 	}
 }

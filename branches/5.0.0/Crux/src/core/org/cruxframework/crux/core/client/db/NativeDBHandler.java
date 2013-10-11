@@ -28,28 +28,52 @@ import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
+ * Initialize the native database APIs used to support Crux Database. On browsers that support IndexedDB natively, 
+ * use that API as native DB provider. For Browsers that support only SQL Lite native database, create a bridge to enable
+ * SQL usage through indexed DB API. If none of those native databases are supported, Crux Database will not be supported
+ * on that browser.
+ * 
  * @author Thiago da Rosa de Bustamante
- *
  */
 @PartialSupport
 class NativeDBHandler
 {
-	protected static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
+	private static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
 	private static boolean nativeDBInitialized = false; 
 	private static boolean nativeDBInitializing = false;
 	private static boolean preferWebSQL = false;//TODO debug
 
+	/**
+	 * Callback used to detect when native database API is completely initialized.
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	public static interface Callback
 	{
+		/**
+		 * Called when native database API is successfully initialized.
+		 */
 		void onSuccess();
+		/**
+		 * Called when an error occurred in native database API initialization process.
+		 * @param e
+		 */
 		void onError(Throwable e);
 	}
 	
+	/**
+	 * Check if native database API is initialized.
+	 * @return
+	 */
 	public static boolean isInitialized()
 	{
 		return nativeDBInitialized;
 	}
 	
+	/**
+	 * Initialize native database API to support Crux Database operations.
+	 * @param callback
+	 */
 	public static void initialize(final Callback callback)
 	{
 		if (isInitialized())
@@ -78,8 +102,8 @@ class NativeDBHandler
 	}
 
     /**
-     * 
-     * @return
+     * Check if browser support one of Crux supoprted native database APIs.
+     * @return true if supported
      */
     public static boolean isSupported()
     {
