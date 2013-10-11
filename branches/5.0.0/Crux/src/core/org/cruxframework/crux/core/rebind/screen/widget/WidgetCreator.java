@@ -610,23 +610,11 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		context.setWidget(widgetVariableName);
 
 		instantiateWidget(out, context);
-		checkForRequiredAttribute(out, context);
-		
 		if(consumer != null)
 		{
 			consumer.consume(out, widgetId, widgetVariableName, getWidgetFactoryDeclaration(), metaElem);
 		}			
 		return context;
-	}
-
-	private void checkForRequiredAttribute(SourcePrinter out, C context) 
-	{
-		String required = context.readWidgetProperty("required");
-
-		if (required != null && required != "")
-		{
-			out.println(context.getWidget() + ".setRequired(" + required + ");");
-		}
 	}
 
 	/**
