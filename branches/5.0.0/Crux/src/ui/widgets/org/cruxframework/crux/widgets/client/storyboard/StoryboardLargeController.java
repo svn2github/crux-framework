@@ -2,11 +2,10 @@ package org.cruxframework.crux.widgets.client.storyboard;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 @Controller("storyboardLargeController")
 public class StoryboardLargeController extends StoryboardSmallController
@@ -24,7 +23,7 @@ public class StoryboardLargeController extends StoryboardSmallController
 	protected Widget createClickablePanelForCell(Widget widget)
 	{
 	    final Widget panel = super.createClickablePanelForCell(widget);
-	    panel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+	    panel.getElement().getStyle().setProperty("display", "inline-table");
 		return panel;
 	}
 
