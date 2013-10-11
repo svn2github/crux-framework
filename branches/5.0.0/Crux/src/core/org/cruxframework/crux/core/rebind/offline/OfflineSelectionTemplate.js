@@ -29,22 +29,6 @@ function __MODULE_FUNC__() {
     throw null;
   }
   
-	function autoResize(iframe) 
-	{
-		var body = document.body, 
-			html = document.documentElement;
-
-		var newHeight = //Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight ),
-						//html.clientHeight,
-						"100%";
-			newWidth = //Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
-					   //html.clientWidth;
-					   "100%";
-		
-		iframe.height = (newHeight) + "px";
-		iframe.width  = (newWidth) + "px";
-	}
-
   // --------------- PROPERTY PROVIDERS --------------- 
 
 // __PROPERTIES_BEGIN__
@@ -70,54 +54,19 @@ function __MODULE_FUNC__() {
       // intentionally silent on property failure
       return;
     }
-//    var _ua = computePropValue('user.agent');
-//    if (_ua == 'safari')
-//    {
-	    var wrapFrame = document.createElement('iframe');
-	    wrapFrame.src = 'offlineLoader_'+initialHtml;
-		wrapFrame.frameborder = 0;
-		wrapFrame.style.height = '100%';
-		wrapFrame.style.width = '100%';
-		wrapFrame.width = '100%';
-		wrapFrame.height = '100%';
-		wrapFrame.style.border = "none";
-		wrapFrame.onload = autoResize(wrapFrame);
-	    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
-	   
-	    var meta = document.createElement('meta');
-	    meta.name="viewport";
-	    meta.content = "user-scalable=no, width=device-width, height=device-height";
-	    document.getElementsByTagName('head')[0].appendChild(meta);
-//	}
-//	else 
-//	if (window.applicationCache)
-//	{
-//		if (window.applicationCache.status =! 4)
-//		{
-//	        window.applicationCache.addEventListener('noupdate',
-//	            function(event) {
-//	                window.location.replace('offlineLoader_'+initialHtml);
-//	            }, false);
-//	        window.applicationCache.addEventListener('updateready',
-//	            function(event) {
-//	                window.location.replace('offlineLoader_'+initialHtml);
-//	            }, false);
-//	        window.applicationCache.addEventListener('error',
-//	            function(event) {
-//	                window.location.replace('offlineLoader_'+initialHtml);
-//	            }, false);
-//		} 
-//		else
-//		{	
-//			setTimeout(function(){
-//				window.location.replace('offlineLoader_'+initialHtml);
-//			}, 100);
-//		}
-//	}
-//	else
-//	{
-//	   window.alert('This browser does not support offline mode.');
-//	}
+    
+	window.__Crux_Frame = true; // Mark this page as a valid crux frame
+	
+	// Create the frame to load the offline content    
+    var wrapFrame = document.createElement('iframe');
+    wrapFrame.src = 'offlineLoader_'+initialHtml;
+	wrapFrame.frameborder = 0;
+	wrapFrame.style.height = '100%';
+	wrapFrame.style.width = '100%';
+	wrapFrame.width = '100%';
+	wrapFrame.height = '100%';
+	wrapFrame.style.border = "none";
+    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
 }
 
 __MODULE_FUNC__();

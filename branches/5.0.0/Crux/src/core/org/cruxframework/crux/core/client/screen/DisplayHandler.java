@@ -20,6 +20,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.MetaElement;
 
@@ -75,9 +76,53 @@ public class DisplayHandler
 	 */
 	public static void createViewport(String content)
 	{
-		MetaElement viewport = Document.get().createMetaElement();
+		createViewport(content, getCurrentWindow());
+	}
+	
+	/**
+	 * Create a viewport meta element with specified content
+	 * @param content
+	 * @param window
+	 */
+	public static void createViewport(String content, JavaScriptObject wnd)
+	{
+		Document document = getWindowDocument(wnd);
+		MetaElement viewport = document.createMetaElement();
 		viewport.setContent(content);
 		viewport.setName("viewport");
-		Document.get().getElementsByTagName("head").getItem(0).appendChild(viewport);
+		document.getElementsByTagName("head").getItem(0).appendChild(viewport);
+		JavaScriptObject parentWindow = getParentWindow(wnd);
+		if (parentWindow != null && isCruxWindow(parentWindow))
+		{
+			createViewport(content, parentWindow);
+		}
 	}
+
+	/**
+	 * Return the parent window from the given window.
+	 * @return
+	 */
+	private static native JavaScriptObject getParentWindow(JavaScriptObject wnd)/*-{
+		return (wnd.parent !== wnd?wnd.parent:null);
+	}-*/;
+	
+	/**
+	 * If the window is a crux frame (used in situations like offline loading), return 
+	 * true.
+	 * @return
+	 */
+	private static native boolean isCruxWindow(JavaScriptObject wnd)/*-{
+		if (wnd && wnd.__Crux_Frame){
+			return true;
+		}
+		return false;
+	}-*/;
+	
+	private static native JavaScriptObject getCurrentWindow()/*-{
+		return $wnd;
+	}-*/;
+	
+	private static native Document getWindowDocument(JavaScriptObject wnd)/*-{
+		return wnd.document;
+	}-*/;
 }

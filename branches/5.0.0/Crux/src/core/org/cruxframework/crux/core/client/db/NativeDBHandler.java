@@ -37,7 +37,7 @@ class NativeDBHandler
 	protected static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
 	private static boolean nativeDBInitialized = false; 
 	private static boolean nativeDBInitializing = false;
-	private static boolean preferWebSQL = true;//TODO debug
+	private static boolean preferWebSQL = false;//TODO debug
 
 	public static interface Callback
 	{

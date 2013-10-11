@@ -137,6 +137,7 @@ public class AppCacheLinker extends AbstractLinker
 		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts);
 		//fix for some browsers like IE that cannot see the $doc variable outside the iframe tag.  
 		selectionScriptText = selectionScriptText.replace("$doc", "document");
+		
 		selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
 		return selectionScriptText;
 	}
@@ -312,11 +313,10 @@ public class AppCacheLinker extends AbstractLinker
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("<!DOCTYPE html>\n");
-		builder.append("<html manifest=\"" + getManifestName(permutationName) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style>");
-		builder.append("<meta name=\"viewport\" content=\"user-scalable=no, width=device-width, height=device-height\"/>");
-		builder.append("</head>");
+		builder.append("<html manifest=\"" + getManifestName(permutationName) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style></head>");
 		builder.append("<body style=\"margin:0px;padding:0px;overflow:hidden;\">");
-		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"height:100%;width:100%;border: none;\" height=\"100%\" width=\"100%\" marginheight=\"0\" frameborder=\"0\" onLoad=\"autoResize(this);\"></iframe>");
+		builder.append("<script>var __Crux_Frame = true;</script>");
+		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"height:100%;width:100%;border: none;\" height=\"100%\" width=\"100%\" marginheight=\"0\" frameborder=\"0\"></iframe>");
 		builder.append("</body></html>");
 
 		return emitString(logger, builder.toString(), getManifestLoaderName(permutationName));
