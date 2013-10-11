@@ -541,9 +541,10 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			if (method.getAnnotation(JsonIgnore.class) == null)
 			{
 				//jackson support to allow inner objects
-				if (method.getAnnotation(JsonSubTypes.class) != null)
+				JsonSubTypes jsonSubTypes = method.getAnnotation(JsonSubTypes.class);
+				if (jsonSubTypes != null)
 				{
-					for(Type type : (method.getAnnotation(JsonSubTypes.class).value()))
+					for(Type type : jsonSubTypes.value())
 					{
 						//Exemplo:
 						//type.name() -> parametrosAutenticarUsuario1DTO
