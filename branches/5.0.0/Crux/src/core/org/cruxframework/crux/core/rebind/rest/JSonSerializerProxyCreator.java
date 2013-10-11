@@ -38,6 +38,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -504,14 +505,57 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		List<JMethod> setterMethods = JClassUtils.getSetterMethods(objectType);
 		for (JMethod method : setterMethods)
 		{
-			if (method.getAnnotation(JsonIgnore.class) == null)
+			
+			//jackson support to allow inner objects
+			JsonSubTypes jsonSubTypes = method.getAnnotation(JsonSubTypes.class);
+			if (jsonSubTypes != null)
 			{
-				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-				JType paramType = method.getParameterTypes()[0];
-				String serializerName = getSerializerForType(paramType);
-				srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
+				if(jsonSubTypes.value() != null)
+				{
+					//getting key type to determine who needs to be invoked
+					JsonTypeInfo jsonTypeInfo = method.getAnnotation(JsonTypeInfo.class);
+					if(jsonTypeInfo == null)
+					{
+						throw new CruxGeneratorException("["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Annotation JsonTypeInfo is required.");
+					}
+					JMethod getType = JClassUtils.getMethod(objectType, jsonTypeInfo.property(), null);
+					
+					if(getType == null)
+					{
+						throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Key type is missing.");	
+					}
+					
+					//building all serializer names
+					int numberInnerClasses = jsonSubTypes.value().length;
+					int index = 0;
+					for(Type innerObject : jsonSubTypes.value())
+					{
+						index++;
+						srcWriter.println("if ("+getType.getName()+".equals("+innerObject.name()+")){");
+
+						JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
+						String serializerName = getSerializerForType(innerClass);
+						generateCustomDecodeType(srcWriter, resultObjectVar, jsonObjectVar, method, serializerName);
+						
+						if(index == numberInnerClasses)
+						{
+							srcWriter.println(" }");
+						} else {
+							srcWriter.println(" } else {");	
+						}
+					}
+				}
+			} else 
+			{
+				generateCustomDecodeType(srcWriter, resultObjectVar, jsonObjectVar, method, getSerializerForType(method.getParameterTypes()[0]));
 			}
 		}
+	}
+
+	private void generateCustomDecodeType(SourcePrinter srcWriter,
+			String resultObjectVar, String jsonObjectVar, JMethod method, String serializerName) {
+		String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+		srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
 	}
 
 	private String getSerializerForType(JType paramType) {
@@ -540,37 +584,75 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		{
 			if (method.getAnnotation(JsonIgnore.class) == null)
 			{
+				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+				
 				//jackson support to allow inner objects
 				JsonSubTypes jsonSubTypes = method.getAnnotation(JsonSubTypes.class);
 				if (jsonSubTypes != null)
 				{
-					for(Type type : jsonSubTypes.value())
+					if(jsonSubTypes.value() != null)
 					{
-						//Exemplo:
-						//type.name() -> parametrosAutenticarUsuario1DTO
-						//type.value() -> br.com.mca.comissionamento.seguranca.client.dto.ParametrosAutenticarUsuario1DTO 
+						//getting key type to determine who needs to be invoked
+						JsonTypeInfo jsonTypeInfo = method.getAnnotation(JsonTypeInfo.class);
+						if(jsonTypeInfo == null)
+						{
+							throw new CruxGeneratorException("["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Annotation JsonTypeInfo is required.");
+						}
 						
-						//chavear serializerName
-						//srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
-						//tratar o json decode tb!
+						String getTypeMethodName = JClassUtils.getGetterMethod(jsonTypeInfo.property(), objectType);
+						if(getTypeMethodName == null)
+						{
+							throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Getter key type is missing.");	
+						}
+						
+						String setTypeMethodName = JClassUtils.getSetterMethod(jsonTypeInfo.property(), objectType, objectType);
+						if(setTypeMethodName == null)
+						{
+							throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Setter key type is missing.");	
+						}
+						
+						//building all serializer names
+						int numberInnerClasses = jsonSubTypes.value().length;
+						int index = 0;
+						for(Type innerObject : jsonSubTypes.value())
+						{
+							index++;
+							srcWriter.println("if ("+getTypeMethodName+".equals("+innerObject.name()+")){");
+							
+							JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
+							String serializerName = getSerializerForType(innerClass);
+						
+							srcWriter.println(setTypeMethodName+";");
+							generateCustomEncodeType(srcWriter, objectVar, resultJSONValueVar, method, property, serializerName);
+							
+							if(index == numberInnerClasses)
+							{
+								srcWriter.println(" }");
+							} else {
+								srcWriter.println(" } else {");	
+							}
+						}
 					}
 				} else {
-					String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-					JType returnType = method.getReturnType();
-					
-					String serializerName = getSerializerForType(returnType); 
-					boolean primitive = returnType.isPrimitive() != null;
-					if (!primitive)
-					{
-						srcWriter.println("if ("+objectVar+"."+method.getName()+"() != null){");
-					}
-					srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
-					if (!primitive)
-					{
-						srcWriter.println("}");
-					}
+					generateCustomEncodeType(srcWriter, objectVar, resultJSONValueVar, method, property, getSerializerForType(method.getReturnType()));
 				}
 			}
+		}
+	}
+
+	private void generateCustomEncodeType(SourcePrinter srcWriter,
+			String objectVar, String resultJSONValueVar, JMethod method,
+			String property, String serializerName) {
+		JType returnType = method.getReturnType();
+		boolean primitive = returnType.isPrimitive() != null;
+		if (!primitive)
+		{
+			srcWriter.println("if ("+objectVar+"."+method.getName()+"() != null){");
+		}
+		srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+		if (!primitive)
+		{
+			srcWriter.println("}");
 		}
 	}
 }
