@@ -28,7 +28,6 @@ import org.cruxframework.crux.core.client.utils.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -46,12 +45,12 @@ public class DBDatabase extends JavaScriptObject
         // Don't do anything... the database automatically closes
     }
 
-    static final DBTransaction transaction (DBDatabase db, JsArrayString storeNames, String mode)
+    static final DBTransaction transaction (DBDatabase db, Array<String> storeNames, String mode)
     {
     	return db.transaction(storeNames, mode);
     }
     
-    final DBTransaction transaction (JsArrayString storeNames, String mode)
+    final DBTransaction transaction (Array<String> storeNames, String mode)
     {
         DBTransaction transaction = DBTransaction.create(storeNames, mode, this);
         return transaction;
@@ -104,8 +103,9 @@ public class DBDatabase extends JavaScriptObject
 						args.push(storeName);
 						args.push(createOptions.getStringKeyPath()); // TODO tratar chave multipla
 						args.push(createOptions.isAutoIncrement());
+						args.push(DBUtil.encodeKey(JavaScriptObject.createObject()));
 						args.push(DBUtil.encodeKey(JavaScriptObject.createArray()));
-						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?)";
+						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?,?)";
 						if (LogConfiguration.loggingIsEnabled())
 						{
 							logger.log(Level.FINE, "Running SQL ["+sql+"].");
@@ -225,7 +225,7 @@ public class DBDatabase extends JavaScriptObject
 	
 	private native void handleObjectNativeFunctions(DBDatabase db)/*-{
 		this.transaction = function(storeNames, mode){
-			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::transaction(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBDatabase;Lcom/google/gwt/core/client/JsArrayString;Ljava/lang/String;)(db, storeNames, mode);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::transaction(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBDatabase;Lorg/cruxframework/crux/core/client/collection/Array;Ljava/lang/String;)(db, storeNames, mode);
 		};
 		this.close = function(){
 			@org.cruxframework.crux.core.client.db.websql.polyfill.DBDatabase::close()();

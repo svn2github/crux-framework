@@ -27,7 +27,6 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -86,7 +85,7 @@ public class DBTransaction extends JavaScriptObject
 		this.db = val;
 	}-*/;
 
-	final native void setStoreNames(JsArrayString val)/*-{
+	final native void setStoreNames(Array<String> val)/*-{
 		this.storeNames = val;
 	}-*/;
 
@@ -193,7 +192,6 @@ public class DBTransaction extends JavaScriptObject
 	        	return true;
 	        }
         }
-		//DBUtil.throwDOMException("ReadOnlyError", message)throwError(errorName, message)
 		return false;
 	}
 	
@@ -330,10 +328,10 @@ public class DBTransaction extends JavaScriptObject
 		DBEvent.invoke("oncomplete", this, evt);
 	}
 	
-	public static DBTransaction create(JsArrayString storeNames, String mode, DBDatabase db)
+	public static DBTransaction create(Array<String> storeNames, String mode, DBDatabase db)
 	{
 		DBTransaction transaction = createObject().cast();
-	    for (int i = 0; i < storeNames.length(); i++) 
+	    for (int i = 0; i < storeNames.size(); i++) 
 	    {
 	    	if (db.getObjectStoreNames().indexOf(storeNames.get(i)) < 0) 
 	    	{
@@ -355,7 +353,7 @@ public class DBTransaction extends JavaScriptObject
 		return transaction;
 	}
 	
-	public static DBTransaction create(JsArrayString storeNames, int mode, DBDatabase db)
+	public static DBTransaction create(Array<String> storeNames, int mode, DBDatabase db)
 	{
 		String strMode;
 		switch (mode)

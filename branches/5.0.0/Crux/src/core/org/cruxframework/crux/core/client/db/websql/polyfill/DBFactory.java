@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.client.db.websql.polyfill;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.collection.Array;
+import org.cruxframework.crux.core.client.collection.CollectionFactory;
 import org.cruxframework.crux.core.client.db.websql.SQLDatabase;
 import org.cruxframework.crux.core.client.db.websql.SQLDatabaseFactory;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
@@ -27,7 +29,6 @@ import org.cruxframework.crux.core.client.db.websql.SQLTransaction.SQLStatementE
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
 import com.google.gwt.core.client.JsArrayMixed;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -316,7 +317,7 @@ public class DBFactory
 			@Override
 			public void onTransaction(final SQLTransaction tx)
 			{
-				String sql = "CREATE TABLE IF NOT EXISTS __sys__ (name VARCHAR(255), keyPath VARCHAR(255), autoInc BOOLEAN, indexList BLOB)";
+				String sql = "CREATE TABLE IF NOT EXISTS __sys__ (name VARCHAR(255), keyPath VARCHAR(255), autoInc BOOLEAN, indexData BLOB, indexColumns BLOB)";
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.INFO, "Execute SQL ["+sql+"]");
@@ -378,7 +379,7 @@ public class DBFactory
         			@Override
         			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
         			{
-        				JsArrayString storeNames = JsArrayString.createArray().cast();
+        				Array<String> storeNames = CollectionFactory.createArray();
         				DBTransaction transaction = DBTransaction.create(storeNames, DBTransaction.VERSION_TRANSACTION, dbDatabase);
         				request.setTransaction(transaction);
         				dbDatabase.setVersionTransaction(transaction);

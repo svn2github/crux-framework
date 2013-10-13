@@ -353,7 +353,7 @@ public class DBCursor extends JavaScriptObject
 		{
 			cursorRequest.setResult((String) null);
 		}
-        DBEvent.invoke("onsuccess", cursorRequest, evt);
+        DBEvent.invoke("onsuccess", cursorRequest, evt, true);
 	}
 	
 	private void updateCursorValues()

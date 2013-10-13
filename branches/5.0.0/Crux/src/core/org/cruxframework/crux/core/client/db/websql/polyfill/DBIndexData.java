@@ -16,7 +16,6 @@
 package org.cruxframework.crux.core.client.db.websql.polyfill;
 
 import org.cruxframework.crux.core.client.collection.Array;
-import org.cruxframework.crux.core.client.collection.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -24,39 +23,31 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DBObjectStoreMetadata extends JavaScriptObject
+public class DBIndexData extends JavaScriptObject
 {
-	protected DBObjectStoreMetadata(){}
+	protected DBIndexData(){}
 	
-	public final native void setIndexData(Map<DBIndexData> data)/*-{
-		this.indexData = data;
-	}-*/;
-	
-	public final native Map<DBIndexData> getIndexData()/*-{
-		return this.indexData;
+	public final native void setColumnNames(Array<String> columns)/*-{
+		this.columnNames = columns;
 	}-*/;
 	
-	public final native void setAutoInc(boolean autoIncrement)/*-{
-		this.autoInc = autoIncrement;
+	public final native Array<String> getColumnNames()/*-{
+		return this.columnNames;
 	}-*/;
 	
-	public final native boolean isAutoInc()/*-{
-		return this.autoInc;
+	public final native void setKeyPaths(Array<String> paths)/*-{
+		this.keyPaths = paths;
+	}-*/;
+	
+	public final native Array<String> getKeyPaths()/*-{
+		return this.keyPaths;
 	}-*/;
 
-	public final native Array<String> getIndexColumns()/*-{
-		return this.indexColumns;
-	}-*/;
-
-	public final native void setIndexColumns(Array<String> col)/*-{
-		this.indexColumns = col;
-	}-*/;
-
-	public final native void setKeyPath(String keyPath)/*-{
-		this.keyPath = keyPath;
-	}-*/;
-
-	public final native String getKeyPath()/*-{
-		return this.keyPath;
+	public final native void setIndexParameters(DBIndexParameters optionalParameters)/*-{
+		this.indexParameters = optionalParameters;
+    }-*/;
+	
+	public final native DBIndexParameters getIndexParameters()/*-{
+		return this.indexParameters;
 	}-*/;
 }

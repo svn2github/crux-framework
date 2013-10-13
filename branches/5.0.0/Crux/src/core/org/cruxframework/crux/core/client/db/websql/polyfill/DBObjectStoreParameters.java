@@ -15,10 +15,9 @@
  */
 package org.cruxframework.crux.core.client.db.websql.polyfill;
 
-import org.cruxframework.crux.core.client.utils.JsUtils;
+import org.cruxframework.crux.core.client.collection.Array;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayString;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -44,12 +43,7 @@ public class DBObjectStoreParameters extends JavaScriptObject
 	    return this.keyPath;
     }-*/;
 
-	public final void setKeyPath(String[] keyPath)
-    {
-    	setKeyPath(JsUtils.toJsArray(keyPath));
-    }
-    
-    private native void setKeyPath(JsArrayString keyPath) /*-{
+    private native void setKeyPath(Array<String> keyPath) /*-{
 	    this.keyPath = keyPath;
 	}-*/;
 
@@ -68,7 +62,7 @@ public class DBObjectStoreParameters extends JavaScriptObject
     	return res;
     }
 
-    public static DBObjectStoreParameters create(String[] keyPath,boolean autoIncrement) 
+    public static DBObjectStoreParameters create(Array<String> keyPath,boolean autoIncrement) 
     {
     	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
     	res.setKeyPath(keyPath);

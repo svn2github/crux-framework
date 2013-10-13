@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.client.db;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
 import org.cruxframework.crux.core.client.db.websql.polyfill.DBBridge;
 
@@ -41,7 +42,6 @@ class NativeDBHandler
 	private static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
 	private static boolean nativeDBInitialized = false; 
 	private static boolean nativeDBInitializing = false;
-	private static boolean preferWebSQL = false;//TODO debug
 
 	/**
 	 * Callback used to detect when native database API is completely initialized.
@@ -88,7 +88,7 @@ class NativeDBHandler
 	    	}
 	    	else
 	    	{
-	    		if (!DBBridge.isWebSQLSupported() || (IDBFactory.isSupported() && !preferWebSQL))
+	    		if (!DBBridge.isWebSQLSupported() || (IDBFactory.isSupported() && !Crux.getConfig().preferWebSQLForNativeDB()))
 	    		{
 					nativeDBInitialized = true;
 					callback.onSuccess();

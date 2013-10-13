@@ -59,14 +59,27 @@ public class DBEvent extends JavaScriptObject
 		};
 	}-*/;
 	
-	public static native void invoke(String handler, JavaScriptObject context, DBEvent event)/*-{
+	public static void invoke(String handler, JavaScriptObject context, DBEvent event)
+	{
+		invoke(handler, context, event, false);
+	}
+	
+	public static native void invoke(String handler, JavaScriptObject context, DBEvent event, boolean delayCall)/*-{
         event.target = context;
-        (typeof context[handler] === "function") && setTimeout(function(){
-        	context[handler].apply(context, [event]);
-        }, 0);
-        //setTimeout is needed to avoid stack overflow errors on long cursors, once continue() 
-        //is called by the same handler on the previous execution.
+        if (typeof context[handler] === "function")
+        {
+	        if (delayCall)
+	        {
+		        setTimeout(function(){
+		        	context[handler].apply(context, [event]);
+		        }, 0);
+		        //setTimeout is needed to avoid stack overflow errors on long cursors, once continue() 
+		        //is called by the same handler on the previous execution.
+	        }
+	        else
+	        {
+	        	context[handler].apply(context, [event]);
+	        }
+        }
 	}-*/;
 }
-
-

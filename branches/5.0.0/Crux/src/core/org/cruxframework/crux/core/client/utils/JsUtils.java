@@ -152,6 +152,10 @@ public class JsUtils
 	public static native boolean readBooleanPropertyValue(JavaScriptObject object, String property)/*-{
 	    var arr = property.split(".");
 	    while(arr.length && (object = object[arr.shift()]));
+		if (typeof object == "string")
+		{
+			return (object == 'true');
+		}
 	    return object;
     }-*/;
 

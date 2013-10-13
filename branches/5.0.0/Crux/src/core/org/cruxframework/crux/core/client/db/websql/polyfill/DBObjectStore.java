@@ -392,26 +392,38 @@ public class DBObjectStore extends JavaScriptObject
         return cursorRequest;
     }
     
-//TODO index    
-//    public DBIndex index(String indexName)
-//    {
-//        var index = new idbModules.IDBIndex(indexName, this);
-//        return index;
-//    }
+    static final DBIndex index(DBObjectStore db, String indexName)
+    {
+    	return db.index(indexName);
+    }
+    
+    final DBIndex index(String indexName)
+    {
+        DBIndex index = DBIndex.create(indexName, this);
+        return index;
+    }
 
-//TOD create index  e com chave (keyPath) composta  
-//    public DBIndex createIndex (String indexName, String keyPath, optionalParameters)
-//    {
-//        var me = this;
-//        optionalParameters = optionalParameters || {};
-//        me.__setReadyState("createIndex", false);
-//        var result = new idbModules.IDBIndex(indexName, me);
-//        me.__waitForReady(function(){
-//            result.__createIndex(indexName, keyPath, optionalParameters);
-//        }, "createObjectStore");
-//        me.indexNames.push(indexName);
-//        return result;
-//    }
+    static final DBIndex createIndex (DBObjectStore db, final String indexName, final Array<String> keyPath, final DBIndexParameters optionalParameters)
+    {
+    	return db.createIndex(indexName, keyPath, optionalParameters);
+    }
+
+    final DBIndex createIndex (final String indexName, final Array<String> keyPath, final DBIndexParameters optionalParameters)
+    {
+        setReadyState("createIndex", false);
+        final DBIndex result = DBIndex.create(indexName, this);
+        waitForReady(new Callback()
+		{
+			@Override
+			public void execute()
+			{
+				result.createIndex(indexName, keyPath, optionalParameters);
+			}
+			
+		}, "createObjectStore");
+        getIndexNames().add(indexName);
+        return result;
+    }
 
 //TODO delete index
 //    public void deleteIndex (String indexName)
@@ -434,6 +446,75 @@ public class DBObjectStore extends JavaScriptObject
 	final void setReadyState(String key, Boolean value)
 	{
 		getReadyProperties().put(key, value);
+	}
+
+	/**
+	 * Reads (and optionally caches) the properties like keyPath, autoincrement, etc for this objectStore
+	 * @param requestOp
+	 * @param tx
+	 * @param callback
+	 * @param waitOnProperty
+	 */
+	final void readStoreProps(final DBTransaction.RequestOperation requestOp, final SQLTransaction tx, final Callback callback, String waitOnProperty)
+	{
+		waitForReady(new Callback()
+		{
+			@Override
+			public void execute()
+			{
+				if (getMetadata() != null)
+				{
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.FINE, "Reading object store metadata from cache. Store name ["+getName()+"].");
+					}
+					callback.execute();
+				}
+				else
+				{
+					String sql = "SELECT * FROM __sys__ WHERE name = ?";
+					JsArrayMixed args = JsArrayMixed.createArray().cast();
+					args.push(getName());
+					tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+					{
+						@Override
+						public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+						{
+							if (rs.getRows().length() != 1)
+							{
+								requestOp.throwError("Not Found", "Error Reading object store metadata. Store name ["+getName()+"]. No rows found on system table.");
+								return;
+							}
+							else
+							{
+								JavaScriptObject metadataObj = rs.getRows().itemObject(0);
+								Map<DBIndexData> indexData = DBUtil.decodeValue(JsUtils.readStringPropertyValue(metadataObj, "indexData"));
+								Array<String> indexColumns = DBUtil.decodeKey(JsUtils.readStringPropertyValue(metadataObj, "indexColumns")).cast();
+								DBObjectStoreMetadata metadata = DBObjectStoreMetadata.createObject().cast();
+								metadata.setAutoInc(JsUtils.readBooleanPropertyValue(metadataObj, "autoInc"));
+								metadata.setKeyPath(JsUtils.readStringPropertyValue(metadataObj, "keyPath"));
+								metadata.setIndexData(indexData);
+								metadata.setIndexColumns(indexColumns);
+								setMetadata(metadata);
+								if (LogConfiguration.loggingIsEnabled())
+								{
+									logger.log(Level.FINE, "Reading object store metadata from database. Store name ["+getName()+"]. Result cached.");
+								}
+								callback.execute();
+							}
+						}
+					}, new SQLTransaction.SQLStatementErrorCallback()
+					{
+						@Override
+						public boolean onError(SQLTransaction tx, SQLError error)
+						{
+							requestOp.throwError(error.getName(), "Error Reading object store metadata. Store name ["+getName()+"]. Error name ["+error.getName()+"]. Error message ["+error.getMessage()+"].");
+							return false;
+						}
+					});
+				}
+			}
+		}, waitOnProperty);
 	}
 
 	/**
@@ -484,68 +565,6 @@ public class DBObjectStore extends JavaScriptObject
 	}
 
 	/**
-	 * Reads (and optionally caches) the properties like keyPath, autoincrement, etc for this objectStore
-	 * @param requestOp
-	 * @param tx
-	 * @param callback
-	 * @param waitOnProperty
-	 */
-	private void readStoreProps(final DBTransaction.RequestOperation requestOp, final SQLTransaction tx, final Callback callback, String waitOnProperty)
-	{
-		waitForReady(new Callback()
-		{
-			@Override
-			public void execute()
-			{
-				if (getMetadata() != null)
-				{
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.FINE, "Reading object store metadata from cache. Store name ["+getName()+"].");
-					}
-					callback.execute();
-				}
-				else
-				{
-					String sql = "SELECT * FROM __sys__ WHERE name = ?";
-					JsArrayMixed args = JsArrayMixed.createArray().cast();
-					args.push(getName());
-					tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
-					{
-						@Override
-						public void onSuccess(SQLTransaction tx, SQLResultSet rs)
-						{
-							if (rs.getRows().length() != 1)
-							{
-								requestOp.throwError("Not Found", "Error Reading object store metadata. Store name ["+getName()+"]. No rows found on system table.");
-								return;
-							}
-							else
-							{
-								DBObjectStoreMetadata metadata = rs.getRows().itemObject(0).cast();
-								setMetadata(metadata);
-								if (LogConfiguration.loggingIsEnabled())
-								{
-									logger.log(Level.FINE, "Reading object store metadata from database. Store name ["+getName()+"]. Result cached.");
-								}
-								callback.execute();
-							}
-						}
-					}, new SQLTransaction.SQLStatementErrorCallback()
-					{
-						@Override
-						public boolean onError(SQLTransaction tx, SQLError error)
-						{
-							requestOp.throwError(error.getName(), "Error Reading object store metadata. Store name ["+getName()+"]. Error name ["+error.getName()+"]. Error message ["+error.getMessage()+"].");
-							return false;
-						}
-					});
-				}
-			}
-		}, waitOnProperty);
-	}
-
-	/**
 	 * From the store properties and object, extracts the value for the key in hte object Store
 	 * If the table has auto increment, get the next in sequence
 	 * @param requestOp
@@ -583,7 +602,7 @@ public class DBObjectStore extends JavaScriptObject
 					{
 						requestOp.throwError("Data Error", "The object store ["+getName()+"] uses out-of-line keys and has no key generator and the key parameter was not provided.");
 						return;
-					}					
+					}
 				}
 			}
 		}, null);//wait for all properties
@@ -670,7 +689,7 @@ public class DBObjectStore extends JavaScriptObject
         if (!StringUtils.isEmpty(keyPath))
         {
         	JsUtils.writePropertyValue(object, keyPath, (String)null);
-        }//TODO nao permitir chave complexa (prop1.prop2) coom autoIncrement e nem chave composta
+        }//TODO nao permitir chave complexa (prop1.prop2) com autoIncrement e nem chave composta
     }
 
 	private void insertObject(final JavaScriptObject object, final SQLTransaction tx, final DBTransaction.RequestOperation op, 
@@ -730,16 +749,18 @@ public class DBObjectStore extends JavaScriptObject
     		paramMap.put("key", DBUtil.encodeKey(primaryKey));
     	}
 
-    	JsArrayMixed indexes = DBUtil.decodeValue(getMetadata().getIndexList());
+    	Map<DBIndexData> indexes = getMetadata().getIndexData();
     	if (indexes != null)
     	{
     		try
     		{
-	    		for (int i=0; i< indexes.length(); i++)
+    			Array<String> indexNames = indexes.keys();
+	    		for (int i=0; i< indexNames.size(); i++)
 	    		{
+	    			JavaScriptObject index = indexes.get(indexNames.get(i));
 	        		JsArrayMixed indexProps = JsArrayMixed.createArray().cast();
-	        		JsUtils.readPropertyValue(indexes, "key.columnName", indexProps);
-	        		JsUtils.readPropertyValue(indexes, "key.keyPath", indexProps);
+	        		JsUtils.readPropertyValue(index, "columnName", indexProps);
+	        		JsUtils.readPropertyValue(index, "keyPath", indexProps);
 	        		JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
 	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexKey);
 	    			
@@ -783,6 +804,10 @@ public class DBObjectStore extends JavaScriptObject
 	    this.indexNames = indexNames;
     }-*/;
 
+	final native Array<String> getIndexNames()/*-{
+		return this.indexNames;
+	}-*/;
+	
 	private native void setTransaction(DBTransaction dbTransaction)/*-{
 	    this.transaction = dbTransaction;
     }-*/;
@@ -830,8 +855,15 @@ public class DBObjectStore extends JavaScriptObject
 		this.openCursor = function(range, direction){
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::openCursor(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBKeyRange;Ljava/lang/String;)(db, range, direction);
 		};
+		this.index = function(indexName){
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::index(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Ljava/lang/String;)(db, indexName);
+		};
+		this.createIndex = function(indexName, keyPath, optionalParameters){
+			var keyPaths = $wnd.__db_bridge__.convertKey(keyPath);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::createIndex(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Ljava/lang/String;Lorg/cruxframework/crux/core/client/collection/Array;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBIndexParameters;)(db, indexName, keyPaths, optionalParameters);
+		};
 	}-*/;
-
+	
 	public static DBObjectStore create(String objectStoreName, DBTransaction dbTransaction, boolean ready)
 	{
 		DBObjectStore objectStore = DBObjectStore.createObject().cast();
@@ -846,7 +878,7 @@ public class DBObjectStore extends JavaScriptObject
 		return objectStore;
 	}
 
-	private static interface Callback
+	static interface Callback
 	{
 		void execute();
 	}

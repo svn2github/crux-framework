@@ -50,6 +50,9 @@ public interface Crux
 	String enableCrux2OldInterfacesCompatibility();
 	
 	@DefaultServerMessage("false")
+	String preferWebSQLForNativeDB();
+
+	@DefaultServerMessage("false")
 	String renderWidgetsWithIDs();
 
 	@DefaultServerMessage("false")
@@ -64,6 +67,7 @@ public interface Crux
 	void setRenderWidgetsWithIDs(Boolean value);
 	void setUseCompileTimeClassScanning(Boolean value);
 	void setEnableCrux2OldInterfacesCompatibility(Boolean value);
+	void setPreferWebSQLForNativDB(Boolean value);
 	void setEnableCrossDocumentSupport(Boolean value);
 	void setClassPathResolver(String value);
 	void setScreenResourceResolver(String value);
