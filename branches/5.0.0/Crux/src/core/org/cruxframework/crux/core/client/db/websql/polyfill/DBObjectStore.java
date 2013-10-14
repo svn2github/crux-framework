@@ -784,17 +784,23 @@ public class DBObjectStore extends JavaScriptObject
     		try
     		{
     			Array<String> indexNames = indexes.keys();
-	    		for (int i=0; i< indexNames.size(); i++)
+	    		for (int i = 0; i < indexNames.size(); i++)
 	    		{
 	    			JavaScriptObject index = indexes.get(indexNames.get(i));
-	        		JsArrayMixed indexProps = JsArrayMixed.createArray().cast();
-	        		JsUtils.readPropertyValue(index, "columnName", indexProps);
-	        		JsUtils.readPropertyValue(index, "keyPath", indexProps);
-	        		JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
-	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexKey, false);
-	    			if (indexKey.length() > 0)
+	    			JsArrayMixed indexKeyPaths = JsArrayMixed.createArray().cast();
+	    			JsArrayMixed indexColumnNames = JsArrayMixed.createArray().cast();
+	        		JsUtils.readPropertyValue(index, "columnNames", indexColumnNames, false);
+	        		JsUtils.readPropertyValue(index, "keyPaths", indexKeyPaths, false);
+	    			for (int j = 0; j < indexColumnNames.length(); j++)
 	    			{
-	    				paramMap.put(indexProps.getString(0), DBUtil.encodeKey(indexKey));
+	    				String columnName = indexColumnNames.getString(j);
+	    				String keyPath = indexKeyPaths.getString(j);
+		    			JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
+		        		JsUtils.readPropertyValue(object, keyPath, indexKey, false);
+		    			if (indexKey.length() > 0)
+		    			{
+		    				paramMap.put(columnName, DBUtil.encodeKey(indexKey));
+		    			}
 	    			}
 	    		}
     		}
