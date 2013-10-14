@@ -510,9 +510,9 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				JsonSubTypes jsonSubTypes = method.getAnnotation(JsonSubTypes.class);
 				if (jsonSubTypes != null && jsonSubTypes.value() != null)
 				{
-					JMethod getType = JClassUtils.getMethod(objectType, "type", null);
+					String getTypeMethodName = JClassUtils.getGetterMethod("type", objectType);
 
-					if(getType == null)
+					if(getTypeMethodName == null || getTypeMethodName == "")
 					{
 						throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Key type is missing.");	
 					}
@@ -523,7 +523,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 					for(Type innerObject : jsonSubTypes.value())
 					{
 						index++;
-						srcWriter.println("if ("+getType.getName()+".equals("+innerObject.name()+")){");
+						srcWriter.println("if ("+getTypeMethodName+".equals("+innerObject.name()+")){");
 
 						JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
 						String serializerName = getSerializerForType(innerClass);
@@ -583,7 +583,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				if (jsonSubTypes != null && jsonSubTypes.value() != null)
 				{
 					String getTypeMethodName = JClassUtils.getGetterMethod("type", objectType);
-					if(getTypeMethodName == null)
+					if(getTypeMethodName == null || getTypeMethodName == "")
 					{
 						throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Getter key type is missing.");	
 					}
