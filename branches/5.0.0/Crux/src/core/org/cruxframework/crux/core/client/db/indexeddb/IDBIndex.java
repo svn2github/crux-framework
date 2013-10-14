@@ -165,7 +165,7 @@ public class IDBIndex extends JavaScriptObject
 	}
 
 	public final  native IDBObjectStoreRequest getKey(double key) /*-{
-	    return this.get(key);
+	    return this.getKey(key);
 	}-*/;
 
 }

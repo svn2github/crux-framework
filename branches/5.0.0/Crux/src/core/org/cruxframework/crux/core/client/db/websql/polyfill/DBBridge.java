@@ -93,7 +93,7 @@ public class DBBridge
 			if (!key) return null;
 			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
 			return keys; 
-		};
+		};//TODO tratar keyrange.... aqui e nos metodos da API que recebem key....ver exemplo na DBIndex
 	}-*/;
 	
 	/**

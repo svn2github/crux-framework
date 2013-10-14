@@ -318,7 +318,7 @@ public class DBFactory
 			@Override
 			public void onTransaction(final SQLTransaction tx)
 			{
-				String sql = "CREATE TABLE IF NOT EXISTS __sys__ (name VARCHAR(255), keyPath VARCHAR(255), autoInc BOOLEAN, indexData BLOB, indexColumns BLOB)";
+				String sql = "CREATE TABLE IF NOT EXISTS __sys__ (name VARCHAR(255), keyPath VARCHAR(255), autoInc BOOLEAN, indexData BLOB)";
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.INFO, "Execute SQL ["+sql+"]");

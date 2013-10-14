@@ -44,19 +44,11 @@ public class DBObjectStoreMetadata extends JavaScriptObject
 		return this.autoInc;
 	}-*/;
 
-	public final native Array<String> getIndexColumns()/*-{
-		return this.indexColumns;
-	}-*/;
-
-	public final native void setIndexColumns(Array<String> col)/*-{
-		this.indexColumns = col;
-	}-*/;
-
-	public final native void setKeyPath(String keyPath)/*-{
+	public final native void setKeyPath(Array<String> keyPath)/*-{
 		this.keyPath = keyPath;
 	}-*/;
 
-	public final native String getKeyPath()/*-{
+	public final native Array<String> getKeyPath()/*-{
 		return this.keyPath;
 	}-*/;
 }

@@ -27,20 +27,12 @@ public class DBIndexData extends JavaScriptObject
 {
 	protected DBIndexData(){}
 	
-	public final native void setColumnNames(Array<String> columns)/*-{
-		this.columnNames = columns;
+	public final native void setKeyPath(Array<String> paths)/*-{
+		this.keyPath = paths;
 	}-*/;
 	
-	public final native Array<String> getColumnNames()/*-{
-		return this.columnNames;
-	}-*/;
-	
-	public final native void setKeyPaths(Array<String> paths)/*-{
-		this.keyPaths = paths;
-	}-*/;
-	
-	public final native Array<String> getKeyPaths()/*-{
-		return this.keyPaths;
+	public final native Array<String> getKeyPath()/*-{
+		return this.keyPath;
 	}-*/;
 
 	public final native void setIndexParameters(DBIndexParameters optionalParameters)/*-{

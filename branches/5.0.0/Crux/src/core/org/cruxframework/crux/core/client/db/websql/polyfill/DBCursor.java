@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.client.db.websql.polyfill;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
@@ -338,6 +339,7 @@ public class DBCursor extends JavaScriptObject
 		JsUtils.writePropertyValue(cursorRequest, "result", key, true);
         DBEvent.invoke("onsuccess", cursorRequest, evt);
 	}
+	
 	private void fireSuccessEvent()
 	{
 		updateCursorValues();
@@ -374,10 +376,10 @@ public class DBCursor extends JavaScriptObject
 			JsUtils.writePropertyValue(this, "key", key, true);
 			
 			//Update Value
-			JavaScriptObject decodeValue = DBUtil.decodeValue(value.getString(0));
+			JavaScriptObject decodedValue = DBUtil.decodeValue(value.getString(0));
 			if (StringUtils.unsafeEquals(getValueColumnName(), "value"))
 			{
-				setValue(decodeValue);
+				setValue(decodedValue);
 			}
 			else
 			{
@@ -386,10 +388,14 @@ public class DBCursor extends JavaScriptObject
 			}
 
 			//Update Primary Key
-			if (!StringUtils.isEmpty(getObjectStore().getMetadata().getKeyPath()))
+			Array<String> keyPath = getObjectStore().getMetadata().getKeyPath();
+			if (keyPath != null && keyPath.size() > 0)
 			{
-				JsUtils.readPropertyValue(decodeValue, getObjectStore().getMetadata().getKeyPath(), primaryKey);
-				JsUtils.writePropertyValue(this, "primaryKey", primaryKey, true);
+				for (int i = 0; i < keyPath.size(); i++)
+				{
+					JsUtils.readPropertyValue(decodedValue, keyPath.get(i), primaryKey, keyPath.size() > 1);					
+				}
+				JsUtils.writePropertyValue(this, "primaryKey", primaryKey, keyPath.size() == 1);
 			}
 		}
 		else

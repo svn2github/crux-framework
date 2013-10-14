@@ -60,25 +60,29 @@ public class DBKeyRange extends JavaScriptObject
 
 	public final native JsArrayMixed getBounds()/*-{
 		var result = [];
-		if (lower)
+		if (this.lower)
 		{
-			result.push(lower);
+			result.push(this.lower);
 		}
-		if (upper)
+		if (this.upper)
 		{
-			result.push(upper);
+			result.push(this.upper);
 		}
 		return result;
 	}-*/;
 
-	protected static DBKeyRange create(JsArrayMixed bounds)
-	{
-		if (bounds.length() < 4)
+	public final native JsArrayMixed getBounds(int index)/*-{
+		var result = [];
+		if (this.lower)
 		{
-			bounds.setLength(4);
+			result.push(this.lower[index]);
 		}
-		return createNative(bounds);
-	}
+		if (this.upper)
+		{
+			result.push(this.upper[index]);
+		}
+		return result;
+	}-*/;
 
 	private static native DBKeyRange createNative(JsArrayMixed bounds)/*-{
 		return {

@@ -27,46 +27,15 @@ public class DBObjectStoreParameters extends JavaScriptObject
 {
     protected DBObjectStoreParameters() {}
     
-    public final native void setAutoIncrement(boolean value) /*-{
-        this.autoIncrement = value;
-    }-*/;
-    
     public final native boolean isAutoIncrement()/*-{
     	return !!this.autoIncrement;
     }-*/;
     
-    public final native void setKeyPath(String keyPath) /*-{
-		this.keyPath = keyPath;
+	public final native Array<String> getKeyPath()/*-{
+	    if (this.keyPath)
+	    {
+	    	return $wnd.__db_bridge__.convertKey(this.keyPath);
+	    }
+	    return null;
     }-*/;
-    
-	public final native String getStringKeyPath()/*-{
-	    return this.keyPath;
-    }-*/;
-
-    private native void setKeyPath(Array<String> keyPath) /*-{
-	    this.keyPath = keyPath;
-	}-*/;
-
-    public static DBObjectStoreParameters create() 
-    {
-    	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
-    	res.setAutoIncrement(false);
-    	return res;
-    }
-
-    public static DBObjectStoreParameters create(String keyPath,boolean autoIncrement) 
-    {
-    	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
-    	res.setKeyPath(keyPath);
-    	res.setAutoIncrement(autoIncrement);
-    	return res;
-    }
-
-    public static DBObjectStoreParameters create(Array<String> keyPath,boolean autoIncrement) 
-    {
-    	DBObjectStoreParameters res = JavaScriptObject.createObject().cast();
-    	res.setKeyPath(keyPath);
-    	res.setAutoIncrement(autoIncrement);
-    	return res;
-    }
 }

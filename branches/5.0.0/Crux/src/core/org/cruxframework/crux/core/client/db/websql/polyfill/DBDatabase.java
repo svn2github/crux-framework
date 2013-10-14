@@ -63,10 +63,8 @@ public class DBDatabase extends JavaScriptObject
     
     final DBObjectStore createObjectStore(final String storeName, final DBObjectStoreParameters createOptions)
     {
-		if (getVersionTransaction() == null)
-		{
-			DBUtil.throwDOMException("Invalid State", "Database can create object stores only on a versionchange transaction");
-		}
+		checkObjectStoreCreationConditions(createOptions);
+		
     	final DBObjectStore result = DBObjectStore.create(storeName, getVersionTransaction());
     	getVersionTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
 		{
@@ -101,11 +99,11 @@ public class DBDatabase extends JavaScriptObject
 					{
 						JsArrayMixed args = JsArrayMixed.createArray().cast();
 						args.push(storeName);
-						args.push(createOptions.getStringKeyPath()); // TODO tratar chave multipla
+						Array<String> keyPath = createOptions.getKeyPath();
+						args.push(keyPath!= null?DBUtil.encodeKey(keyPath):null); 
 						args.push(createOptions.isAutoIncrement());
 						args.push(DBUtil.encodeKey(JavaScriptObject.createObject()));
-						args.push(DBUtil.encodeKey(JavaScriptObject.createArray()));
-						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?,?)";
+						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?)";
 						if (LogConfiguration.loggingIsEnabled())
 						{
 							logger.log(Level.FINE, "Running SQL ["+sql+"].");
@@ -127,6 +125,30 @@ public class DBDatabase extends JavaScriptObject
       // Hence, this can technically be unusable, and we hack around it, by setting the ready value to false
       getObjectStoreNames().add(storeName);
       return result;
+    }
+
+	private void checkObjectStoreCreationConditions(final DBObjectStoreParameters createOptions)
+    {
+	    if (getVersionTransaction() == null)
+		{
+			DBUtil.throwDOMException("Invalid State", "Database can create object stores only on a versionchange transaction");
+		}
+		
+		if (createOptions.isAutoIncrement())
+		{
+			Array<String> keyPath = createOptions.getKeyPath();
+			if (keyPath != null)
+			{
+				if (keyPath.size() > 1)
+				{
+					DBUtil.throwDOMException("Data Error", "Auto increment Key is not supported on composite Keys.");
+				}
+				if (keyPath.size() == 1 && (keyPath.get(0).indexOf('.') != -1))
+				{
+					DBUtil.throwDOMException("Data Error", "Auto increment Key is not supported on complex nested Keys.");
+				}
+			}
+		}
     }
 
     static final void deleteObjectStore(DBDatabase db, final String storeName)

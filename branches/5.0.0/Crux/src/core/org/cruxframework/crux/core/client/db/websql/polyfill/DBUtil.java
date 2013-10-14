@@ -58,7 +58,12 @@ public class DBUtil
 			}
 			if (jsonArray.size() > 0)
 			{
-				return jsonArray.get(0).toString();
+				JSONValue jsonValue = jsonArray.get(0);
+				if (jsonValue.isString() != null)
+				{
+					return jsonValue.isString().stringValue();
+				}
+				return jsonValue.toString();
 			}
 		}
 		return jsonObject.toString();

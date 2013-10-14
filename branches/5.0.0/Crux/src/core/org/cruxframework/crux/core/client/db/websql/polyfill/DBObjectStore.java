@@ -414,13 +414,13 @@ public class DBObjectStore extends JavaScriptObject
     final DBIndex createIndex (final String indexName, final Array<String> keyPath, final DBIndexParameters optionalParameters)
     {
         setReadyState("createIndex-"+indexName, false);
-        final DBIndex result = DBIndex.create(indexName, this);
+        final DBIndex result = DBIndex.create(indexName, this, keyPath, optionalParameters);
         waitForReady(new Callback()
 		{
 			@Override
 			public void execute()
 			{
-				result.createIndex(indexName, keyPath, optionalParameters);
+				result.createIndex(keyPath, optionalParameters);
 			}
 			
 		}, "createObjectStore");
@@ -428,13 +428,30 @@ public class DBObjectStore extends JavaScriptObject
         return result;
     }
 
-//TODO delete index
-//    public void deleteIndex (String indexName)
-//    {
-//        var result = new idbModules.IDBIndex(indexName, this, false);
-//        result.__deleteIndex(indexName);
-//        return result;
-//    }    
+    static final void deleteIndex (DBObjectStore db, String indexName)
+    {
+    	db.deleteIndex(indexName);
+    }
+    
+    final void deleteIndex (String indexName)
+    {
+        setReadyState("deleteIndex-"+indexName, false);
+        final DBIndex result = DBIndex.create(indexName, this, null, null);
+        waitForReady(new Callback()
+		{
+			@Override
+			public void execute()
+			{
+		        result.deleteIndex();
+			}
+			
+		}, "createObjectStore");
+        int index = getIndexNames().indexOf(indexName);
+        if (index != -1)
+        {
+        	getIndexNames().remove(index);
+        }
+    }    
     
     /**
      * Get objectStore metadata
@@ -513,12 +530,11 @@ public class DBObjectStore extends JavaScriptObject
 							{
 								JavaScriptObject metadataObj = rs.getRows().itemObject(0);
 								Map<DBIndexData> indexData = DBUtil.decodeValue(JsUtils.readStringPropertyValue(metadataObj, "indexData"));
-								Array<String> indexColumns = DBUtil.decodeKey(JsUtils.readStringPropertyValue(metadataObj, "indexColumns")).cast();
+								Array<String> keyPath = DBUtil.decodeKey(JsUtils.readStringPropertyValue(metadataObj, "keyPath")).cast();
 								DBObjectStoreMetadata metadata = DBObjectStoreMetadata.createObject().cast();
 								metadata.setAutoInc(JsUtils.readBooleanPropertyValue(metadataObj, "autoInc"));
-								metadata.setKeyPath(JsUtils.readStringPropertyValue(metadataObj, "keyPath"));
+								metadata.setKeyPath(keyPath);
 								metadata.setIndexData(indexData);
-								metadata.setIndexColumns(indexColumns);
 								setMetadata(metadata);
 								setIndexNames(indexData.keys());
 								if (LogConfiguration.loggingIsEnabled())
@@ -613,7 +629,7 @@ public class DBObjectStore extends JavaScriptObject
 					requestOp.throwError("Data Error", "Could not locate definition for the table ["+getName()+"]");
 					return;
 				}
-				if (!StringUtils.isEmpty(getMetadata().getKeyPath()))
+				if (getMetadata().getKeyPath() != null && getMetadata().getKeyPath().size() > 0)
 				{
 					deriveKeyFromMetatadaKeyPath(requestOp, tx, object, key, callback);
 				}
@@ -691,7 +707,11 @@ public class DBObjectStore extends JavaScriptObject
         try 
         {
         	JsArrayMixed primaryKey = JsArrayMixed.createArray().cast();
-        	JsUtils.readPropertyValue(object, getMetadata().getKeyPath(), primaryKey, false);
+        	Array<String> keyPath = getMetadata().getKeyPath();
+        	for (int i = 0 ; i < keyPath.size(); i++)
+        	{
+        		JsUtils.readPropertyValue(object, keyPath.get(i), primaryKey, keyPath.size() > 1);
+        	}
         	if (primaryKey.length() > 0)
         	{
         		callback.execute(primaryKey, false);
@@ -714,11 +734,15 @@ public class DBObjectStore extends JavaScriptObject
 
 	private void clearGeneratedKey(final JavaScriptObject object)
     {
-        String keyPath = getMetadata().getKeyPath();
-        if (!StringUtils.isEmpty(keyPath))
+		Array<String> keyPath = getMetadata().getKeyPath();
+        if (keyPath != null && keyPath.size() > 0)
         {
-        	JsUtils.writePropertyValue(object, keyPath, (String)null);
-        }//TODO nao permitir chave complexa (prop1.prop2) com autoIncrement e nem chave composta
+        	for (int i = 0; i < keyPath.size(); i++)
+        	{
+        		String path = keyPath.get(i);
+        		JsUtils.writePropertyValue(object, path, (String)null);
+        	}
+        }
     }
 
 	private void insertObject(final JavaScriptObject object, final SQLTransaction tx, final DBTransaction.RequestOperation op, 
@@ -726,10 +750,10 @@ public class DBObjectStore extends JavaScriptObject
     {
         if (generatedKey)
         {
-        	String keyPath = getMetadata().getKeyPath();
-        	if (!StringUtils.isEmpty(keyPath))
-        	{
-        		JsUtils.writePropertyValue(object, keyPath, key.getNumber(0));
+    		Array<String> keyPath = getMetadata().getKeyPath();
+            if (keyPath != null && keyPath.size() > 0)
+            {
+        		JsUtils.writePropertyValue(object, keyPath.get(0), key.getNumber(0));
         	}
         }
         DBUtil.encodeValue(object, new DBUtil.EncodeCallback()
@@ -786,21 +810,18 @@ public class DBObjectStore extends JavaScriptObject
     			Array<String> indexNames = indexes.keys();
 	    		for (int i = 0; i < indexNames.size(); i++)
 	    		{
-	    			JavaScriptObject index = indexes.get(indexNames.get(i));
-	    			JsArrayMixed indexKeyPaths = JsArrayMixed.createArray().cast();
-	    			JsArrayMixed indexColumnNames = JsArrayMixed.createArray().cast();
-	        		JsUtils.readPropertyValue(index, "columnNames", indexColumnNames, false);
-	        		JsUtils.readPropertyValue(index, "keyPaths", indexKeyPaths, false);
-	    			for (int j = 0; j < indexColumnNames.length(); j++)
+	    			String indexName = indexNames.get(i);
+					DBIndexData index = indexes.get(indexName);
+	    			JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
+	    			Array<String> keyPath = index.getKeyPath();
+
+	    			for (int j = 0; j < keyPath.size(); j++)
 	    			{
-	    				String columnName = indexColumnNames.getString(j);
-	    				String keyPath = indexKeyPaths.getString(j);
-		    			JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
-		        		JsUtils.readPropertyValue(object, keyPath, indexKey, false);
-		    			if (indexKey.length() > 0)
-		    			{
-		    				paramMap.put(columnName, DBUtil.encodeKey(indexKey));
-		    			}
+		        		JsUtils.readPropertyValue(object, keyPath.get(j), indexKey, keyPath.size() > 1);
+	    			}
+	    			if (indexKey.length() > 0)
+	    			{
+	    				paramMap.put(indexName, DBUtil.encodeKey(indexKey));
 	    			}
 	    		}
     		}
@@ -899,6 +920,10 @@ public class DBObjectStore extends JavaScriptObject
 		this.createIndex = function(indexName, keyPath, optionalParameters){
 			var keyPaths = $wnd.__db_bridge__.convertKey(keyPath);
 			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::createIndex(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Ljava/lang/String;Lorg/cruxframework/crux/core/client/collection/Array;Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBIndexParameters;)(db, indexName, keyPaths, optionalParameters);
+		};
+		this.deleteIndex = function(indexName, keyPath, optionalParameters){
+			var keyPaths = $wnd.__db_bridge__.convertKey(keyPath);
+			return @org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore::deleteIndex(Lorg/cruxframework/crux/core/client/db/websql/polyfill/DBObjectStore;Ljava/lang/String;)(db, indexName);
 		};
 	}-*/;
 	
