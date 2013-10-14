@@ -142,7 +142,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	/**
 	 * @param panel2
 	 */
-	private HorizontalPanel createPanelCells()
+	protected HorizontalPanel createPanelCells()
 	{
 		HorizontalPanel panel = new HorizontalPanel();
 		panel.setStyleName(DEFAULT_STYLE_NAME);
