@@ -488,24 +488,17 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JsonSubTypes jsonSubTypesClass = objectType.getAnnotation(JsonSubTypes.class);
 		if (jsonSubTypesClass != null && jsonSubTypesClass.value() != null)
 		{
-			String getTypeMethodName = JClassUtils.getGetterMethod("type", objectType);
-
-			if(getTypeMethodName == null || getTypeMethodName == "")
-			{
-				throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Key type is missing.");	
-			}
-
 			//building all serializer names
 			int numberInnerClasses = jsonSubTypesClass.value().length;
 			int index = 0;
 			for(Type innerObject : jsonSubTypesClass.value())
 			{
 				index++;
-				srcWriter.println("if ("+jsonValueVar+".isObject().get(\"type\").equals(\""+innerObject.name()+"\")){");
+				srcWriter.println("if ("+jsonValueVar+".isObject().get(\"type\").equals(\""+innerObject.value().getName()+"\")){");
 
 				JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
 				String serializerName = getSerializerForType(innerClass);
-				srcWriter.println("return new ("+innerClass.getQualifiedSourceName()+")"+serializerName+"().decode("+jsonValueVar+");");
+				srcWriter.println("return ("+innerClass.getQualifiedSourceName()+") new "+serializerName+"().decode("+jsonValueVar+");");
 
 				if(index == numberInnerClasses)
 				{
@@ -581,7 +574,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			for(Type innerObject : jsonSubTypesClass.value())
 			{
 				index++;
-				srcWriter.println("if ("+objectVar+"."+getTypeMethodName+"().equals(\""+innerObject.name()+"\")){");
+				srcWriter.println("if ("+objectVar+"."+getTypeMethodName+"().equals(\""+innerObject.value().getName()+"\")){");
 
 				JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
 				String serializerName = getSerializerForType(innerClass);

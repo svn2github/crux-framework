@@ -49,7 +49,6 @@ public interface JsonEncoder<T>
 		public static @interface Type
 		{
 			Class<?> value();
-			String name();
 		}		
 	}
 }
