@@ -40,6 +40,9 @@ public class DBObjectStore extends JavaScriptObject
 {
 	private static Logger logger = Logger.getLogger(DBObjectStore.class.getName());
 
+	private static Map<Boolean> readyProperties;
+	private static Map<DBObjectStoreMetadata> metadataCache;
+	
 	protected DBObjectStore(){}
 
 	public final native String getName()/*-{
@@ -410,7 +413,7 @@ public class DBObjectStore extends JavaScriptObject
 
     final DBIndex createIndex (final String indexName, final Array<String> keyPath, final DBIndexParameters optionalParameters)
     {
-        setReadyState("createIndex", false);
+        setReadyState("createIndex-"+indexName, false);
         final DBIndex result = DBIndex.create(indexName, this);
         waitForReady(new Callback()
 		{
@@ -433,9 +436,13 @@ public class DBObjectStore extends JavaScriptObject
 //        return result;
 //    }    
     
-	native final DBObjectStoreMetadata getMetadata()/*-{
-		return this.metadata;
-	}-*/;
+    /**
+     * Get objectStore metadata
+     */
+	final DBObjectStoreMetadata getMetadata()
+	{
+		return getMetadataCache().get(getName());
+	}
 
 	/**
 	 * Need this flag as createObjectStore is synchronous. So, we simply return when create ObjectStore is called
@@ -445,9 +452,26 @@ public class DBObjectStore extends JavaScriptObject
 	 */
 	final void setReadyState(String key, Boolean value)
 	{
-		getReadyProperties().put(key, value);
+		getReadyProperties().put(getName()+"-"+key, value);
 	}
 
+	/**
+	 * Loads the object store metadata and calls the callback when it is loaded
+	 * @param callback
+	 */
+	final void loadMetadata(final Callback callback)
+	{
+    	getTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
+    	{
+    		@Override
+    		public void doOperation(final SQLTransaction tx)
+    		{
+    			readStoreProps(this, tx, callback, null);
+    			onSuccess();
+    		}
+    	}, this, new String[]{DBTransaction.VERSION_TRANSACTION, DBTransaction.READ, DBTransaction.READ_WRITE});
+	}
+	
 	/**
 	 * Reads (and optionally caches) the properties like keyPath, autoincrement, etc for this objectStore
 	 * @param requestOp
@@ -496,6 +520,7 @@ public class DBObjectStore extends JavaScriptObject
 								metadata.setIndexData(indexData);
 								metadata.setIndexColumns(indexColumns);
 								setMetadata(metadata);
+								setIndexNames(indexData.keys());
 								if (LogConfiguration.loggingIsEnabled())
 								{
 									logger.log(Level.FINE, "Reading object store metadata from database. Store name ["+getName()+"]. Result cached.");
@@ -522,23 +547,27 @@ public class DBObjectStore extends JavaScriptObject
 	 * @param callback
 	 * @param key
 	 */
-	private void waitForReady(final Callback callback, final String key)
+	final void waitForReady(final Callback callback, final String key)
 	{
 		boolean ready = true;
 		Map<Boolean> readyProperties = getReadyProperties();
 		if (key != null) 
 		{
-			ready = (readyProperties.containsKey(key) ? readyProperties.get(key) : true);
+			ready = (readyProperties.containsKey(getName()+"-"+key) ? readyProperties.get(getName()+"-"+key) : true);
 		}
 		else 
 		{
 			Array<String> keys = readyProperties.keys();
 			for (int i=0; i< keys.size(); i++) 
 			{
-				if (!readyProperties.get(keys.get(i))) 
+				String propKey = keys.get(i);
+				if (propKey.startsWith(getName()+"-"))
 				{
-					ready = false;
-					break;
+					if (!readyProperties.get(propKey)) 
+					{
+						ready = false;
+						break;
+					}
 				}
 			}
 		}
@@ -551,7 +580,7 @@ public class DBObjectStore extends JavaScriptObject
 		{
 			if (LogConfiguration.loggingIsEnabled())
 			{
-				logger.log(Level.FINE, "Waintin for property ["+key+"], on object store ["+getName()+"] to be ready.");
+				logger.log(Level.FINE, "Waiting for property ["+key+"], on object store ["+getName()+"] to be ready.");
 			}
 			new Timer()
 			{
@@ -762,13 +791,19 @@ public class DBObjectStore extends JavaScriptObject
 	        		JsUtils.readPropertyValue(index, "columnName", indexProps);
 	        		JsUtils.readPropertyValue(index, "keyPath", indexProps);
 	        		JsArrayMixed indexKey = JsArrayMixed.createArray().cast();
-	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexKey);
-	    			
-	    			paramMap.put(indexProps.getString(0), DBUtil.encodeKey(indexKey));
+	        		JsUtils.readPropertyValue(object, indexProps.getString(1), indexKey, false);
+	    			if (indexKey.length() > 0)
+	    			{
+	    				paramMap.put(indexProps.getString(0), DBUtil.encodeKey(indexKey));
+	    			}
 	    		}
     		}
     		catch (Exception e) 
     		{
+    			if (LogConfiguration.loggingIsEnabled())
+    			{
+    				logger.log(Level.SEVERE, "Error updating associated index.", e);
+    			}
     			requestOp.throwError("Data Error", "Error updating indexes while processing transaction request. Error Message [" +e.getMessage()+"].");
     			return;
 			}
@@ -816,13 +851,10 @@ public class DBObjectStore extends JavaScriptObject
 	    this.name = objectStoreName;
     }-*/;
 
-	private native final void setMetadata(DBObjectStoreMetadata meta)/*-{
-		this.metadata = meta;
-	}-*/;
-	
-	private native Map<Boolean> getReadyProperties()/*-{
-		return this.ready;
-	}-*/;
+	private void setMetadata(DBObjectStoreMetadata meta)
+	{
+		getMetadataCache().put(getName(), meta);
+	}
 	
 	private native void setReadyProperties(Map<Boolean> r)/*-{
 		this.ready = r;
@@ -864,16 +896,42 @@ public class DBObjectStore extends JavaScriptObject
 		};
 	}-*/;
 	
-	public static DBObjectStore create(String objectStoreName, DBTransaction dbTransaction, boolean ready)
+	private static Map<Boolean> getReadyProperties()
+    {
+	    if (readyProperties == null)
+	    {
+	    	readyProperties = CollectionFactory.createMap();
+	    }
+	    return readyProperties;
+    }
+
+	private static Map<DBObjectStoreMetadata> getMetadataCache()
+	{
+	    if (metadataCache == null)
+	    {
+	    	metadataCache = CollectionFactory.createMap();
+	    }
+	    return metadataCache;
+	}
+	
+	public static DBObjectStore create(String objectStoreName, DBTransaction dbTransaction)
 	{
 		DBObjectStore objectStore = DBObjectStore.createObject().cast();
 		objectStore.setName(objectStoreName);
 		Map<Boolean> readyProp = CollectionFactory.createMap();
 		objectStore.setReadyProperties(readyProp);
 		objectStore.setTransaction(dbTransaction);
+		boolean ready = !StringUtils.unsafeEquals(dbTransaction.getMode(), DBTransaction.VERSION_TRANSACTION);
 		objectStore.setReadyState("createObjectStore", ready);
-		Array<String> indexNames = CollectionFactory.createArray();
-		objectStore.setIndexNames(indexNames);
+		if (ready)
+		{
+			objectStore.setIndexNames(getMetadataCache().get(objectStoreName).getIndexData().keys());
+		}
+		else
+		{
+			Array<String> indexNames = CollectionFactory.createArray();
+			objectStore.setIndexNames(indexNames);
+		}
 		objectStore.handleObjectNativeFunctions(objectStore);
 		return objectStore;
 	}

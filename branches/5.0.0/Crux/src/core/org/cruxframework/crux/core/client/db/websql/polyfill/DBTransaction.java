@@ -109,11 +109,16 @@ public class DBTransaction extends JavaScriptObject
 		this.requests = r;
 	}-*/;
 	
-    public static DBObjectStore objectStore(DBTransaction db, String objectStoreName)
+    static DBObjectStore objectStore(DBTransaction db, String objectStoreName)
     {
-        return DBObjectStore.create(objectStoreName, db, true);
+        return db.objectStore(objectStoreName);
     }
     
+    final DBObjectStore objectStore(String objectStoreName)
+    {
+        return DBObjectStore.create(objectStoreName, this);
+    }
+
     public static void abort(DBTransaction db)
     {
     	db.abort(true);

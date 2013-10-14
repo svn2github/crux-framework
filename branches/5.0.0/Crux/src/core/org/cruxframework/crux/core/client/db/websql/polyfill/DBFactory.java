@@ -19,13 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.collection.Array;
-import org.cruxframework.crux.core.client.collection.CollectionFactory;
 import org.cruxframework.crux.core.client.db.websql.SQLDatabase;
 import org.cruxframework.crux.core.client.db.websql.SQLDatabaseFactory;
 import org.cruxframework.crux.core.client.db.websql.SQLError;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction.SQLStatementErrorCallback;
+import org.cruxframework.crux.core.client.db.websql.polyfill.DBObjectStore.Callback;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
 import com.google.gwt.core.client.JsArrayMixed;
@@ -41,6 +41,7 @@ public class DBFactory
 	private static int  DEFAULT_DB_SIZE = 5 * 1024 * 1024;
 	private boolean initialized = false;
 	private SQLDatabase systemDatabase;
+	private int readyStores;
 	
 	public final DBOpenRequest open(final String name, final int version)
 	{
@@ -348,8 +349,9 @@ public class DBFactory
 								}
 								else
 								{
-									DBEvent evt = DBEvent.create("success");
-									DBEvent.invoke("onsuccess", request, evt);
+			        				DBTransaction transaction = DBTransaction.create(dbDatabase.getObjectStoreNames(), DBTransaction.READ, dbDatabase);
+			        				request.setTransaction(transaction);
+									openWhenStoresAreReady(dbDatabase, request);
 								}
 							}
 						}, errorCallback);
@@ -379,7 +381,7 @@ public class DBFactory
         			@Override
         			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
         			{
-        				Array<String> storeNames = CollectionFactory.createArray();
+        				Array<String> storeNames = dbDatabase.getObjectStoreNames();
         				DBTransaction transaction = DBTransaction.create(storeNames, DBTransaction.VERSION_TRANSACTION, dbDatabase);
         				request.setTransaction(transaction);
         				dbDatabase.setVersionTransaction(transaction);
@@ -387,14 +389,53 @@ public class DBFactory
         				JsUtils.writePropertyValue(upgradeEvt, "oldVersion", oldVersion);
         				JsUtils.writePropertyValue(upgradeEvt, "newVersion", newVersion);
         				DBEvent.invoke("onupgradeneeded", request, upgradeEvt);
-        				DBEvent successEvt = DBEvent.create("success");
-        				DBEvent.invoke("onsuccess", request, successEvt);
+        				openWhenStoresAreReady(dbDatabase, request);
         			}
         		}, errorCallback);
         	}
         }, null, null);
     }
 
+	/**
+	 * Ensure that open callback will be called after all database are ready. It is necessary because
+	 * Web SQL API execute Asynchronous operations to load object stores metadata, and IndexedDB API 
+	 * returns Object Stores from transactions synchronously. 
+	 * @param database
+	 * @param request
+	 */
+	private void openWhenStoresAreReady(DBDatabase database, final DBOpenRequest request)
+    {
+        Array<String> storeNames = database.getObjectStoreNames();
+        final int totalStores = storeNames.size();
+        if (totalStores > 0)
+        {
+        	readyStores = 0;
+        	for (int i=0; i< totalStores; i++)
+        	{
+        		String objectStoreName = storeNames.get(i);
+        		DBObjectStore objectStore = request.getTransaction().objectStore(objectStoreName);
+        		objectStore.loadMetadata(new Callback()
+        		{
+        			@Override
+        			public void execute()
+        			{
+        				readyStores++;
+        				if (readyStores == totalStores)
+        				{
+        					DBEvent successEvt = DBEvent.create("success");
+        					DBEvent.invoke("onsuccess", request, successEvt);
+        				}
+        			}
+        		});
+        	}
+        }
+        else
+        {
+			DBEvent successEvt = DBEvent.create("success");
+			DBEvent.invoke("onsuccess", request, successEvt);
+        }
+    }
+	
 	private SQLTransaction.SQLStatementErrorCallback getErrorCallback(final DBOpenRequest request)
 	{
 		return new SQLTransaction.SQLStatementErrorCallback()

@@ -26,6 +26,7 @@ import org.cruxframework.crux.core.client.db.websql.SQLResultSet;
 import org.cruxframework.crux.core.client.db.websql.SQLResultSetRowList;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
 import org.cruxframework.crux.core.client.db.websql.SQLTransaction.SQLStatementErrorCallback;
+import org.cruxframework.crux.core.client.db.websql.polyfill.DBTransaction.RequestOperation;
 import org.cruxframework.crux.core.client.db.websql.polyfill.DBUtil.EncodeCallback;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
@@ -67,11 +68,16 @@ public class DBIndex extends JavaScriptObject
 			@Override
 			public void doOperation(final SQLTransaction tx)
 			{
+				final DBTransaction.RequestOperation op = this;
 				getObjectStore().readStoreProps(this, tx, new DBObjectStore.Callback()
 				{
 					@Override
 					public void execute()
 					{
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.FINE, "Creating index ["+indexName+"] on Object Store ["+getObjectStore().getName()+"].");
+						}
 						final Map<DBIndexData> indexData = getObjectStore().getMetadata().getIndexData();
 						if (indexData.containsKey(indexName))
 						{
@@ -97,9 +103,13 @@ public class DBIndex extends JavaScriptObject
 								{
 									sql.append(",");
 								}
+								else
+								{
+									sql.append(" ADD ");
+								}
 								hasColumnsToUpdate = true;
 								objectStoreIndexColumns.add(col);
-								sql.append(" ADD ").append(col).append(" BLOB");
+								sql.append(col).append(" BLOB");
 								if (optionalParameters.isUnique())
 								{
 									sql.append(" UNIQUE");
@@ -119,9 +129,17 @@ public class DBIndex extends JavaScriptObject
 								@Override
 								public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 								{
-				                    updateIndex(keyPath, indexData, indexColumnNames, tx);
+				                    updateIndex(op, keyPath, indexData, indexColumnNames, tx);
 								}
 							}, getErrorHandler());
+						}
+						else
+						{
+							if (LogConfiguration.loggingIsEnabled())
+							{
+								logger.log(Level.FINE, "Index Successfully created.");
+							}
+							op.onSuccess();
 						}
 					}
 				}, "createObjectStore");
@@ -142,7 +160,7 @@ public class DBIndex extends JavaScriptObject
         };
     }
 
-	private void updateIndex(final Array<String> keyPath, final Map<DBIndexData> indexData, final Array<String> indexColumnNames, SQLTransaction tx)
+	private void updateIndex(final RequestOperation op, final Array<String> keyPath, final Map<DBIndexData> indexData, final Array<String> indexColumnNames, SQLTransaction tx)
     {
         // Once a column is created, put existing records into the index
 		String sql = "SELECT * FROM \""+getObjectStore().getName() + "\"";
@@ -157,19 +175,19 @@ public class DBIndex extends JavaScriptObject
 			public void onSuccess(final SQLTransaction tx, SQLResultSet rs)
 			{
 				updateIndexEntries(keyPath, indexColumnNames, tx, rs);
-				updateIndexMetadata(indexData, indexColumnNames, tx);
+				updateIndexMetadata(op, indexData, indexColumnNames, tx);
 			}
 		}, getErrorHandler());
     }
 	
-	private void updateIndexMetadata(final Map<DBIndexData> indexData, final Array<String> indexColumnNames, final SQLTransaction tx)
+	private void updateIndexMetadata(final RequestOperation op, final Map<DBIndexData> indexData, final Array<String> indexColumnNames, final SQLTransaction tx)
     {
         DBUtil.encodeValue(indexData, new EncodeCallback()
 		{
 			@Override
 			public void onEncode(String encoded)
 			{
-				String sql = "UPDATE __sys__ SET indexData = ?, SET indexColumns = ?  WHERE name = ?";
+				String sql = "UPDATE __sys__ SET indexData = ?, indexColumns = ?  WHERE name = ?";
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.FINE, "Running SQL ["+sql+"].");
@@ -183,7 +201,12 @@ public class DBIndex extends JavaScriptObject
 					@Override
 					public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 					{
-						getObjectStore().setReadyState("createIndex", true);
+						if (LogConfiguration.loggingIsEnabled())
+						{
+							logger.log(Level.FINE, "Index Successfully created.");
+						}
+						getObjectStore().setReadyState("createIndex-"+getName(), true);
+						op.onSuccess();
 					}
 				}, getErrorHandler());
 			}
@@ -203,11 +226,15 @@ public class DBIndex extends JavaScriptObject
 				JsArrayMixed args = JsArrayMixed.createArray().cast();
 				for (int j=0; j<keyPath.size(); j++)
 				{
-					if (i!=0)
+					if (j==0)
+					{
+						sql.append(" SET ");
+					}
+					else
 					{
 						sql.append(",");
 					}
-					sql.append(" SET ").append(indexColumnNames.get(j)).append("= ?");
+					sql.append(indexColumnNames.get(j)).append("= ?");
 					JsUtils.readPropertyValue(valueObject, keyPath.get(j), args);
 				}
 				sql.append(" WHERE key = ?");

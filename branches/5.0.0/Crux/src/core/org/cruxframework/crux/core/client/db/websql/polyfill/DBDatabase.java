@@ -67,7 +67,7 @@ public class DBDatabase extends JavaScriptObject
 		{
 			DBUtil.throwDOMException("Invalid State", "Database can create object stores only on a versionchange transaction");
 		}
-    	final DBObjectStore result = DBObjectStore.create(storeName, getVersionTransaction(), false);
+    	final DBObjectStore result = DBObjectStore.create(storeName, getVersionTransaction());
     	getVersionTransaction().addToTransactionQueue(new DBTransaction.RequestOperation()
 		{
 			@Override
