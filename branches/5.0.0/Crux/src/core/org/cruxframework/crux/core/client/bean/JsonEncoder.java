@@ -37,4 +37,28 @@ public interface JsonEncoder<T>
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.METHOD})
 	public static @interface JsonIgnore{}
+	
+	//We still need jackson annotations at server (des)serialization. Use Javassist to include them?
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+	public static @interface JsonTypeInfo
+	{
+		String property() default "type";
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+	public static @interface JsonSubTypes
+	{
+		Type[] value();
+		
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target({ElementType.TYPE})
+		public static @interface Type
+		{
+			Class<?> value();
+			String name();
+		}		
+	}
 }
