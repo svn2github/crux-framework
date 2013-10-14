@@ -19,6 +19,8 @@ import java.lang.reflect.Type;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonSubTypes;
+
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -36,14 +38,28 @@ public class JsonUtil
 	public static ObjectReader createReader(Type type)
 	{
 		ObjectMapper mapper = getObjectMapper();
+		registerSubtypes(type, mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectReader reader = mapper.reader(paramJavaType);
 		return reader;
 	}
 
+	private static void registerSubtypes(Type type, ObjectMapper mapper) 
+	{
+		JsonSubTypes jsonSubTypes = type.getClass().getAnnotation(JsonSubTypes.class);
+		if (jsonSubTypes != null && jsonSubTypes.value() != null)
+		{
+			for(JsonSubTypes.Type innerObject : jsonSubTypes.value())
+			{
+				mapper.registerSubtypes(innerObject.value());
+			}
+		}
+	}
+
 	public static ObjectWriter createWriter(Type type)
 	{
 		ObjectMapper mapper = getObjectMapper();
+		registerSubtypes(type, mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectWriter writer = mapper.writerWithType(paramJavaType);
 		return writer;

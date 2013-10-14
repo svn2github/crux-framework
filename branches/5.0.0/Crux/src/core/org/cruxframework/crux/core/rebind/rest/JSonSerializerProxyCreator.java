@@ -30,7 +30,6 @@ import org.cruxframework.crux.core.client.bean.JsonEncoder;
 import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonIgnore;
 import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonSubTypes;
 import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonSubTypes.Type;
-import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonTypeInfo;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
@@ -511,10 +510,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				JsonSubTypes jsonSubTypes = method.getAnnotation(JsonSubTypes.class);
 				if (jsonSubTypes != null && jsonSubTypes.value() != null)
 				{
-					//getting key type to determine who needs to be invoked
-					String flagProperty = getJSONFlagProperty(objectType);
-					
-					JMethod getType = JClassUtils.getMethod(objectType, flagProperty, null);
+					JMethod getType = JClassUtils.getMethod(objectType, "type", null);
 
 					if(getType == null)
 					{
@@ -586,15 +582,13 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				JsonSubTypes jsonSubTypes = method.getAnnotation(JsonSubTypes.class);
 				if (jsonSubTypes != null && jsonSubTypes.value() != null)
 				{
-					String flagProperty = getJSONFlagProperty(objectType);
-
-					String getTypeMethodName = JClassUtils.getGetterMethod(flagProperty, objectType);
+					String getTypeMethodName = JClassUtils.getGetterMethod("type", objectType);
 					if(getTypeMethodName == null)
 					{
 						throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Getter key type is missing.");	
 					}
 
-					String setTypeMethodName = JClassUtils.getSetterMethod(flagProperty, objectType, objectType);
+					String setTypeMethodName = JClassUtils.getSetterMethod("type", objectType, objectType);
 					if(setTypeMethodName == null)
 					{
 						throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Setter key type is missing.");	
@@ -626,22 +620,6 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				}
 			}
 		}
-	}
-
-	private String getJSONFlagProperty(JClassType objectType) {
-		String flagProperty = null;
-		try {
-			flagProperty = (String) JsonTypeInfo.class.getMethod("property").getDefaultValue();
-		} catch (Exception e) {
-			throw new CruxGeneratorException("["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Annotation JsonTypeInfo doesn't have the 'property' attribute.");
-		}
-		//getting key type to determine who needs to be invoked
-		JsonTypeInfo jsonTypeInfo = objectType.getAnnotation(JsonTypeInfo.class);
-		if(jsonTypeInfo != null)
-		{
-			flagProperty = jsonTypeInfo.property();
-		}
-		return flagProperty;
 	}
 
 	private void generateCustomEncodeType(SourcePrinter srcWriter,
