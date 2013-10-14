@@ -34,11 +34,6 @@ public interface JsonEncoder<T>
 	T decode(String jsonText);
 	T fromJavaScriptObject(JavaScriptObject object);
 	
-	
-	/**
-	 * @deprecated beta work. Not ready yet.  
-	 */
-	@Deprecated
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.METHOD})
 	public static @interface JsonIgnore{}
@@ -52,7 +47,11 @@ public interface JsonEncoder<T>
 	public static @interface JsonSubTypes
 	{
 		Type[] value();
-		
+
+		/**
+		 * @deprecated beta work. Not ready yet.  
+		 */
+		@Deprecated
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.TYPE})
 		public static @interface Type
