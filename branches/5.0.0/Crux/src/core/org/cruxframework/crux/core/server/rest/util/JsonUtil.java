@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -46,12 +47,48 @@ public class JsonUtil
 
 	private static void registerSubtypes(Type type, ObjectMapper mapper) 
 	{
-		JsonSubTypes jsonSubTypes = type.getClass().getAnnotation(JsonSubTypes.class);
-		if (jsonSubTypes != null && jsonSubTypes.value() != null)
-		{
-			for(JsonSubTypes.Type innerObject : jsonSubTypes.value())
+		if (type instanceof Class) {
+			Class<?> clazz = (Class<?>) type;
+			JsonSubTypes jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
+			if (jsonSubTypes != null && jsonSubTypes.value() != null)
 			{
-				mapper.registerSubtypes(innerObject.value());
+				
+				//StdTypeResolverBuilder typeResolverBuilder = new ObjectMapper.DefaultTypeResolverBuilder(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
+				//typeResolverBuilder = typeResolverBuilder.inclusion(JsonTypeInfo.As.PROPERTY);
+		        
+//		        typeResolverBuilder.init(JsonTypeInfo.Id.NAME, new ObjectMapper.DefaultType DefaultTyp ClassNameIdResolver(SimpleType.construct(Base.class), TypeFactory.defaultInstance()) {
+//		            private HashMap<Class, Class> classes = new HashMap<Class, Class>() {
+//		                {
+//		                    put(ConcreteA.class, ConcreteAAdapter.class);
+//		                    put(ConcreteB.class, ConcreteBAdapter.class);
+//		                    put(ConcreteC.class, ConcreteCAdapter.class);
+//		                }
+//		            };
+//
+//		            @Override
+//		            public String idFromValue(Object value) {
+//		                return (classes.containsKey(value.getClass())) ? value.getClass().getName() : null;
+//		            }
+//
+//		            @Override
+//		            public JavaType typeFromId(String id) {
+//		                try {
+//		                    return classes.get(Class.forName(id)) == null ? super.typeFromId(id) : _typeFactory.constructSpecializedType(_baseType, classes.get(Class.forName(id)));
+//		                } catch (ClassNotFoundException e) {
+//		                    // todo catch the e
+//		                }
+//		                return super.typeFromId(id);
+//		            }
+//		        });
+		        //mapper.setDefaultTyping(typeResolverBuilder);
+				
+				for(JsonSubTypes.Type innerObject : jsonSubTypes.value())
+				{
+					//mapper.registerSubtypes(innerObject.value());
+					mapper.registerSubtypes(new NamedType(innerObject.value(), innerObject.name()));
+					
+					
+			    }
 			}
 		}
 	}
