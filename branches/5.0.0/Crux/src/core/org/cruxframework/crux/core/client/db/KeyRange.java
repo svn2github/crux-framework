@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
 
 
 /**
@@ -24,27 +23,8 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class KeyRange<K>
+public interface KeyRange<K>
 {
-	protected final IDBKeyRange idbKeyRange;
-
-	protected KeyRange(IDBKeyRange idbKeyRange)
-    {
-		this.idbKeyRange = idbKeyRange;
-    }
-	
-    public boolean isLowerOpen()
-    {
-	    return idbKeyRange.isLowerOpen();
-    }
-
-    public boolean isUpperOpen()
-    {
-	    return idbKeyRange.isUpperOpen();
-    }
-	
-	protected IDBKeyRange getNativeKeyRange()
-	{
-		return idbKeyRange;
-	}
+    boolean isLowerOpen();
+    boolean isUpperOpen();
 }

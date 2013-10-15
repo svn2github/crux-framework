@@ -15,23 +15,13 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import java.util.logging.Level;
-
-import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBTransaction;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBTransaction.IDBTransactionMode;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBAbortEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCompleteEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
-
-import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * A transaction on Crux Database, To create transactions, use one of {@link Database}'s getTransaction() method.
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Transaction extends DBObject
+public abstract class Transaction extends DBObject
 {
 	/**
 	 * Transaction mode.
@@ -40,123 +30,35 @@ public class Transaction extends DBObject
 	 */
 	public static enum Mode{readWrite, readOnly}
 	
-	private IDBTransaction transaction;
-	private TransactionCallback transactionCallback;
+	protected TransactionCallback transactionCallback;
+	private final String[] storeNames;
+	private final Mode mode;
 
 	protected Transaction(final AbstractDatabase db, String[] storeNames, Mode mode)
     {
 		super(db);
-		IDBTransactionMode idbMode;
-		switch (mode)
-        {
-        	case readWrite:
-        		idbMode = IDBTransactionMode.readwrite;
-        	break;
-        	default:
-        		idbMode = IDBTransactionMode.readonly;
-        }
-	    if (db == null || !db.isOpen())
-		{
-			throw new DatabaseException(db.messages.databaseNotOpenedError());
-		}
-				
-		transaction = db.db.getTransaction(storeNames, idbMode);
-		transaction.onAbort(new IDBAbortEvent.Handler()
-		{
-			@Override
-			public void onAbort(IDBAbortEvent event)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, Transaction.this.db.messages.databaseTransactionAborted(Transaction.this.db.getName()));
-				}
-				if (transactionCallback != null)
-				{
-					try
-					{
-						transactionCallback.onAbort();
-					}
-					catch (Exception e) 
-					{
-						String message = Transaction.this.db.messages.databaseTransactionError(Transaction.this.db.getName(), e.getMessage());
-						reportError(transactionCallback, message, e);
-					}
-				}
-			}
-		});
-		transaction.onComplete(new IDBCompleteEvent.Handler()
-		{
-			@Override
-			public void onComplete(IDBCompleteEvent event)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, Transaction.this.db.messages.databaseTransactionCompleted(Transaction.this.db.getName()));
-				}
-				if (transactionCallback != null)
-				{
-					try
-					{
-						transactionCallback.onComplete();
-					}
-					catch (Exception e) 
-					{
-						String message = Transaction.this.db.messages.databaseTransactionError(Transaction.this.db.getName(), e.getMessage());
-						reportError(transactionCallback, message, e);
-					}
-						
-				}
-			}
-		});
-		transaction.onError(new IDBErrorEvent.Handler()
-		{
-			@Override
-			public void onError(IDBErrorEvent event)
-			{
-				String message = Transaction.this.db.messages.databaseTransactionError(Transaction.this.db.getName(), event.getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (transactionCallback != null)
-				{
-					transactionCallback.onError(message);
-				}
-			}
-		});
+		this.storeNames = storeNames;
+		this.mode = mode;
     }
 	
 	/**
-	 * Retrieve an ObjectStore manipulated by the current transaction.
-	 * @param <K>
-	 * @param <V>
-	 * @param storeName
+	 * Retrieve the object store names associated with this transaction
 	 * @return
 	 */
-	public <K, V> ObjectStore<K, V> getObjectStore(String storeName)
-	{
-		IDBObjectStore idbObjectStore = transaction.getObjectStore(storeName);
-		return db.getObjectStore(storeName, idbObjectStore);
-	}
+	public String[] getStoreNames()
+    {
+    	return storeNames;
+    }
 
 	/**
-	 * Abort current transaction and rollback operations.
-	 */
-	public void abort()
-	{
-		transaction.abort();
-	}
-	
-	/**
-	 * Retrieve a specialized object store for files handling.
+	 * Retrieve the trnasction mode
 	 * @return
 	 */
-	public FileStore getFileStore()
-	{
-		IDBObjectStore idbObjectStore = transaction.getObjectStore(FileStore.OBJECT_STORE_NAME);
-		return new FileStore(db, idbObjectStore);
-	}
-	
+	public Mode getMode()
+    {
+    	return mode;
+    }
+
 	/**
 	 * Inform a callback to monitor the current transaction state changes.
 	 * @param callback
@@ -173,6 +75,26 @@ public class Transaction extends DBObject
 			transactionCallback.setDb(db);
 		}
 	}
+	
+	/**
+	 * Retrieve an ObjectStore manipulated by the current transaction.
+	 * @param <K>
+	 * @param <V>
+	 * @param storeName
+	 * @return
+	 */
+	public abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName);
+
+	/**
+	 * Abort current transaction and rollback operations.
+	 */
+	public abstract void abort();
+	
+	/**
+	 * Retrieve a specialized object store for files handling.
+	 * @return
+	 */
+	public abstract FileStore getFileStore();
 	
 	/**
 	 * A callback to monitor the current transaction state changes.

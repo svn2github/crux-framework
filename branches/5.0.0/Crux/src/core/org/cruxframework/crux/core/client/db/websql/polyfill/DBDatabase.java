@@ -103,7 +103,8 @@ public class DBDatabase extends JavaScriptObject
 						args.push(keyPath!= null?DBUtil.encodeKey(keyPath):null); 
 						args.push(createOptions.isAutoIncrement());
 						args.push(DBUtil.encodeKey(JavaScriptObject.createObject()));
-						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?)";
+						args.push(DBUtil.encodeKey(JavaScriptObject.createArray()));
+						String sql = "INSERT INTO __sys__ VALUES (?,?,?,?,?)";
 						if (LogConfiguration.loggingIsEnabled())
 						{
 							logger.log(Level.FINE, "Running SQL ["+sql+"].");

@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.database;
+package org.cruxframework.crux.core.rebind.database.idb;
 
 import java.io.PrintWriter;
 import java.sql.Date;
 
-import org.cruxframework.crux.core.client.db.Cursor;
+import org.cruxframework.crux.core.client.db.IDXCursor;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -34,21 +34,21 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBKeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 {
 	private JClassType cursorType;
 	private String idbCursorVariable;
 	private String[] objectStoreKeyPath;
 	private String indexName;
 
-	public KeyCursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, 
+	public IDBKeyCursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, 
 								String objectStoreName, String[] keyPath, String[] objectStoreKeyPath, 
 								String indexName)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.objectStoreKeyPath = objectStoreKeyPath;
 		this.indexName = indexName;
-		this.cursorType = context.getTypeOracle().findType(Cursor.class.getCanonicalName());
+		this.cursorType = context.getTypeOracle().findType(IDXCursor.class.getCanonicalName());
 		this.idbCursorVariable = "idbCursor";
 	}
 
@@ -198,7 +198,7 @@ public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			composerFactory.addImport(imp);
 		}
-		composerFactory.setSuperclass("Cursor<"+getKeyTypeName()+","+getKeyTypeName(objectStoreKeyPath)+">");
+		composerFactory.setSuperclass("IDXCursor<"+getKeyTypeName()+","+getKeyTypeName(objectStoreKeyPath)+">");
 
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
@@ -206,7 +206,7 @@ public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 	protected String[] getImports()
 	{
 		String[] imports = new String[] {
-				Cursor.class.getCanonicalName(), 
+				IDXCursor.class.getCanonicalName(), 
 				IDBCursorWithValue.class.getCanonicalName(), 
 				JSONObject.class.getCanonicalName(),
 				JsArrayMixed.class.getCanonicalName(),

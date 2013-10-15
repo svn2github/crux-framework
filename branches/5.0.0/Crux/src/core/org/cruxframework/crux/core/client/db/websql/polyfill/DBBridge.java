@@ -91,9 +91,12 @@ public class DBBridge
 		$wnd.__db_bridge__.convertKey = function(key)
 		{
 			if (!key) return null;
+			if (key.lower !== undefined || key.upper !== undefined){
+			    return key;
+			}
 			var keys = (Object.prototype.toString.call(key) === '[object Array]')?key:[key];
 			return keys; 
-		};//TODO tratar keyrange.... aqui e nos metodos da API que recebem key....ver exemplo na DBIndex
+		};
 	}-*/;
 	
 	/**

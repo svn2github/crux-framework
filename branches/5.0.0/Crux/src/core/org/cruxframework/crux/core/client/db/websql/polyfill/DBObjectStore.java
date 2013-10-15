@@ -197,7 +197,7 @@ public class DBObjectStore extends JavaScriptObject
 //  {
 //  	
 //  }
-    
+  //TODO tratar keyrange.... aqui e nos metodos da API que recebem key....ver exemplo na DBIndex
     static final DBRequest get (DBObjectStore db, final JsArrayMixed key)
     {
     	return db.get(key);

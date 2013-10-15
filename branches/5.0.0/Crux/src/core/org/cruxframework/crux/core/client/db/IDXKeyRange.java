@@ -15,43 +15,36 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
+
 
 /**
+ * Specify a range of Keys. Used to openCursors on object stores or indexes.
+ * @param <K> The type of the key referenced by this KeyRange .
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractObjectStore<K, V> extends DBObject implements ObjectStore<K, V> 
+public class IDXKeyRange<K> implements KeyRange<K> 
 {
-	protected AbstractObjectStore(AbstractDatabase db)
-	{
-		super(db);
-	}
-	
-	public abstract String[] getIndexNames();
-	
-	@Override
-	public abstract boolean isAutoIncrement();
-	
-	@Override
-	public void put(V object) 
-	{
-		put(object, null);
-	}
+	protected final IDBKeyRange idbKeyRange;
 
-	@Override
-	public void add(V object) 
-	{
-		add(object, null);
-	}
+	protected IDXKeyRange(IDBKeyRange idbKeyRange)
+    {
+		this.idbKeyRange = idbKeyRange;
+    }
 	
-	public void delete(K key) 
-	{
-		delete(key, null);
-	}
+    public boolean isLowerOpen()
+    {
+	    return idbKeyRange.isLowerOpen();
+    }
+
+    public boolean isUpperOpen()
+    {
+	    return idbKeyRange.isUpperOpen();
+    }
 	
-	@Override
-	public void delete(KeyRange<K> keyRange)
+	public static IDBKeyRange getNativeKeyRange(KeyRange<?> range)
 	{
-		delete(keyRange, null);
+		return ((IDXKeyRange<?>)range).idbKeyRange;
 	}
 }

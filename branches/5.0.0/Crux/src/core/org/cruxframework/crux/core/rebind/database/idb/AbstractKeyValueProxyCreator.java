@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.database;
+package org.cruxframework.crux.core.rebind.database.idb;
 
 import java.util.Date;
 
@@ -254,7 +254,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 	protected void generateGetKeyRangeFactoryMethod(SourcePrinter srcWriter, String parentName)
     {
 		srcWriter.println("public KeyRangeFactory<"+getKeyTypeName()+"> getKeyRangeFactory(){");
-		String keyRangeFatoryClassName = new KeyRangeFactoryProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, parentName).create();
+		String keyRangeFatoryClassName = new IDBKeyRangeFactoryProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, parentName).create();
 		srcWriter.println("return (KeyRangeFactory<"+getKeyTypeName()+">) new "+keyRangeFatoryClassName+"();");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -437,7 +437,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		
 		srcWriter.println(cursorRequestVar+".onSuccess(new IDBCursorEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
-		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, cursorName).create();
+		String cursorClassName = new IDBCursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, cursorName).create();
 		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
 		srcWriter.println("if ("+callbackVar+" != null){");
 

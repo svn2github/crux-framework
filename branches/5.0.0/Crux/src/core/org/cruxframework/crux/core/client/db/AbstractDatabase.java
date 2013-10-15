@@ -15,24 +15,12 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.db.Transaction.TransactionCallback;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBDatabase;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBDeleteDBRequest;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBOpenDBRequest;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBBlockedEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * HTML5 AbstractDatabase based on IndexedDB (http://www.w3.org/TR/IndexedDB/).
@@ -43,7 +31,6 @@ import com.google.gwt.logging.client.LogConfiguration;
 public abstract class AbstractDatabase implements Database
 {
 	protected static Logger logger = Logger.getLogger(AbstractDatabase.class.getName());
-	protected IDBDatabase db = null;
 	protected DBMessages messages = GWT.create(DBMessages.class);
 	protected DatabaseErrorHandler errorHandler;
 	protected String name;
@@ -86,96 +73,11 @@ public abstract class AbstractDatabase implements Database
 	{
 		if (checkOpenPreConditions(callback))
 		{
-			if (NativeDBHandler.isInitialized())
-			{
-				doOpen(callback);
-			}
-			else
-			{
-				initializeNativeDBAndTryOpen(callback);
-			}
+			doOpen(callback);
 		}
 	}
 
-    @Override
-    public boolean isSupported()
-    {
-        return NativeDBHandler.isSupported();
-    }
-    
 	@Override
-	public void close()
-	{
-		if (isOpen())
-		{
-			db.close();
-			db = null;
-		}
-	}
-	
-    @Override
-	public void delete(final DatabaseCallback callback)
-	{
-		if (StringUtils.isEmpty(getName()))
-		{
-			throw new DatabaseException(messages.databaseInvalidNameDBError(getName()));
-		}
-		IDBDeleteDBRequest deleteDatabase = IDBFactory.get().deleteDatabase(getName());
-		deleteDatabase.onSuccess(new IDBDatabaseDeleteEvent.Handler()
-		{
-			@Override
-			public void onDelete(IDBDatabaseDeleteEvent event)
-			{
-				db = null;
-				if (callback != null)
-				{
-					callback.onSuccess();
-				}
-			}
-		});
-		deleteDatabase.onBlocked(new IDBBlockedEvent.Handler()
-		{
-			@Override
-			public void onBlocked(IDBBlockedEvent event)
-			{
-				String message = messages.databaseBlocked(getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-				}
-				else if (errorHandler != null)
-				{
-					errorHandler.onError(message);
-				}
-			}
-		});
-		deleteDatabase.onError(new IDBErrorEvent.Handler()
-		{
-			@Override
-			public void onError(IDBErrorEvent event)
-			{
-				String message = messages.databaseDeleteError(getName(), event.getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-				}
-				else if (errorHandler != null)
-				{
-					errorHandler.onError(message);
-				}
-			}
-		});
-	}
-
-    @Override
 	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode)
 	{
 		return getTransaction(storeNames, mode, null);
@@ -184,10 +86,11 @@ public abstract class AbstractDatabase implements Database
     @Override
 	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode, TransactionCallback callback)
 	{
-		Transaction transaction = new Transaction(this, storeNames, mode);
+		Transaction transaction = createTransaction(storeNames, mode);
 		transaction.setTransactionCallback(callback);
 		return transaction;
 	}
+
 
     @Override
 	public <V> void add(V[] objects, String objectStoreName, final DatabaseCallback callback)
@@ -235,12 +138,6 @@ public abstract class AbstractDatabase implements Database
     	objectStore.delete(keys);
 	}
     
-    @Override
-    public boolean isOpen()
-    {
-    	return db != null;
-    }
-
     @Override
     public void setDefaultErrorHandler(DatabaseErrorHandler errorHandler)
     {
@@ -313,120 +210,7 @@ public abstract class AbstractDatabase implements Database
 			}
 		};
     }
-
-	private void doOpen(final DatabaseCallback callback)
-    {
-	    final IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
-		openDBRequest.onSuccess(new IDBOpenedEvent.Handler()
-		{
-			@Override
-			public void onSuccess(IDBOpenedEvent event)
-			{
-				db = event.getResult();
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, messages.databaseOpened(getName()));
-				}
-				if (callback != null)
-				{
-					callback.onSuccess();
-				}
-			}
-		});
-		
-		openDBRequest.onBlocked(new IDBBlockedEvent.Handler()
-		{
-			@Override
-			public void onBlocked(IDBBlockedEvent event)
-			{
-				String message = messages.databaseBlocked(getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-				}
-				else if (errorHandler != null)
-				{
-					errorHandler.onError(message);
-				}
-			}
-		});
-		
-		openDBRequest.onError(new IDBErrorEvent.Handler()
-		{
-			@Override
-			public void onError(IDBErrorEvent event)
-			{
-				String message = messages.databaseOpenError(getName(), event.getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-				}
-				else if (errorHandler != null)
-				{
-					errorHandler.onError(message);
-				}
-			}
-		});
-		openDBRequest.onUpgradeNeeded(new IDBUpgradeNeededEvent.Handler()
-		{
-			@Override
-			public void onUpgradeNeeded(IDBUpgradeNeededEvent event)
-			{
-				db = event.getResult();
-				try
-				{
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.INFO, messages.databaseUpgrading(getName()));
-					}
-					updateDatabaseStructure(openDBRequest);
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.INFO, messages.databaseUpgraded(getName()));
-					}
-				}
-				catch (RuntimeException e) 
-				{
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.SEVERE, messages.databaseUpgradeError(getName(), e.getMessage()), e);
-					}
-					throw e;
-				}
-			}
-		});
-    }
 	
-    private void initializeNativeDBAndTryOpen(final DatabaseCallback callback)
-    {
-    	NativeDBHandler.initialize(new NativeDBHandler.Callback()
-		{
-			@Override
-			public void onSuccess()
-			{
-				doOpen(callback);
-			}
-			
-			@Override
-			public void onError(Throwable e)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
-				}
-				callback.onError(messages.databaseLoadingError(getName()));
-			}
-		});
-    }
-    
-	protected abstract void updateDatabaseStructure(IDBOpenDBRequest openDBRequest);
-	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
+    protected abstract void doOpen(DatabaseCallback callback);
+    protected abstract Transaction createTransaction(String[] storeNames, Transaction.Mode mode);
 }

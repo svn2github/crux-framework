@@ -13,18 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.database;
+package org.cruxframework.crux.core.rebind.database.idb;
 
 import java.io.PrintWriter;
 import java.util.Set;
 
-import org.cruxframework.crux.core.client.db.AbstractObjectStore;
 import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseDeleteCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
 import org.cruxframework.crux.core.client.db.DatabaseWriteCallback;
+import org.cruxframework.crux.core.client.db.IDXAbstractObjectStore;
+import org.cruxframework.crux.core.client.db.IDXCursor;
+import org.cruxframework.crux.core.client.db.IDXKeyRange;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCursorRequest;
@@ -39,7 +41,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEven
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.database.DatabaseProxyCreator.IndexData;
+import org.cruxframework.crux.core.rebind.database.idb.IDBDatabaseProxyCreator.IndexData;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -51,18 +53,18 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 {
 	private JClassType abstractObjectStoreType;
 	private String idbObjectStoreVariable;
 	private String dbVariable;
 	private final Set<IndexData> indexes;
 
-	public ObjectStoreProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, Set<IndexData> indexes)
+	public IDBObjectStoreProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, Set<IndexData> indexes)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.indexes = indexes;
-		this.abstractObjectStoreType = context.getTypeOracle().findType(AbstractObjectStore.class.getCanonicalName());
+		this.abstractObjectStoreType = context.getTypeOracle().findType(IDXAbstractObjectStore.class.getCanonicalName());
 		this.idbObjectStoreVariable = "idbObjectStore";
 		this.dbVariable = "db";
 	}
@@ -70,7 +72,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		srcWriter.println("public "+getProxySimpleName()+"(AbstractDatabase db, IDBObjectStore idbObjectStore){");
+		srcWriter.println("public "+getProxySimpleName()+"(IDXAbstractDatabase db, IDBObjectStore idbObjectStore){");
 		srcWriter.println("super(db, idbObjectStore);");
 		srcWriter.println("}");
 	}
@@ -122,7 +124,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateDeleteRangeMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void delete(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseDeleteCallback callback){");
-		srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange));");
 		generateDeleteCallbacks(srcWriter, "callback", dbVariable, "deleteRequest");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -205,7 +207,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateOpenCursorKeyMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
-		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange));");
 		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", "ObjectStore_"+getTargetObjectClassName());
 		srcWriter.println("}");
 		srcWriter.println();
@@ -214,7 +216,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateOpenCursorKeyDirectionMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
-		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor(keyRange.getNativeKeyRange(), direction.getNativeCursorDirection());");
+		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange), "+IDXCursor.class.getCanonicalName()+".getNativeCursorDirection(direction));");
 		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", "ObjectStore_"+getTargetObjectClassName());
 		srcWriter.println("}");
 		srcWriter.println();
@@ -226,7 +228,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		for(IndexData index: indexes)
 		{
 			srcWriter.println("if (StringUtils.unsafeEquals(name, "+EscapeUtils.quote(index.indexName)+")){");
-			String indexClassName = new IndexProxyCreator(context, logger, targetObjectType, objectStoreName, index.keyPath, index.indexName, keyPath).create();
+			String indexClassName = new IDBIndexProxyCreator(context, logger, targetObjectType, objectStoreName, index.keyPath, index.indexName, keyPath).create();
 			srcWriter.println("return (Index<"+getKeyTypeName()+", I, "+getTargetObjectClassName()+">) new " + indexClassName + "("+dbVariable+", "+idbObjectStoreVariable+".getIndex(name));");
 			srcWriter.println("}");
 		}
@@ -267,7 +269,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			composerFactory.addImport(imp);
 		}
-		composerFactory.setSuperclass("AbstractObjectStore<"+getKeyTypeName()+","+getTargetObjectClassName()+">");
+		composerFactory.setSuperclass("IDXAbstractObjectStore<"+getKeyTypeName()+","+getTargetObjectClassName()+">");
 
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
@@ -278,7 +280,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected String[] getImports()
 	{
 		String[] imports = new String[] {
-				AbstractObjectStore.class.getCanonicalName(), 
+				IDXAbstractObjectStore.class.getCanonicalName(), 
 				IDBObjectStore.class.getCanonicalName(),
 				DatabaseRetrieveCallback.class.getCanonicalName(),
 				DatabaseWriteCallback.class.getCanonicalName(),

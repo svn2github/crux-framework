@@ -16,6 +16,10 @@
 package org.cruxframework.crux.core.client.db;
 
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBIndex;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectCountRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 
 /**
  * Represents an index into this database.
@@ -24,35 +28,62 @@ import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
  * @param <V> object type
  * @author Thiago da Rosa de Bustamante
  */
-public abstract class Index<K, I, V> extends DBObject 
+public abstract class IDXIndex<K, I, V> extends Index<K, I, V> 
 {
-	protected Index(AbstractDatabase db)
+	protected final IDBIndex idbIndex;
+	protected final IDXAbstractDatabase db;
+
+	protected IDXIndex(IDXAbstractDatabase db, IDBIndex idbIndex)
     {
 		super(db);
+		this.db = db;
+		this.idbIndex = idbIndex;
     }
 
 	/**
 	 * Retrieve the index name
 	 * @return
 	 */
-	public abstract String getName();
+	@Override
+	public String getName()
+	{
+		return idbIndex.getName();
+	}
 
-	public abstract boolean isUnique();
+	@Override
+	public boolean isUnique()
+	{
+		return idbIndex.isUnique();
+	}
 	
-	public abstract boolean isMultiEntry();
+	@Override
+	public boolean isMultiEntry()
+	{
+		return idbIndex.isMultiEntry();
+	}
 	
 	/**
 	 * Return the number of items referenced by the index.
 	 * @param callback
 	 */
-	public abstract void count(DatabaseCountCallback callback);
+	@Override
+	public void count(DatabaseCountCallback callback)
+	{
+		IDBObjectCountRequest countRequest = idbIndex.count();
+		handleCountCallback(callback, countRequest);
+	}
 
 	/**
 	 * Return the number of items referenced by the index in the given range.
 	 * @param range
 	 * @param callback
 	 */
-	public abstract void count(KeyRange<I> range, DatabaseCountCallback callback);
+	@Override
+	public void count(KeyRange<I> range, DatabaseCountCallback callback)
+	{
+		IDBObjectCountRequest countRequest = idbIndex.count(IDXKeyRange.getNativeKeyRange(range));
+		handleCountCallback(callback, countRequest);
+	}
 
 	/**
 	 * Retrieve the object associated with the given key from the index. To read the object, 
@@ -133,4 +164,43 @@ public abstract class Index<K, I, V> extends DBObject
 	 * @return
 	 */	
 	public abstract KeyRangeFactory<I> getKeyRangeFactory();
+
+	private void handleCountCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)
+    {
+		if (callback != null || db.errorHandler != null)
+		{
+			if (callback != null)
+			{
+				callback.setDb(db);
+			}
+			countRequest.onError(new IDBErrorEvent.Handler()
+			{
+				@Override
+				public void onError(IDBErrorEvent event)
+				{
+					reportError(callback, db.messages.objectStoreCountError(event.getName()), null);
+				}
+			});
+			countRequest.onSuccess(new IDBCountEvent.Handler()
+			{
+
+				@Override
+				public void onSuccess(IDBCountEvent event)
+				{
+					if (callback != null)
+					{
+						try
+						{
+							callback.onSuccess(event.getCount());
+							callback.setDb(null);
+						}
+						catch(Exception e)
+						{
+							reportError(callback, db.messages.objectStoreCountError(e.getMessage()), e);
+						}
+					}
+				}
+			});
+		}
+    }
 }

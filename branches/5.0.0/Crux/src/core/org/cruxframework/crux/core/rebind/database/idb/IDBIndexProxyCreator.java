@@ -13,16 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.database;
+package org.cruxframework.crux.core.rebind.database.idb;
 
 import java.io.PrintWriter;
 import java.util.Date;
 
-import org.cruxframework.crux.core.client.db.AbstractDatabase;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
-import org.cruxframework.crux.core.client.db.Index;
+import org.cruxframework.crux.core.client.db.IDXAbstractDatabase;
+import org.cruxframework.crux.core.client.db.IDXCursor;
+import org.cruxframework.crux.core.client.db.IDXIndex;
+import org.cruxframework.crux.core.client.db.IDXKeyRange;
 import org.cruxframework.crux.core.client.db.KeyRange;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
@@ -47,7 +49,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IndexProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBIndexProxyCreator extends AbstractKeyValueProxyCreator
 {
 	private JClassType indexType;
 	private String idbIndexVariable;
@@ -55,12 +57,12 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	private String dbVariable;
 	private String[] objectStoreKeyPath;
 
-	public IndexProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
+	public IDBIndexProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
 			String[] keyPath, String indexName, String[] objectStoreKeyPath)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.objectStoreKeyPath = objectStoreKeyPath;
-		this.indexType = context.getTypeOracle().findType(Index.class.getCanonicalName());
+		this.indexType = context.getTypeOracle().findType(IDXIndex.class.getCanonicalName());
 		this.idbIndexVariable = "idbIndex";
 		this.dbVariable = "db";
 		this.indexName = indexName;
@@ -69,7 +71,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		srcWriter.println("public "+getProxySimpleName()+"(AbstractDatabase db, IDBIndex idbIndex){");
+		srcWriter.println("public "+getProxySimpleName()+"(IDXAbstractDatabase db, IDBIndex idbIndex){");
 		srcWriter.println("super(db, idbIndex);");
 		srcWriter.println("}");
 	}
@@ -119,7 +121,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		String keyTypeName = getKeyTypeName();
 		String targetObjectClassName = getTargetObjectClassName();
 		srcWriter.println("public void get(KeyRange<"+keyTypeName+"> keyRange, final DatabaseRetrieveCallback<"+targetObjectClassName+"> callback){");
-		srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbIndexVariable+".get(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbIndexVariable+".get("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange));");
 		generateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
@@ -148,7 +150,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
     {
 		String keyTypeName = getKeyTypeName();
 		srcWriter.println("public void getKey(KeyRange<"+keyTypeName+"> keyRange, final DatabaseRetrieveCallback<"+getKeyTypeName(objectStoreKeyPath)+"> callback){");
-		srcWriter.println("IDBObjectStoreRequest retrieveRequest = "+idbIndexVariable+".getKey(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBObjectStoreRequest retrieveRequest = "+idbIndexVariable+".getKey("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange));");
 		generateGetKeyCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
@@ -167,7 +169,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateOpenCursorKeyMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
-		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openCursor(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openCursor("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange));");
 		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", indexName);
 		srcWriter.println("}");
 		srcWriter.println();
@@ -176,7 +178,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateOpenCursorKeyDirectionMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
-		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openCursor(keyRange.getNativeKeyRange(), direction.getNativeCursorDirection());");
+		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openCursor("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange), "+IDXCursor.class.getCanonicalName()+".getNativeCursorDirection(direction));");
 		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", indexName);
 		srcWriter.println("}");
 		srcWriter.println();
@@ -194,7 +196,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateOpenKeyCursorKeyMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openKeyCursor(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getKeyTypeName(objectStoreKeyPath)+"> callback){");
-		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openKeyCursor(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openKeyCursor("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange));");
 		generateKeyCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -203,7 +205,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateOpenKeyCursorKeyDirectionMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openKeyCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getKeyTypeName(objectStoreKeyPath)+"> callback){");
-		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openKeyCursor(keyRange.getNativeKeyRange(), direction.getNativeCursorDirection());");
+		srcWriter.println("IDBIndexCursorRequest cursorRequest = " + idbIndexVariable+".openKeyCursor("+IDXKeyRange.class.getCanonicalName()+".getNativeKeyRange(keyRange), "+IDXCursor.class.getCanonicalName()+".getNativeCursorDirection(direction));");
 		generateKeyCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -218,7 +220,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		
 		srcWriter.println(cursorRequestVar+".onSuccess(new IDBCursorEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
-		String cursorClassName = new KeyCursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, objectStoreKeyPath, indexName).create();
+		String cursorClassName = new IDBKeyCursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, objectStoreKeyPath, indexName).create();
 		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
 		srcWriter.println("if ("+callbackVar+" != null){");
 		
@@ -345,7 +347,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			composerFactory.addImport(imp);
 		}
-		composerFactory.setSuperclass("Index<"+getKeyTypeName(objectStoreKeyPath)+","+getKeyTypeName()+","+getTargetObjectClassName()+">");
+		composerFactory.setSuperclass("IDXIndex<"+getKeyTypeName(objectStoreKeyPath)+","+getKeyTypeName()+","+getTargetObjectClassName()+">");
 
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
@@ -353,7 +355,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	protected String[] getImports()
 	{
 		String[] imports = new String[] {
-				Index.class.getCanonicalName(), 
+				IDXIndex.class.getCanonicalName(), 
 				IDBIndex.class.getCanonicalName(),
 				IDBObjectRetrieveRequest.class.getCanonicalName(),
 				IDBObjectRetrieveEvent.class.getCanonicalName(),
@@ -364,7 +366,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 				IDBCursorEvent.class.getCanonicalName(),
 				DatabaseRetrieveCallback.class.getCanonicalName(),
 				DatabaseCursorCallback.class.getCanonicalName(),
-				AbstractDatabase.class.getCanonicalName(),
+				IDXAbstractDatabase.class.getCanonicalName(),
 				KeyRange.class.getCanonicalName(), 
 				KeyRangeFactory.class.getCanonicalName(),
 				JSONObject.class.getCanonicalName(), 

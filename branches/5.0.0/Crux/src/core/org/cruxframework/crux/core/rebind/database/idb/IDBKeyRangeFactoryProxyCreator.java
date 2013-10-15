@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.database;
+package org.cruxframework.crux.core.rebind.database.idb;
 
 import java.io.PrintWriter;
 
+import org.cruxframework.crux.core.client.db.IDXKeyRange;
 import org.cruxframework.crux.core.client.db.KeyRange;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
@@ -31,12 +32,12 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBKeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 {
 	private JClassType keyRangeType;
  	private String parentName;
 
-	public KeyRangeFactoryProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
+	public IDBKeyRangeFactoryProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
 			String[] keyPath, String parentName)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
@@ -72,11 +73,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> only("+keyTypeName+" key){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.only(getNativeKey(key)));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.only(getNativeKey(key)));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.only(key));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.only(key));");
 		}
 				
 		srcWriter.println("}");
@@ -89,11 +90,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> lowerBound("+keyTypeName+" key, boolean open){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(getNativeKey(key), open));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(getNativeKey(key), open));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(key, open));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(key, open));");
 		}
 				
 		srcWriter.println("}");
@@ -106,11 +107,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> lowerBound("+keyTypeName+" key){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(getNativeKey(key)));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(getNativeKey(key)));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(key));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.lowerBound(key));");
 		}
 				
 		srcWriter.println("}");
@@ -123,11 +124,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> upperBound("+keyTypeName+" key, boolean open){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(getNativeKey(key), open));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(getNativeKey(key), open));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(key, open));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(key, open));");
 		}
 				
 		srcWriter.println("}");
@@ -140,11 +141,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> upperBound("+keyTypeName+" key){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(getNativeKey(key)));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(getNativeKey(key)));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(key));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.upperBound(key));");
 		}
 				
 		srcWriter.println("}");
@@ -157,11 +158,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> bound("+keyTypeName+" startKey, "+keyTypeName+" endKey, boolean startOpen, boolean endOpen){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.bound(getNativeKey(startKey), getNativeKey(endKey), startOpen, endOpen));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.bound(getNativeKey(startKey), getNativeKey(endKey), startOpen, endOpen));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.bound(startKey, endKey, startOpen, endOpen));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.bound(startKey, endKey, startOpen, endOpen));");
 		}
 				
 		srcWriter.println("}");
@@ -174,11 +175,11 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public KeyRange<"+keyTypeName+"> bound("+keyTypeName+" startKey, "+keyTypeName+" endKey){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.bound(getNativeKey(startKey), getNativeKey(endKey)));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.bound(getNativeKey(startKey), getNativeKey(endKey)));");
 		}
 		else
 		{
-			srcWriter.println("return new KeyRange<"+keyTypeName+">(IDBKeyRange.bound(startKey, endKey));");
+			srcWriter.println("return new IDXKeyRange<"+keyTypeName+">(IDBKeyRange.bound(startKey, endKey));");
 		}
 				
 		srcWriter.println("}");
@@ -224,7 +225,8 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 	protected String[] getImports()
 	{
 		String[] imports = new String[] {
-				KeyRange.class.getCanonicalName(), 
+				KeyRange.class.getCanonicalName(),
+				IDXKeyRange.class.getCanonicalName(),
 				KeyRangeFactory.class.getCanonicalName(),
 				IDBKeyRange.class.getCanonicalName()
 		};
