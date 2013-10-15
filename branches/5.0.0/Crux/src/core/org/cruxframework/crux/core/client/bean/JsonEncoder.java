@@ -38,20 +38,12 @@ public interface JsonEncoder<T>
 	@Target({ElementType.METHOD})
 	public static @interface JsonIgnore{}
 	
-	/**
-	 * @deprecated beta work. Not ready yet.  
-	 */
-	@Deprecated
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.TYPE})
 	public static @interface JsonSubTypes
 	{
 		Type[] value();
 
-		/**
-		 * @deprecated beta work. Not ready yet.  
-		 */
-		@Deprecated
 		@Retention(RetentionPolicy.RUNTIME)
 		@Target({ElementType.TYPE})
 		public static @interface Type

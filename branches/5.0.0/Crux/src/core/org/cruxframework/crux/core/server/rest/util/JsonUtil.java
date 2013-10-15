@@ -16,6 +16,8 @@
 package org.cruxframework.crux.core.server.rest.util;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -33,12 +35,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  */
 public class JsonUtil
 {
-	private static ObjectMapper mapper;
+	private static Map<Type,ObjectMapper> mapper;
 	private static final Lock lock = new ReentrantLock();
 
 	public static ObjectReader createReader(Type type)
 	{
-		ObjectMapper mapper = getObjectMapper();
+		ObjectMapper mapper = getObjectMapper(type);
 		registerSubtypes(type, mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectReader reader = mapper.reader(paramJavaType);
@@ -66,23 +68,28 @@ public class JsonUtil
 
 	public static ObjectWriter createWriter(Type type)
 	{
-		ObjectMapper mapper = getObjectMapper();
+		ObjectMapper mapper = getObjectMapper(type);
 		registerSubtypes(type, mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectWriter writer = mapper.writerWithType(paramJavaType);
 		return writer;
 	}
 	
-	private static ObjectMapper getObjectMapper()
+	private static ObjectMapper getObjectMapper(Type type)
     {
-		if (mapper == null)
+		if (mapper == null || mapper.get(type) == null)
 		{
 			lock.lock();
 			try
 			{
 				if (mapper == null)
 				{
-					mapper = new ObjectMapper();
+					mapper = new HashMap<Type,ObjectMapper>();
+				}
+				
+				if(mapper.get(type) == null)
+				{
+					mapper.put(type, new ObjectMapper());
 				}
 			}
 			finally
@@ -90,6 +97,6 @@ public class JsonUtil
 				lock.unlock();
 			}
 		}
-	    return mapper;
+	    return mapper.get(type);
     }
 }
