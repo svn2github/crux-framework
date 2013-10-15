@@ -154,7 +154,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		return panel;
 	}
 
-	private void createRightList(HorizontalPanel panel) {
+	protected void createRightList(HorizontalPanel panel) {
 		VerticalPanel vPanelRight = new VerticalPanel();
 		this.rightListLabel = new Label();
 		this.rightList = new ListBox(this.multiTransferFromRight);
@@ -176,7 +176,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		panel.add(vPanelRight);
 	}
 
-	private void createLeftList(HorizontalPanel panel) {
+	protected void createLeftList(HorizontalPanel panel) {
 		VerticalPanel vPanelLeft = new VerticalPanel();
 		this.leftListLabel = new Label();
 		this.leftList = new ListBox(this.multiTransferFromLeft);
@@ -201,7 +201,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	/**
 	 * @return
 	 */
-	private VerticalPanel createCommands()
+	protected VerticalPanel createCommands()
 	{
 		VerticalPanel commandsPanel = new VerticalPanel();
 		commandsPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
