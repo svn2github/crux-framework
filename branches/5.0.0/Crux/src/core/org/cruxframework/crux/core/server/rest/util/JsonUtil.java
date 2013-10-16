@@ -35,41 +35,22 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  */
 public class JsonUtil
 {
-	private static Map<Type,ObjectMapper> mapper;
+	private static ObjectMapper defaultMapper;
+	private static Map<Type, ObjectMapper> customMappers;
+	
 	private static final Lock lock = new ReentrantLock();
 
 	public static ObjectReader createReader(Type type)
 	{
 		ObjectMapper mapper = getObjectMapper(type);
-		registerSubtypes(type, mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectReader reader = mapper.reader(paramJavaType);
 		return reader;
 	}
 
-	private static void registerSubtypes(Type type, ObjectMapper mapper) 
-	{
-		if (type instanceof Class) {
-			Class<?> clazz = (Class<?>) type;
-			JsonSubTypes jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
-			if (jsonSubTypes != null && jsonSubTypes.value() != null)
-			{
-				mapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, "type");
-				Class<?>[] innerClasses = new Class<?>[jsonSubTypes.value().length];
-				int i=0;
-				for(JsonSubTypes.Type innerObject : jsonSubTypes.value())
-				{
-					innerClasses[i++] = innerObject.value();
-			    }
-				mapper.registerSubtypes(innerClasses);
-			}
-		}
-	}
-
 	public static ObjectWriter createWriter(Type type)
 	{
 		ObjectMapper mapper = getObjectMapper(type);
-		registerSubtypes(type, mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectWriter writer = mapper.writerWithType(paramJavaType);
 		return writer;
@@ -77,19 +58,42 @@ public class JsonUtil
 	
 	private static ObjectMapper getObjectMapper(Type type)
     {
-		if (mapper == null || mapper.get(type) == null)
+		ObjectMapper customMapper = customMappers != null ? customMappers.get(type) : null;
+		
+		if (customMapper == null)
 		{
 			lock.lock();
 			try
 			{
-				if (mapper == null)
+				if (customMappers == null)
 				{
-					mapper = new HashMap<Type,ObjectMapper>();
+					customMappers = new HashMap<Type,ObjectMapper>();
 				}
 				
-				if(mapper.get(type) == null)
+				if(defaultMapper == null)
 				{
-					mapper.put(type, new ObjectMapper());
+					defaultMapper = new ObjectMapper();
+				}
+				
+				if (type instanceof Class) 
+				{
+					Class<?> clazz = (Class<?>) type;
+					JsonSubTypes jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
+					if (jsonSubTypes != null && jsonSubTypes.value() != null)
+					{
+						customMapper = new ObjectMapper();
+						
+						customMapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, "type");
+						Class<?>[] innerClasses = new Class<?>[jsonSubTypes.value().length];
+						int i=0;
+						for(JsonSubTypes.Type innerObject : jsonSubTypes.value())
+						{
+							innerClasses[i++] = innerObject.value();
+					    }
+						customMapper.registerSubtypes(innerClasses);
+						
+						customMappers.put(type, customMapper);
+					}
 				}
 			}
 			finally
@@ -97,6 +101,11 @@ public class JsonUtil
 				lock.unlock();
 			}
 		}
-	    return mapper.get(type);
+		
+		if(customMapper == null)
+		{
+			return defaultMapper;
+		}
+	    return customMapper;
     }
 }
