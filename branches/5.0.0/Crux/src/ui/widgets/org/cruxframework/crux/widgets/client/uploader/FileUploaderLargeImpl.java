@@ -55,6 +55,9 @@ class FileUploaderLargeImpl extends AbstractFileUploader
 		}
 		FlowPanel buttonsPanel = initButtonsPanel();
 		mainPanel.add(buttonsPanel);
+		FlowPanel clearDiv = new FlowPanel();
+		clearDiv.getElement().getStyle().setProperty("clear", "both");
+		mainPanel.add(clearDiv);
     }
 
 	protected FocusPanel initDropArea()
@@ -92,7 +95,6 @@ class FileUploaderLargeImpl extends AbstractFileUploader
 				processFiles(event.getNativeEvent());
 			}
 		});
-		dropArea.setWidth("100%");
 		return dropArea;
 	}
 
