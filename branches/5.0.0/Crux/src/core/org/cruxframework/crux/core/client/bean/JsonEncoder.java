@@ -15,11 +15,6 @@
  */
 package org.cruxframework.crux.core.client.bean;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 
@@ -33,22 +28,4 @@ public interface JsonEncoder<T>
 	JavaScriptObject toJavaScriptObject(T object);
 	T decode(String jsonText);
 	T fromJavaScriptObject(JavaScriptObject object);
-	
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.METHOD})
-	public static @interface JsonIgnore{}
-	
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.TYPE})
-	public static @interface JsonSubTypes
-	{
-		Type[] value();
-
-		@Retention(RetentionPolicy.RUNTIME)
-		@Target({ElementType.TYPE})
-		public static @interface Type
-		{
-			Class<?> value();
-		}		
-	}
 }

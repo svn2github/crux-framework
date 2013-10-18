@@ -27,15 +27,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.bean.JsonEncoder;
-import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonIgnore;
-import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonSubTypes;
-import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonSubTypes.Type;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.shared.json.annotations.JsonIgnore;
+import org.cruxframework.crux.core.shared.json.annotations.JsonSubTypes;
+import org.cruxframework.crux.core.shared.json.annotations.JsonSubTypes.Type;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;

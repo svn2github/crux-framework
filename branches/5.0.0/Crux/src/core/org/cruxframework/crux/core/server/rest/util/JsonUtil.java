@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonSubTypes;
+import org.cruxframework.crux.core.shared.json.annotations.JsonSubTypes;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
