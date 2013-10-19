@@ -42,8 +42,8 @@
 		</section>
 	</gwt:HTML>		
 	
-	<center>
+	<div class="buttonBar">
 		<crux:button id="btnVoltar" onSelect="mainController.showViewInfo" text="Voltar"/>
-	</center>
+	</div>
 	
 </v:view>

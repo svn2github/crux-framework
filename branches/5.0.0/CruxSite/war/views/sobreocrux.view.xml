@@ -32,7 +32,7 @@
 					<p>O Crux é um projeto totalmente livre e independente. Seu código encontra-se hospedado no 
 					<a href="https://code.google.com/p/crux-framework/" target="_blank">Google Code</a> e totalmente
 					disponível, sob a licença Apache 2.0, para sua análise e uso. Você pode baixar, compilar, modificar 
-					e redistrubuir se quiser. Sem restrições.</p>
+					e redistribuir se quiser. Sem restrições.</p>
 				</li>
 				<li>
 					<h2>Bases sólidas</h2>
@@ -44,7 +44,7 @@
 		</section>
 	</gwt:HTML>		
 
-	<center>
+	<div class="buttonBar">
 		<crux:button id="btnVoltar" onSelect="mainController.showViewInfo" text="Voltar"/>
-	</center>	
+	</div>
 </v:view>
