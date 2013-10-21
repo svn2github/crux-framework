@@ -132,7 +132,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private void generateGetMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("	public <K, V> void get(K key, String objectStore, "+DatabaseRetrieveCallback.class.getCanonicalName()+"<V> callback){");
-		srcWriter.println("get(key, objectStore, callback);");
+		srcWriter.println("impl.get(key, objectStore, callback);");
 		srcWriter.println("}");
 		srcWriter.println();
     }
