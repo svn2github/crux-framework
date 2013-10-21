@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cruxVersion>5.0.0-SNAPSHOT</cruxVersion>
+        <cruxVersion>5.0.3-RC1-SNAPSHOT</cruxVersion>
         <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
 		<webinf.lib.folder>${webappDirectory}/WEB-INF/lib/</webinf.lib.folder>
 		<webinf.classes.folder>${webappDirectory}/WEB-INF/classes/</webinf.classes.folder>
@@ -51,6 +51,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<overwrite>true</overwrite>
 				</configuration>
 			</plugin>
 			<!-- Update webapp folders -->
