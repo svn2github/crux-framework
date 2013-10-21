@@ -494,7 +494,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			for(Type innerObject : jsonSubTypesClass.value())
 			{
 				index++;
-				srcWriter.println("if ("+jsonValueVar+".isObject().get(\"type\").equals(\""+innerObject.value().getName()+"\")){");
+				//toString is overriden inside JsonObject and it adds a "" to the string.
+				srcWriter.println("if ("+jsonValueVar+".isObject().get(\"type\").isString().stringValue().equals(\""+innerObject.value().getName()+"\")){");
 
 				JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
 				String serializerName = getSerializerForType(innerClass);
@@ -534,7 +535,9 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType paramType = method.getParameterTypes()[0];
 				String serializerName = getSerializerForType(paramType);
+				srcWriter.println("if ("+jsonObjectVar+" != null) {");
 				srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
+				srcWriter.println("}");
 			}
 		}
 	}
