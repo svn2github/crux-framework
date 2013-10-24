@@ -69,7 +69,9 @@ public class DownloadButton extends Composite implements HasSelectHandlers, HasH
 	static class DownloadButtonCommon extends Button
 	{
 		private static native void clickElement(Element elem) /*-{
-    		elem.click();
+    		//elem.click();
+    		//prevent buble
+    		elem.onclick.call(elem);
 		}-*/;
 		
 		public void fireDownload(DownloadData downloadData) 
