@@ -27,10 +27,10 @@ import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -42,57 +42,54 @@ import com.google.gwt.user.client.ui.HasHTML;
 public class DownloadButton extends Composite implements HasSelectHandlers, HasHTML, HasSafeHtml, HasAllFocusHandlers, HasEnabled
 {
 	private DownloadButtonCommon impl;
+	private Anchor downloadAnchor;
 	
-	public static interface DownloadData
+	public interface DownloadData
 	{
 		/**
 		 * Base64 data to be downloaded.
 		 */
-		String getBase64Data();
+		public abstract String getBase64Data();
 		
 		/**
 		 * The filename with extension.
 		 */
-		String getFilename();
+		public abstract String getFilename();
 		
 		/**
 		 * The target where it should be rendered the file.
 		 */
-		String getTarget();
+		public String getTarget();
+//		{
+//			return "_blank";
+//		};
 	}
 	
 	public void fireDownload(DownloadData downloadData) 
 	{
-		impl.fireDownload(downloadData);
+		impl.fireDownload(downloadData, downloadAnchor);
 	}
 	
-	static class DownloadButtonCommon extends Button
+	public static class DownloadButtonCommon extends Button
 	{
-		private static native void clickElement(Element elem) /*-{
-    		//elem.click();
-    		//prevent buble
-    		elem.onclick.call(elem);
+		private native void clickElement(Element elem) /*-{
+    		elem.click();
+    		//elem.onclick.call(elem);
 		}-*/;
 		
-		public void fireDownload(DownloadData downloadData) 
+		public void fireDownload(DownloadData downloadData, final Anchor downloadAnchor) 
 		{
-			final Anchor downloadAnchor = new Anchor();
-			downloadAnchor.setVisible(false);
 			if(downloadData != null)
 			{
-				final Element downloadButtonElement = this.getElement();
-				
 				downloadAnchor.setHref(downloadData.getBase64Data());
 				downloadAnchor.setTarget(downloadData.getTarget());
 				downloadAnchor.getElement().setAttribute("download", downloadData.getFilename());
-				DOM.appendChild(downloadButtonElement, downloadAnchor.getElement());
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
 					@Override
 					public void execute() 
 					{
 						clickElement(downloadAnchor.getElement());
-						DOM.removeChild(downloadButtonElement, downloadAnchor.getElement());		
 					}
 				});
 			}
@@ -101,9 +98,17 @@ public class DownloadButton extends Composite implements HasSelectHandlers, HasH
 
 	public DownloadButton()
 	{
+		FlowPanel wrapper = new FlowPanel();
+		wrapper.setStyleName("crux-DownloadButton");
+		
+		downloadAnchor = new Anchor();
+		downloadAnchor.setVisible(false);
+		
 		impl = GWT.create(DownloadButtonCommon.class);
-		initWidget(impl);
-		setStyleName("crux-DownloadButton");
+		wrapper.add(impl);
+		wrapper.add(downloadAnchor);
+		
+		initWidget(wrapper);
 	}
 
 	@Override
@@ -123,6 +128,12 @@ public class DownloadButton extends Composite implements HasSelectHandlers, HasH
 		return impl.getText();
 	}
 
+	@Override
+	public void setStyleName(String style) 
+	{
+		impl.setStyleName(style);
+	}
+	
 	@Override
 	public void setText(String text)
 	{
