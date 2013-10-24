@@ -32,6 +32,7 @@ public class StoryboardLargeMouseController extends StoryboardLargeController
 			}
 		});
 		panel.getElement().getStyle().setProperty("display", "inline-table");
+		panel.getElement().getStyle().setProperty("verticalAlign", "bottom");
 		panel.addKeyPressHandler(new KeyPressHandler()
 		{
 			@Override
