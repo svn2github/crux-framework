@@ -26,7 +26,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author Gesse Dafe
  *
  */
-@Resource(value="siteResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
+@Resource(value="siteDeviceResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
 public interface SiteResourcesSmall extends ClientBundle
 {
 	@Source("cssSiteSmall.css")
@@ -61,7 +61,4 @@ public interface SiteResourcesSmall extends ClientBundle
 	
 	@Source("icon-fast.jpg")
 	ImageResource iconFast();
-	
-	@Source("code.jpg")
-	ImageResource codeBg();
 }

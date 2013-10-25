@@ -4,7 +4,7 @@
 	xmlns:core="http://www.cruxframework.org/crux" 
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-	useController="mainController" title="Home" useResource="siteResources"> 
+	useController="mainController" title="Home"> 
 	
 	<gwt:HTML id="viewTextPanel" styleName="viewTextPanel">
 		<section>

@@ -54,9 +54,19 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
+			<jvmarg value="-Xdebug"/>
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y"/>
+			
 			<arg value="-localWorkers" />
 			<arg value="2" />
-
+		
+			<arg value="-gen"/>
+			<arg value="generated"/>
+			
+			<arg value="-strict"/>
+			<arg value="-style"/>
+			<arg value="DETAILED"/>
+			
 			<!-- use these parameters if you want to modify GWT output settings
 			<arg value="-style"/>
 			<arg value="DETAILED"/>
@@ -125,6 +135,7 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
+			<arg value="-strict"/>
 			<arg value="-localWorkers" />
 			<arg value="2" />
 			<arg value="-gen"/>

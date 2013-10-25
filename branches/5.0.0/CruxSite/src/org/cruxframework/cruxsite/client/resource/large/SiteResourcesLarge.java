@@ -26,7 +26,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author Gesse Dafe
  *
  */
-@Resource(value="siteResources", supportedDevices={Device.all})
+@Resource(value="siteDeviceResources", supportedDevices={Device.all})
 public interface SiteResourcesLarge extends ClientBundle
 {
 	@Source("cssSiteLarge.css")
@@ -64,7 +64,4 @@ public interface SiteResourcesLarge extends ClientBundle
 	
 	@Source("mountain-bg.png")
 	DataResource mountainBg();
-	
-	@Source("code.jpg")
-	ImageResource codeBg();
 }

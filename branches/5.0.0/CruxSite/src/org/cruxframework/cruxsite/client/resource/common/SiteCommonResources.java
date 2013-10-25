@@ -19,7 +19,6 @@ import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -31,9 +30,6 @@ public interface SiteCommonResources extends ClientBundle
 {
 	@Source("cssSiteCommon.css")
 	CssSiteCommon css();
-	
-	@Source("noise.png")
-	DataResource noiseBg();
 	
 	@Source("code.jpg")
 	ImageResource codeBg();
