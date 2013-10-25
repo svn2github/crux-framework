@@ -17,12 +17,16 @@ package org.cruxframework.crux.widgets.client.disposal.menutabsdisposal;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.tabcontainer.TabContainer;
 
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
@@ -32,6 +36,8 @@ import com.google.gwt.user.client.ui.Label;
 @Controller("menuTabsDisposalLargeController")
 public class MenuTabsDisposalLargeController extends DeviceAdaptiveController implements MenuTabsDisposal
 {
+	private static final String HISTORY_PREFIX = "menuTabsDisposal:";
+
 	private FlowPanel menuPanel;
 	private TabContainer viewContainer;
 	
@@ -46,8 +52,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 			@Override
 			public void onSelect(SelectEvent event)
 			{
-				viewContainer.showView(targetView, targetView);
-				viewContainer.focusView(targetView);
+				showView(targetView, true);
 			}
 		});
 		
@@ -60,6 +65,32 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		menuPanel = getChildWidget("menuPanel");
 		viewContainer = getChildWidget("viewContainer");
 		setStyleName("crux-MenuTabsDisposal");
+		
+		Screen.addHistoryChangedHandler(new ValueChangeHandler<String>() 
+		{
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) 
+			{
+				String token = event.getValue();
+				if(token != null && token.startsWith(HISTORY_PREFIX))
+				{
+					showView(token.replace(HISTORY_PREFIX, ""), false);
+				}
+			}
+		});
+	}
+
+	protected void showView(String targetView, boolean saveHistory) 
+	{
+		if(saveHistory)
+		{
+			History.newItem(HISTORY_PREFIX + targetView);
+		}
+		else
+		{
+			viewContainer.showView(targetView, targetView);
+			viewContainer.focusView(targetView);
+		}
 	}
 
 	@Override

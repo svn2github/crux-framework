@@ -17,6 +17,7 @@ package org.cruxframework.crux.widgets.client.disposal.menutabsdisposal;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
@@ -25,6 +26,9 @@ import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
@@ -34,6 +38,8 @@ import com.google.gwt.user.client.ui.Label;
 @Controller("menuTabsDisposalSmallController")
 public class MenuTabsDisposalSmallController extends DeviceAdaptiveController implements MenuTabsDisposal
 {
+	private static final String HISTORY_PREFIX = "menuTabsDisposal:";
+	
 	private HorizontalSwapPanel swapPanel;
 	private FlowPanel menuPanel;
 	private SimpleViewContainer viewContainer;
@@ -49,8 +55,7 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 			@Override
 			public void onSelect(SelectEvent event)
 			{
-				viewContainer.showView(targetView);
-				swapPanel.transitTo(viewContainer, Direction.FORWARD);
+				showView(targetView, true, Direction.FORWARD);
 			}
 		});
 		
@@ -64,6 +69,19 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 		swapPanel = getChildWidget("swapPanel");
 		menuPanel = getChildWidget("menuPanel");
 		setStyleName("crux-MenuTabsDisposal");
+		
+		Screen.addHistoryChangedHandler(new ValueChangeHandler<String>() 
+		{
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) 
+			{
+				String token = event.getValue();
+				if(token != null && token.startsWith(HISTORY_PREFIX))
+				{
+					showView(token.replace(HISTORY_PREFIX, ""), false, Direction.BACKWARDS);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -80,5 +98,18 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 		section.getElement().getStyle().setDisplay(Display.BLOCK);
 		section.setText(label);
 		menuPanel.add(section);
+	}
+	
+	private void showView(final String targetView, boolean saveHistoryToken, Direction direction) 
+	{
+		if(saveHistoryToken)
+		{
+			History.newItem(HISTORY_PREFIX + targetView);
+		}
+		else
+		{
+			viewContainer.showView(targetView);
+			swapPanel.transitTo(viewContainer, direction);
+		}
 	}
 }

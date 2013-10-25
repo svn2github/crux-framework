@@ -17,10 +17,14 @@ package org.cruxframework.crux.widgets.client.disposal.topmenudisposal;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -31,6 +35,8 @@ import com.google.gwt.user.client.ui.MenuItem;
 @Controller("topMenuDisposalLargeController")
 public class TopMenuDisposalLargeController extends DeviceAdaptiveController implements TopMenuDisposal
 {
+	private static final String HISTORY_PREFIX = "topMenuDisposal:";
+	
 	private MenuBar menuBar;
 	private SimpleViewContainer viewContainer;
 	
@@ -42,9 +48,9 @@ public class TopMenuDisposalLargeController extends DeviceAdaptiveController imp
 		menuItem.setScheduledCommand(new ScheduledCommand() 
 		{
 			@Override
-			public void execute() {
-				viewContainer.showView(targetView, targetView);
-				Window.scrollTo(0, 0);
+			public void execute() 
+			{
+				showView(targetView, true);
 			}
 		});
 		menuBar.addItem(menuItem);
@@ -56,6 +62,19 @@ public class TopMenuDisposalLargeController extends DeviceAdaptiveController imp
 		menuBar = getChildWidget("menuBar");
 		viewContainer = getChildWidget("viewContainer");
 		setStyleName("crux-TopMenuDisposal");
+		
+		Screen.addHistoryChangedHandler(new ValueChangeHandler<String>() 
+		{
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) 
+			{
+				String token = event.getValue();
+				if(token != null && token.startsWith(HISTORY_PREFIX))
+				{
+					showView(token.replace(HISTORY_PREFIX, ""), false);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -65,10 +84,17 @@ public class TopMenuDisposalLargeController extends DeviceAdaptiveController imp
 	}
 
 	@Override
-	public void showView(String viewName) 
+	public void showView(String viewName, boolean saveHistory) 
 	{
-		viewContainer.showView(viewName);
-		Window.scrollTo(0, 0);
+		if(saveHistory)
+		{
+			History.newItem(HISTORY_PREFIX + viewName);
+		}
+		else
+		{
+			viewContainer.showView(viewName);
+			Window.scrollTo(0, 0);
+		}
 	}
 
 	@Override
@@ -76,5 +102,6 @@ public class TopMenuDisposalLargeController extends DeviceAdaptiveController imp
 	{
 		viewContainer.showView(viewName);
 		Window.scrollTo(0, 0);
+		History.newItem(HISTORY_PREFIX + viewName);
 	}
 }
