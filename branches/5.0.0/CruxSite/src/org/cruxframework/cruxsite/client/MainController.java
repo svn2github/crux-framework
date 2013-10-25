@@ -3,8 +3,11 @@ package org.cruxframework.cruxsite.client;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.widgets.client.disposal.topmenudisposal.TopMenuDisposal;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
+
+import com.google.gwt.user.client.ui.Label;
 
 @Controller("mainController")
 public class MainController 
@@ -51,14 +54,47 @@ public class MainController
 		showView("exemplos", evt);
 	}
 	
+	@Expose
+	public void showAppHelloCross(SelectEvent evt)
+	{
+		showSampleApp(evt, "CrossDeviceHelloWorld");
+	}
+	
+	@Expose
+	public void showAppSite(SelectEvent evt)
+	{
+		showSampleApp(evt, "CruxSite");
+	}
+	
+	@Expose
+	public void showAppShowcase(SelectEvent evt)
+	{
+		showSampleApp(evt, "CrossDeviceShowcase");
+	}
+
+	/**
+	 * @param evt
+	 * @param nomeAplicacao
+	 */
+	private void showSampleApp(SelectEvent evt, String nomeAplicacao) 
+	{
+		showView("aplicacaoExemplo", evt);
+		Label appName = (Label) View.getView("aplicacaoExemplo").getWidget("sampleAppName");
+		appName.setText(nomeAplicacao);
+	}
+	
 	/**
 	 * @param viewName
 	 * @param evt 
 	 */
 	private void showView(String viewName, SelectEvent evt) 
 	{
-		evt.setCanceled(true);
+		if(evt != null)
+		{
+			evt.setCanceled(true);
+		}
+		
 		TopMenuDisposal disposal = (TopMenuDisposal) Screen.get("menuDisposal");
-		disposal.showView(viewName);
+		disposal.showView(viewName, true);
 	}
 }
