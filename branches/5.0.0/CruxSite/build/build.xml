@@ -54,9 +54,6 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
-			<jvmarg value="-Xdebug"/>
-			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y"/>
-			
 			<arg value="-localWorkers" />
 			<arg value="2" />
 		
@@ -75,7 +72,7 @@
 			-->
 		</cruxcompiler>
 		
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="${temp.dir}/webroot">
 				<include name="**/*.crux.xml"/>
 				<include name="**/*.template.xml"/>
