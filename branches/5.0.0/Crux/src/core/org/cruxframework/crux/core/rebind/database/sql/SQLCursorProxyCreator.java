@@ -29,12 +29,14 @@ import org.cruxframework.crux.core.client.db.WSQLTransaction;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
@@ -48,11 +50,14 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected final String cursorName;
 	protected final String[] objectStoreKeyPath;
 	private final Set<String> objectStoreIndexColumns;
+	private final boolean autoIncrement;
 
-	public SQLCursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
-								Set<String> objectStoreIndexColumns, String[] keyPath, String[] objectStoreKeyPath, String cursorName)
+	public SQLCursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName,
+								boolean autoIncrement, Set<String> objectStoreIndexColumns, String[] keyPath, String[] objectStoreKeyPath, 
+								String cursorName)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
+		this.autoIncrement = autoIncrement;
 		this.objectStoreIndexColumns = objectStoreIndexColumns;
 		this.objectStoreKeyPath = objectStoreKeyPath;
 		this.cursorName = cursorName;
@@ -63,7 +68,7 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		srcWriter.println("public "+getProxySimpleName()+"(WSQLAbstractDatabase db, WSQLKeyRange<"+getKeyTypeName()+"> range, CursorDirection direction, WSQLTransaction transaction){");
-		srcWriter.println("super(db, range, "+EscapeUtils.quote(objectStoreName)+", direction, transaction);");
+		srcWriter.println("super(db, range, "+EscapeUtils.quote(objectStoreName)+", "+autoIncrement+", direction, transaction);");
 		populateKeyPathVariable(srcWriter);
 		srcWriter.println("this.indexColumnNames = "+CollectionFactory.class.getCanonicalName()+".createArray();");
 		for (String col : objectStoreIndexColumns)
@@ -91,8 +96,34 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 		generateAddPrimaryKeyToQueryMethod(srcWriter);
 		generateDecodeObjectMethod(srcWriter);
 		generateEncodeObjectMethod(srcWriter);
+		generateSetObjectKeyMethod(srcWriter);
 	}
 	
+	protected void generateSetObjectKeyMethod(SourcePrinter srcWriter)
+	{
+		srcWriter.println("protected void setObjectKey("+getTargetObjectClassName()+" object, "+getKeyTypeName(objectStoreKeyPath)+" key){");
+
+		if (objectStoreKeyPath.length > 1)
+		{
+			for (int i = 0; i < objectStoreKeyPath.length; i++)
+			{
+				String k = objectStoreKeyPath[i];
+				JType jType = JClassUtils.getTypeForProperty(k, targetObjectType);
+				String setterMethod = JClassUtils.getSetterMethod(k, targetObjectType, jType);
+				srcWriter.println("object."+setterMethod+"((key==null?null:("+jType.getParameterizedQualifiedSourceName()+")key["+i+"]));");
+			}
+		}
+		else
+		{
+			String k = objectStoreKeyPath[0];
+			JType jType = JClassUtils.getTypeForProperty(k, targetObjectType);
+			String setterMethod = JClassUtils.getSetterMethod(k, targetObjectType, jType);
+			srcWriter.println("object."+setterMethod+"(key);");
+		}
+		srcWriter.println("}");
+		srcWriter.println();
+	}
+
 	protected void generateAddPrimaryKeyToQueryMethod(SourcePrinter srcWriter)
 	{
 	    generateGetNativeKeyMethod(srcWriter, objectStoreKeyPath, "getNativePrimaryKey");
@@ -136,7 +167,7 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 		}
 		else if (keyTypeName.equals("Integer"))
 		{
-			srcWriter.println("return "+JsUtils.class.getCanonicalName()+".readIntPropertyValue(object, "+EscapeUtils.quote(keyPath[0])+");");
+			srcWriter.println("return ("+JsUtils.class.getCanonicalName()+".hasPropertyValue(object, "+EscapeUtils.quote(keyPath[0])+")?"+JsUtils.class.getCanonicalName()+".readIntPropertyValue(object, "+EscapeUtils.quote(keyPath[0])+"):null);");
 		}
 		else if (keyTypeName.equals("Double"))
 		{
@@ -162,7 +193,7 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 		if (objectStoreKeyPath.length > 1 && !isEmptyType())
 		{
 			srcWriter.println(JsArrayMixed.class.getCanonicalName() + " k = "+JsArrayMixed.class.getCanonicalName()+".createArray().cast(); ");
-			for(String key: keyPath)
+			for(String key: objectStoreKeyPath)
 			{
 				srcWriter.println(JsUtils.class.getCanonicalName()+".readPropertyValue(object, "+EscapeUtils.quote(key)+", k, true);");
 			}
@@ -170,19 +201,19 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 		}
 		else if (keyTypeName.equals("String"))
 		{
-			srcWriter.println("return "+JsUtils.class.getCanonicalName()+".readStringPropertyValue(object, "+EscapeUtils.quote(keyPath[0])+");");
+			srcWriter.println("return "+JsUtils.class.getCanonicalName()+".readStringPropertyValue(object, "+EscapeUtils.quote(objectStoreKeyPath[0])+");");
 		}
 		else if (keyTypeName.equals("Integer"))
 		{
-			srcWriter.println("return "+JsUtils.class.getCanonicalName()+".readIntPropertyValue(object, "+EscapeUtils.quote(keyPath[0])+");");
+			srcWriter.println("return ("+JsUtils.class.getCanonicalName()+".hasPropertyValue(object, "+EscapeUtils.quote(objectStoreKeyPath[0])+")?"+JsUtils.class.getCanonicalName()+".readIntPropertyValue(object, "+EscapeUtils.quote(objectStoreKeyPath[0])+"):null);");
 		}
 		else if (keyTypeName.equals("Double"))
 		{
-			srcWriter.println("return "+JsUtils.class.getCanonicalName()+".readDoublePropertyValue(object, "+EscapeUtils.quote(keyPath[0])+");");
+			srcWriter.println("return "+JsUtils.class.getCanonicalName()+".readDoublePropertyValue(object, "+EscapeUtils.quote(objectStoreKeyPath[0])+");");
 		}
 		else if (keyTypeName.equals(Date.class.getCanonicalName()))
 		{
-			srcWriter.println("return new "+Date.class.getCanonicalName()+"((long)"+JsUtils.class.getCanonicalName()+".readDoublePropertyValue(object, "+EscapeUtils.quote(keyPath[0])+"));");
+			srcWriter.println("return new "+Date.class.getCanonicalName()+"((long)"+JsUtils.class.getCanonicalName()+".readDoublePropertyValue(object, "+EscapeUtils.quote(objectStoreKeyPath[0])+"));");
 		}
 		else
 		{

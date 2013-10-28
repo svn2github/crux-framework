@@ -124,6 +124,18 @@ public class JsUtils
 	}-*/;
 	
 	/**
+	 * Return true if given object has a property with specified name. 
+	 * @param object the Object where the property will be read from. 
+	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)
+	 */
+	public static native boolean hasPropertyValue(JavaScriptObject object, String property)/*-{
+	    var arr = property.split(".");
+	    while(arr.length && (object = object[arr.shift()]));
+	    return (object !== undefined);
+    }-*/;
+
+	
+	/**
 	 * Read properties from native javascript objects. 
 	 * @param object the Object where the property will be read from. 
 	 * @param property the name of the property. You can pass inner properties using dot notation (prop1.prop2)

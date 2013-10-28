@@ -46,11 +46,13 @@ public class SQLIndexProxyCreator extends SQLAbstractKeyValueProxyCreator
 	private String[] objectStoreKeyPath;
 	private final Set<String> objectStoreIndexColumns;
 	private final boolean unique;
+	private final boolean autoIncrement;
 
 	public SQLIndexProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
-			String[] keyPath, String indexName, String[] objectStoreKeyPath, Set<String> objectStoreIndexColumns, boolean unique)
+			boolean autoIncrement, String[] keyPath, String indexName, String[] objectStoreKeyPath, Set<String> objectStoreIndexColumns, boolean unique)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
+		this.autoIncrement = autoIncrement;
 		this.objectStoreKeyPath = objectStoreKeyPath;
 		this.objectStoreIndexColumns = objectStoreIndexColumns;
 		this.unique = unique;
@@ -110,7 +112,7 @@ public class SQLIndexProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected void generateOpenCursorMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
-		String cursorClassName = new SQLCursorProxyCreator(context, logger, targetObjectType, objectStoreName, objectStoreIndexColumns, keyPath, objectStoreKeyPath, indexName).create();
+		String cursorClassName = new SQLCursorProxyCreator(context, logger, targetObjectType, objectStoreName, autoIncrement, objectStoreIndexColumns, keyPath, objectStoreKeyPath, indexName).create();
 		srcWriter.println("new "+cursorClassName+"("+dbVariable+", (WSQLKeyRange<"+getKeyTypeName()+">)keyRange, direction, transaction).start(callback);");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -119,7 +121,7 @@ public class SQLIndexProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected void generateOpenKeyCursorMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openKeyCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getKeyTypeName(objectStoreKeyPath)+"> callback){");
-		String cursorClassName = new SQLKeyCursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, objectStoreKeyPath, indexName).create();
+		String cursorClassName = new SQLKeyCursorProxyCreator(context, logger, targetObjectType, objectStoreName, autoIncrement, keyPath, objectStoreKeyPath, indexName).create();
 		srcWriter.println("new "+cursorClassName+"("+dbVariable+", (WSQLKeyRange<"+getKeyTypeName()+">)keyRange, direction, transaction).start(callback);");
 		srcWriter.println("}");
 		srcWriter.println();

@@ -37,9 +37,9 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 {
 	public SQLKeyCursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, 
-								String objectStoreName, String[] keyPath, String[] objectStoreKeyPath, String indexName)
+								String objectStoreName, boolean autoIncrement, String[] keyPath, String[] objectStoreKeyPath, String indexName)
 	{
-		super(context, logger, targetObjectType, objectStoreName, new HashSet<String>(), keyPath, objectStoreKeyPath, indexName);
+		super(context, logger, targetObjectType, objectStoreName, autoIncrement, new HashSet<String>(), keyPath, objectStoreKeyPath, indexName);
 	}
 
 	@Override

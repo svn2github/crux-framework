@@ -30,9 +30,7 @@ import org.cruxframework.crux.core.client.db.DatabaseWriteCallback;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.WSQLAbstractDatabase;
 import org.cruxframework.crux.core.client.db.WSQLAbstractObjectStore;
-import org.cruxframework.crux.core.client.db.WSQLAbstractObjectStore.CallbackKey;
 import org.cruxframework.crux.core.client.db.WSQLTransaction;
-import org.cruxframework.crux.core.client.db.websql.SQLTransaction;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -133,8 +131,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 
 	protected void generateDeriveKeyMethod(SourcePrinter srcWriter)
 	{
-		srcWriter.println("protected void deriveKey("+SQLTransaction.class.getCanonicalName() +" tx, "+ getTargetObjectClassName()+" object, "+
-						CallbackKey.class.getCanonicalName()+"<"+getKeyTypeName()+"> callbackKey){");
+		srcWriter.println("protected "+getKeyTypeName()+" getKey("+ getTargetObjectClassName()+" object){");
 		
 		srcWriter.print("boolean hasKey = ");
 		boolean first = true;
@@ -167,8 +164,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 		{
 			srcWriter.println(" = object."+JClassUtils.getGetterMethod(keyPath[0], targetObjectType)+"();");
 		}
-		srcWriter.println("callbackKey.execute(key, false);");
-		srcWriter.println("return;");
+		srcWriter.println("return key;");
 		
 		if (autoIncrement)
 		{
@@ -177,8 +173,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 				throw new CruxGeneratorException("Auto increment keys can only be used on integer keys");
 			}
 			srcWriter.println("} else {");
-			srcWriter.println("readNextAutoIncKey(tx, callbackKey);");
-			srcWriter.println("return;");
+			srcWriter.println("return null;");
 		}
 		else
 		{
@@ -313,7 +308,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected void generateOpenCursorMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
-		String cursorClassName = new SQLCursorProxyCreator(context, logger, targetObjectType, objectStoreName, getIndexColumns(), keyPath, keyPath, "ObjectStore_"+getTargetObjectClassName()).create();
+		String cursorClassName = new SQLCursorProxyCreator(context, logger, targetObjectType, objectStoreName, autoIncrement, getIndexColumns(), keyPath, keyPath, "ObjectStore_"+getTargetObjectClassName()).create();
 		srcWriter.println("new "+cursorClassName+"("+dbVariable+", (WSQLKeyRange<"+getKeyTypeName()+">)keyRange, direction, transaction).start(callback);");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -347,7 +342,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 		for(IndexData index: indexes)
 		{
 			srcWriter.println("if (StringUtils.unsafeEquals(name, "+EscapeUtils.quote(index.indexName)+")){");
-			String indexClassName = new SQLIndexProxyCreator(context, logger, targetObjectType, objectStoreName, index.keyPath, index.indexName, keyPath, getIndexColumns(), index.unique).create();
+			String indexClassName = new SQLIndexProxyCreator(context, logger, targetObjectType, objectStoreName, autoIncrement, index.keyPath, index.indexName, keyPath, getIndexColumns(), index.unique).create();
 			srcWriter.println("return (Index<"+getKeyTypeName()+", I, "+getTargetObjectClassName()+">) new " + indexClassName + "("+dbVariable+", transaction);");
 			srcWriter.println("}");
 		}

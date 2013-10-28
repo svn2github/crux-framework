@@ -51,12 +51,14 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 	protected SQLResultSet resultSet;
 	protected DatabaseCursorCallback<K, V> callback;
 	private K cursorKey;
+	private final boolean autoIncrement;
 	
-	protected WSQLCursor(WSQLAbstractDatabase db, WSQLKeyRange<K> range, String objectStoreName, CursorDirection direction, WSQLTransaction transaction)
+	protected WSQLCursor(WSQLAbstractDatabase db, WSQLKeyRange<K> range, String objectStoreName, boolean autoIncrement, CursorDirection direction, WSQLTransaction transaction)
 	{
 		super(db);
 		this.keyRange = range;
 		this.objectStoreName = objectStoreName;
+		this.autoIncrement = autoIncrement;
 		this.direction = direction;
 		this.transaction = transaction;
 		this.offset = NOT_INITIALIZED;
@@ -368,7 +370,12 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 		}
 		if (offset < length)
 		{
-			return decodeObject(JsUtils.readStringPropertyValue(resultSet.getRows().itemObject(offset), "value"));
+			V object = decodeObject(JsUtils.readStringPropertyValue(resultSet.getRows().itemObject(offset), "value"));
+			if (autoIncrement)
+			{
+				setObjectKey(object, getPrimaryKey());
+			}
+			return object;
 		}
 		else
 		{
@@ -396,6 +403,7 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 		return null;
 	}
 
+	protected abstract void setObjectKey(V object, P key);
 	protected abstract Array<String> getIndexedColumnNames();
 	protected abstract P getPrimaryKey();
 	protected abstract Array<String> getKeyPath();

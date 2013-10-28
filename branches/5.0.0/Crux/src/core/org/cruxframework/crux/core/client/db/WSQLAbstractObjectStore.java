@@ -67,14 +67,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
     		@Override
     		public void doOperation(final SQLTransaction tx)
     		{
-    			deriveKey(tx, object, new CallbackKey<K>()
-				{
-					@Override
-					public void execute(K key, boolean generatedKey)
-					{
-						insertObject(object, tx, callback, key, generatedKey);
-					}
-				});
+				insertObject(object, tx, callback, getKey(object));
     		}
     	}, new Mode[]{Mode.readWrite});
 	}
@@ -87,14 +80,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
     		@Override
     		public void doOperation(final SQLTransaction tx)
     		{
-    			deriveKey(tx, object, new CallbackKey<K>()
-				{
-					@Override
-					public void execute(final K key, final boolean generatedKey)
-					{
-						updateObject(object, tx, callback, key, generatedKey);
-					}
-				});
+				updateObject(object, tx, callback, getKey(object));
     		}
     	}, new Mode[]{Mode.readWrite});
 	}
@@ -114,7 +100,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 					sql.append(" WHERE ");
 					addKeyToQuery(key, sql, args);
 				}
-				runSelectSQL(callback, tx, args, sql.toString());
+				runSelectSQL(callback, tx, args, sql.toString(), key);
 			}
 		}, new Mode[]{Mode.readOnly, Mode.readWrite});
     }
@@ -285,47 +271,58 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		openCursor(keyRange, CursorDirection.next, callback);
 	}
 	
-	protected void insertObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key, final boolean generatedKey)
+	protected void insertObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key)
     {
-        if (generatedKey)
-        {
-       		setObjectKey(object, key);
-        }
 		encodeObject(object, new EncodeCallback()
 		{
 			@Override
 			public void onEncode(JSONObject encoded)
 			{
-		    	insertObject(object, tx, callback, key, generatedKey, encoded);
+		    	insertObject(object, tx, callback, key, encoded);
 			}
 		});
     }
 
-	protected void insertObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key, 
-			final boolean generatedKey, JSONObject encoded)
+	protected void insertObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key, JSONObject encoded)
 	{
 		StringBuilder sqlStart = new StringBuilder("INSERT INTO ").append("\""+ name +"\" (");
 		StringBuilder sqlEnd = new StringBuilder(" VALUES(");
 		JavaScriptObject encodedObject = encoded.getJavaScriptObject();
 		
     	JsArrayMixed sqlValues = JsArrayMixed.createArray().cast();
-		getIndexesValuesForObject(encodedObject, indexAndKeyColumnNames, sqlValues);
-		
-		for (int i=0; i< indexAndKeyColumnNames.size(); i++)
-		{
-			String k = indexAndKeyColumnNames.get(i);
-			sqlStart.append(k +",");
-			sqlEnd.append("?,");
-		}
+    	
+    	if (!isAutoIncrement() || key != null)
+    	{
+    		getIndexesValuesForObject(encodedObject, indexAndKeyColumnNames, sqlValues);
+    		
+    		for (int i=0; i< indexAndKeyColumnNames.size(); i++)
+    		{
+    			String k = indexAndKeyColumnNames.get(i);
+    			sqlStart.append(k +",");
+    			sqlEnd.append("?,");
+    		}
+    	}
+    	else
+    	{
+    		Array<String> indexedColumnNames = getIndexedColumnNames();
+    		getIndexesValuesForObject(encodedObject, indexedColumnNames, sqlValues);
+    		
+    		for (int i=0; i< indexedColumnNames.size(); i++)
+    		{
+    			String k = indexedColumnNames.get(i);
+    			sqlStart.append(k +",");
+    			sqlEnd.append("?,");
+    		}
+    	}
 		
 		sqlStart.append("value)");
 		sqlEnd.append("?)");
 		sqlValues.push(encoded.toString());
 		String sqlStatement = sqlStart.toString()+" "+sqlEnd.toString() ;
-		runInsertQL(callback, tx, sqlValues, sqlStatement, key, object, generatedKey);
+		runInsertQL(callback, tx, sqlValues, sqlStatement, key, object);
 	}
 
-	protected void updateObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key, final boolean generatedKey)
+	protected void updateObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key)
     {
 		encodeObject(object, new EncodeCallback()
 		{
@@ -349,7 +346,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 				addKeyToQuery(key, sql, sqlValues);
 				
 		        String sqlStatement = sql.toString();
-				runUpdateSQL(callback, tx, sqlValues, sqlStatement, key, object, generatedKey, encoded);
+				runUpdateSQL(callback, tx, sqlValues, sqlStatement, key, object, encoded);
 			}
 		});
     }
@@ -382,38 +379,9 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 			JsUtils.readPropertyValue(object, columnNames.get(i), output, true);
 		}
 	}
-	
-	protected void readNextAutoIncKey(final SQLTransaction tx, final CallbackKey<Integer> callback)
-	{
-		String sql = "SELECT * FROM sqlite_sequence WHERE name LIKE ?";
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.log(Level.FINE, "Running SQL["+sql+"].");
-		}
-		JsArrayMixed args = JsArrayMixed.createArray().cast();
-		args.push(name);
-		tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
-		{
-			@Override
-			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
-			{
-				int key;
-				if (rs.getRows().length() != 1)
-				{
-					key = 0;
-				}
-				else
-				{
-					key = JsUtils.readIntPropertyValue(rs.getRows().itemObject(0), "seq");
-				}
-
-				callback.execute(key, true);
-			}
-		}, getErrorHandler(null));
-	}
 
 	protected void runUpdateSQL(final DatabaseWriteCallback<K> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, 
-								final K key, final V object, final boolean generatedKey, final JSONObject encodedObject)
+								final K key, final V object, final JSONObject encodedObject)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -426,7 +394,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 			{
 				if (rs.getRowsAffected() == 0)
 				{
-					insertObject(object, tx, callback, key, generatedKey, encodedObject);
+					insertObject(object, tx, callback, key, encodedObject);
 				}
 				else
 				{
@@ -454,7 +422,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		}, getErrorHandler(callback));
     }
 	
-	protected void runInsertQL(final DatabaseWriteCallback<K> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, final K key, final V object, final boolean generatedKey)
+	protected void runInsertQL(final DatabaseWriteCallback<K> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, final K key, final V object)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -462,7 +430,8 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		}
         tx.executeSQL(sqlStatement, args, new SQLTransaction.SQLStatementCallback()
 		{
-			@Override
+			@SuppressWarnings("unchecked")
+            @Override
 			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
 			{
 				if (LogConfiguration.loggingIsEnabled())
@@ -473,7 +442,14 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 				{
 					try
 					{
-						callback.onSuccess(key);
+						if (isAutoIncrement())
+						{   // Only integer keys can be auto incremented.
+							callback.onSuccess((K) new Integer(rs.getInsertId()));
+						}
+						else
+						{
+							callback.onSuccess(key);
+						}
 						callback.setDb(null);
 					}
 					catch (Exception e) 
@@ -485,32 +461,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 					}
 				}
 			}
-		}, new SQLTransaction.SQLStatementErrorCallback()
-		{
-			@Override
-			public boolean onError(SQLTransaction tx, SQLError error)
-			{
-		        if (generatedKey)
-		        {
-		       		setObjectKey(object, null);
-		        }
-				String message = db.messages.objectStoreOperationError(error.getName() + " - " + error.getMessage());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-					callback.setDb(null);
-				}
-				else if (db.errorHandler != null)
-				{
-					db.errorHandler.onError(message);
-				}
-				return true;
-			}
-		});
+		}, getErrorHandler(callback));
     }
 	
 	protected void runDeleteSQL(final DatabaseDeleteCallback callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement)
@@ -547,7 +498,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		}, getErrorHandler(callback));
     }
 
-	protected void runSelectSQL(final DatabaseRetrieveCallback<V> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement)
+	protected void runSelectSQL(final DatabaseRetrieveCallback<V> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, final K key)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -571,7 +522,12 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 							String encodedObject = JsUtils.readStringPropertyValue(rs.getRows().itemObject(0), "value");
 							if (!StringUtils.isEmpty(encodedObject))
 							{
-								callback.onSuccess(decodeObject(encodedObject));
+								V object = decodeObject(encodedObject);
+								if (isAutoIncrement() && key != null)
+								{
+									setObjectKey(object, key);
+								}
+								callback.onSuccess(object);
 							}
 							else
 							{
@@ -673,17 +629,12 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 	protected abstract Array<String> getKeyPath();
 	protected abstract void addKeyRangeToQuery(final KeyRange<K> range, StringBuilder sql, JsArrayMixed args);
 	protected abstract void addKeyToQuery(final K key, StringBuilder sql, JsArrayMixed args);
-	protected abstract void deriveKey(SQLTransaction tx, V object, CallbackKey<K> callbackKey);
+	protected abstract K getKey(V object);
 	protected abstract void setObjectKey(V object, K key);
 	protected abstract V decodeObject(String encodedObject);
 	protected abstract void encodeObject(V object, EncodeCallback callback);
 	protected abstract String getCreateTableSQL();
-	
-	public static interface CallbackKey<K>
-	{
-		void execute(K key, boolean generatedKey);
-	}
-	
+		
 	public static interface EncodeCallback
 	{
 		void onEncode(JSONObject encoded);
