@@ -71,6 +71,7 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * This class creates a client proxy for calling rest services
@@ -370,8 +371,10 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
 			srcWriter.println(callbackParameterName+".onSuccess(result);");
 			srcWriter.println("}catch (Exception e){");
+			srcWriter.println("if (LogConfiguration.loggingIsEnabled()){");
 			srcWriter.println("__log.log(Level.SEVERE, e.getMessage(), e);");
 			//srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage())));");
+			srcWriter.println("}");
 			srcWriter.println("}");
 			srcWriter.println("}else {");
 			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
@@ -508,6 +511,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return new String[] { 
 				Level.class.getCanonicalName(),
 				Logger.class.getCanonicalName(),
+				LogConfiguration.class.getCanonicalName(),
 				RequestBuilder.class.getCanonicalName(), 
 				RequestCallback.class.getCanonicalName(),
 				Request.class.getCanonicalName(), 
