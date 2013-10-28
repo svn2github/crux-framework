@@ -26,6 +26,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 /**
@@ -34,6 +35,18 @@ import com.google.gwt.json.client.JSONValue;
  */
 public class JsUtils
 {
+	/**
+	 * Append all values contained in input array into the output array 
+	 * @param in
+	 * @param out
+	 */
+	public static native void copyValues(JsArrayMixed input, JsArrayMixed output)/*-{
+		for (var i=0; i< input.length; i++)
+		{
+			output.push(input[i]);
+		}
+	}-*/;
+	
 	/**
 	 * Create a JSONValue Object from a native javascript object
 	 * @param object
@@ -50,6 +63,36 @@ public class JsUtils
 			return new JSONArray(object);
 		}
 		return new JSONObject(object);
+	}
+
+	/**
+	 * Extract the associated native javascript object from the given json string
+	 * @param jsonValue
+	 * @return
+	 */
+	public static <T extends JavaScriptObject> T fromString(String encodedObject)
+	{
+		if (StringUtils.isEmpty(encodedObject))
+		{
+			return null;
+		}
+		if (encodedObject.startsWith("data:"))
+		{
+			return FileUtils.fromDataURI(encodedObject).cast();
+		}
+		return fromJSONValue(encodedObject);
+	}
+	
+	
+	/**
+	 * Extract the associated native javascript object from the given json string
+	 * @param jsonValue
+	 * @return
+	 */
+	public static <T extends JavaScriptObject> T fromJSONValue(String encodedObject)
+	{
+		JSONValue jsonValue = JSONParser.parseStrict(encodedObject);
+		return fromJSONValue(jsonValue).cast();
 	}
 
 	/**

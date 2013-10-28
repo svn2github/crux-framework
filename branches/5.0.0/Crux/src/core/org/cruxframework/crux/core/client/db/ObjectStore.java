@@ -107,8 +107,9 @@ public interface ObjectStore<K, V>
 	
 	/**
 	 * Clear this object store
+	 * @param callback
 	 */
-	void clear();
+	void clear(DatabaseCallback callback);
 	
 	/**
 	 * Open a cursor to iterate over the object store.

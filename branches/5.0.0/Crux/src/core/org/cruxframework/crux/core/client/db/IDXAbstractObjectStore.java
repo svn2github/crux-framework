@@ -17,8 +17,10 @@ package org.cruxframework.crux.core.client.db;
 
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectCountRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBEvent;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -49,9 +51,10 @@ public abstract class IDXAbstractObjectStore<K, V> extends AbstractObjectStore<K
 	}
 	
 	@Override
-	public void clear()
+	public void clear(DatabaseCallback callback)
 	{
-		idbObjectStore.clear();
+		IDBRequest<IDBObjectStore> request = idbObjectStore.clear();
+		handleCallback(callback, request);
 	}
 	
 	@Override
@@ -100,6 +103,45 @@ public abstract class IDXAbstractObjectStore<K, V> extends AbstractObjectStore<K
 						catch (Exception e) 
 						{
 							reportError(callback, db.messages.objectStoreCountError(e.getMessage()), e);
+						}
+					}
+				}
+			});
+		}
+    }
+
+	private void handleCallback(final DatabaseCallback callback, IDBRequest<IDBObjectStore> request)
+    {
+		if (callback != null || db.errorHandler != null)
+		{
+			if (callback != null)
+			{
+				callback.setDb(db);
+			}
+			request.onError(new IDBErrorEvent.Handler()
+			{
+				@Override
+				public void onError(IDBErrorEvent event)
+				{
+					reportError(callback, db.messages.objectStoreClearError(event.getName()), null);
+				}
+			});
+			request.onSuccess(new IDBEvent.Handler()
+			{
+
+				@Override
+				public void onSuccess(IDBEvent event)
+				{
+					if (callback != null)
+					{
+						try
+						{
+							callback.onSuccess();
+							callback.setDb(null);
+						}
+						catch (Exception e) 
+						{
+							reportError(callback, db.messages.objectStoreClearError(e.getMessage()), e);
 						}
 					}
 				}

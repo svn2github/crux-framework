@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.utils.StringUtils;
+
 
 /**
  * A transaction on Crux Database, To create transactions, use one of {@link Database}'s getTransaction() method.
@@ -118,5 +120,22 @@ public abstract class Transaction extends DBObject
 				db.errorHandler.onError(db.messages.databaseTransactionAborted(db.getName()));
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * @param storeName
+	 * @return
+	 */
+	protected boolean containsObjectStore(String storeName)
+	{
+		for (String objectStore : storeNames)
+        {
+	        if (StringUtils.unsafeEquals(storeName, objectStore))
+	        {
+	        	return true;
+	        }
+        }
+		return false;
 	}
 }

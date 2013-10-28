@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.websql.SQLError;
+
 import com.google.gwt.i18n.client.Messages;
 
 /**
@@ -23,13 +25,13 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface DBMessages extends Messages
 {
-	@DefaultMessage("Error retrieving object from database. Error name [{0}]")
+	@DefaultMessage("Error retrieving object from database. Error [{0}]")
 	String objectStoreGetError(String errorName);
 	
-	@DefaultMessage("Error removing object from database. Error name [{0}]")
+	@DefaultMessage("Error removing object from database. Error [{0}]")
 	String objectStoreDeleteError(String errorName);
 	
-	@DefaultMessage("Error writing object into database. Error name [{0}]")
+	@DefaultMessage("Error writing object into database. Error [{0}]")
 	String objectStoreWriteError(String errorName);
 	
 	@DefaultMessage("Error on database cursor. Error name [{0}]")
@@ -41,7 +43,7 @@ public interface DBMessages extends Messages
 	@DefaultMessage("Database [{0}] is blocked.")
 	String databaseBlocked(String name);
 
-	@DefaultMessage("Error opening Database [{0}]. Error name [{1}]")
+	@DefaultMessage("Error opening Database [{0}]. Error [{1}]")
 	String databaseOpenError(String databaseName, String errorName);
 	
 	@DefaultMessage("Browser is using an outdated Database [{0}]. Upgrading database structure.")
@@ -53,7 +55,7 @@ public interface DBMessages extends Messages
 	@DefaultMessage("Error Upgrading Database [{0}]. Error message[{1}]")
 	String databaseUpgradeError(String name, String message);
 
-	@DefaultMessage("Error removing Database [{0}]. Error name [{1}]")
+	@DefaultMessage("Error removing Database [{0}]. Error [{1}]")
 	String databaseDeleteError(String databaseName, String errorName);
 
 	@DefaultMessage("Can not found objectStore for type [{1}] on database [{0}]")
@@ -62,18 +64,24 @@ public interface DBMessages extends Messages
 	@DefaultMessage("Database is not opened.")
 	String databaseNotOpenedError();
 
+	@DefaultMessage("Transaction on Database [{0}] is not active.")
+	String databaseTransactionInactive(String name);
+
 	@DefaultMessage("Transaction abborted on Database [{0}].")
 	String databaseTransactionAborted(String name);
 
 	@DefaultMessage("Transaction completed on Database [{0}].")
 	String databaseTransactionCompleted(String name);
 	
-	@DefaultMessage("Transaction Error on Database [{0}]. Error name [{1}].")
+	@DefaultMessage("Transaction Error on Database [{0}]. Error [{1}].")
 	String databaseTransactionError(String databaseName, String errorName);
 
-	@DefaultMessage("Error counting object store items. Error name [{0}].")
+	@DefaultMessage("Error counting object store items. Error [{0}].")
 	String objectStoreCountError(String name);
 
+	@DefaultMessage("Error clearing object store items. Error [{0}].")
+	String objectStoreClearError(String message);
+	
 	@DefaultMessage("Error changing database property for Database[{0}]. This operation can not be performed on an open database.")
 	String databaseSetPropertyOnOpenDBError(String name);
 
@@ -91,4 +99,16 @@ public interface DBMessages extends Messages
 
 	@DefaultMessage("Crux database is not supported on this browser.")
 	String databaseNotSupportedError();
+
+	@DefaultMessage("Object Store [{0}] not found in this transaction. Make sure that you inform this objectStore name when transaction was created.")
+	String databaseTransactionStoreNotFound(String storeName);
+
+	@DefaultMessage("Transaction on database [{0}] tries to execute an operation not supported for its transaction Mode (eg. writes on readOnly transactions).")
+	String databaseTransactionNotSupportedOperation(String name);
+
+	@DefaultMessage("Error executing operation on. Error [{0}]")
+	String objectStoreOperationError(String error);
+
+	@DefaultMessage("Can not derive key for objectStore [{0}].")
+	String objectStoreDeriveKeyError(String storeName);
 }

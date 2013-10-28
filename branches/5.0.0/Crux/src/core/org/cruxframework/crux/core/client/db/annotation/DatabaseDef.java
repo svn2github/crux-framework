@@ -48,12 +48,12 @@ public @interface DatabaseDef
 	 */
 	Class<? extends DatabaseErrorHandler> defaultErrorHandler() default NoErrorHandler.class;
 
-	/**
-	 * If this property is true, Crux will override any existent Object store or index when updating database.
-	 * If false, only non existent database or index will be created on database updating. 
-	 * @return
-	 */
-	boolean overrideDBElements() default false;
+//	/**
+//	 * If this property is true, Crux will override any existent Object store or index when updating database.
+//	 * If false, only non existent database or index will be created on database updating. 
+//	 * @return
+//	 */
+//	boolean overrideDBElements() default false;
 	
 	/**
 	 * Defines a new object store for current database. 

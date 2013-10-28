@@ -41,7 +41,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEven
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.database.idb.IDBDatabaseProxyCreator.IndexData;
+import org.cruxframework.crux.core.rebind.database.AbstractDatabaseProxyCreator.IndexData;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -53,7 +53,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBObjectStoreProxyCreator extends IDBAbstractKeyValueProxyCreator
 {
 	private JClassType abstractObjectStoreType;
 	private String idbObjectStoreVariable;
@@ -63,6 +63,8 @@ public class IDBObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	public IDBObjectStoreProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, Set<IndexData> indexes)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
+		validatePrimaryKeyPath(targetObjectType, objectStoreName, keyPath);
+
 		this.indexes = indexes;
 		this.abstractObjectStoreType = context.getTypeOracle().findType(IDXAbstractObjectStore.class.getCanonicalName());
 		this.idbObjectStoreVariable = "idbObjectStore";

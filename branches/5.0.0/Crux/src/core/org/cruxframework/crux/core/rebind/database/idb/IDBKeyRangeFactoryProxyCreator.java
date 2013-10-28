@@ -32,7 +32,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBKeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBKeyRangeFactoryProxyCreator extends IDBAbstractKeyValueProxyCreator
 {
 	private JClassType keyRangeType;
  	private String parentName;

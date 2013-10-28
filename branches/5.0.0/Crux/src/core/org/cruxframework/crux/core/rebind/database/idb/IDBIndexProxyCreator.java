@@ -49,7 +49,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBIndexProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBIndexProxyCreator extends IDBAbstractKeyValueProxyCreator
 {
 	private JClassType indexType;
 	private String idbIndexVariable;

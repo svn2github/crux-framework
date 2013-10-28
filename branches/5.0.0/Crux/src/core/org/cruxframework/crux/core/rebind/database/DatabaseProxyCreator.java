@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.db.Database;
 import org.cruxframework.crux.core.client.db.DatabaseCallback;
 import org.cruxframework.crux.core.client.db.DatabaseErrorHandler;
@@ -30,6 +31,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.database.idb.IDBDatabaseProxyCreator;
+import org.cruxframework.crux.core.rebind.database.sql.SQLDatabaseProxyCreator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -57,12 +59,25 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		String idxDatabaseImplClass = new IDBDatabaseProxyCreator(logger, context, baseIntf).create();
+		String sqlDatabaseImplClass = new SQLDatabaseProxyCreator(logger, context, baseIntf).create();
 		srcWriter.println("public "+getProxySimpleName()+"(){");
-		srcWriter.println("if (isIndexedDBSupported()){");
+		srcWriter.println("if ("+Crux.class.getCanonicalName()+".getConfig().preferWebSQLForNativeDB() && isWebSQLDBSupported()){");
+		srcWriter.println("if (LogConfiguration.loggingIsEnabled()){");
+		srcWriter.println("logger.log(Level.INFO, \"Using WEB SQL as native database implementation.\");");
+		srcWriter.println("}");
+		srcWriter.println("this.impl = new "+sqlDatabaseImplClass+"();");
+		srcWriter.println("}");
+		srcWriter.println("else if (isIndexedDBSupported()){");
 		srcWriter.println("if (LogConfiguration.loggingIsEnabled()){");
 		srcWriter.println("logger.log(Level.INFO, \"Using Indexed DB as native database implementation.\");");
 		srcWriter.println("}");
 		srcWriter.println("this.impl = new "+idxDatabaseImplClass+"();");
+		srcWriter.println("}");
+		srcWriter.println("else if (isWebSQLDBSupported()){");
+		srcWriter.println("if (LogConfiguration.loggingIsEnabled()){");
+		srcWriter.println("logger.log(Level.INFO, \"Using WEB SQL as native database implementation.\");");
+		srcWriter.println("}");
+		srcWriter.println("this.impl = new "+sqlDatabaseImplClass+"();");
 		srcWriter.println("}");
 		srcWriter.println("}");
 	}
@@ -95,6 +110,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		generateDefaultErrorHandlerMethod(srcWriter);
 		generateIsSupportedMethod(srcWriter);
 		generateIsIndexedDBSupported(srcWriter);
+		generateIsWebSQLDBSupported(srcWriter);
 	}
 	
 	private void generateIsSupportedMethod(SourcePrinter srcWriter)
@@ -244,6 +260,15 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		srcWriter.println("return true;");
 		srcWriter.println("}");
 		srcWriter.println("return false;");
+		srcWriter.println("}-*/;");
+		srcWriter.println();
+    }
+
+	private void generateIsWebSQLDBSupported(SourcePrinter srcWriter)
+    {
+		srcWriter.println("private native boolean isWebSQLDBSupported()/*-{");
+		srcWriter.println("var sqlsupport = !!$wnd.openDatabase;");
+		srcWriter.println("return sqlsupport;");
 		srcWriter.println("}-*/;");
 		srcWriter.println();
     }

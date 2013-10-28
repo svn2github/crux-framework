@@ -34,7 +34,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBCursorProxyCreator extends AbstractKeyValueProxyCreator
+public class IDBCursorProxyCreator extends IDBAbstractKeyValueProxyCreator
 {
 	private JClassType cursorType;
 	private String idbCursorVariable;
