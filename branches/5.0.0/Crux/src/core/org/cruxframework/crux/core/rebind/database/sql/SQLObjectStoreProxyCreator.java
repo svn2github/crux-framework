@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.collection.Array;
-import org.cruxframework.crux.core.client.collection.CollectionFactory;
 import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
@@ -74,15 +73,6 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 	{
 		srcWriter.println("public "+getProxySimpleName()+"(WSQLAbstractDatabase db, String name, WSQLTransaction transaction){");
 		srcWriter.println("super(db, name, transaction);");
-		Set<String> indexColumns = getIndexColumns();
-
-		srcWriter.println("this.indexColumnNames = "+CollectionFactory.class.getCanonicalName()+".createArray();");
-		for (String col : indexColumns)
-		{
-			srcWriter.println("indexColumnNames.add("+EscapeUtils.quote(col)+");");
-		}
-
-		populateKeyPathVariable(srcWriter);
 
 		srcWriter.println("}");
 	}
@@ -91,7 +81,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		generateGetNativeKeyMethod(srcWriter);
-		generateGetIndexedColumnNamesMethod(srcWriter);
+		generateGetIndexedColumnNamesMethod(srcWriter, getIndexColumns());
 		generateGetKeyPathMethod(srcWriter);
 		generateGetObjectStoreNameMethod(srcWriter);
 		generateAddKeyRangeToQueryMethod(srcWriter);

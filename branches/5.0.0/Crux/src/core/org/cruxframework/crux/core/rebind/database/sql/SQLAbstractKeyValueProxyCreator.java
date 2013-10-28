@@ -16,8 +16,8 @@
 package org.cruxframework.crux.core.rebind.database.sql;
 
 import java.util.Date;
+import java.util.Set;
 
-import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.collection.CollectionFactory;
 import org.cruxframework.crux.core.client.db.WSQLAbstractObjectStore.EncodeCallback;
 import org.cruxframework.crux.core.client.db.WSQLKeyRange;
@@ -105,39 +105,33 @@ public abstract class SQLAbstractKeyValueProxyCreator extends AbstractKeyValuePr
 	    return jType;
     }
 	
-	protected void populateKeyPathVariable(SourcePrinter srcWriter)
-    {
-		srcWriter.println("this.keyPath = "+CollectionFactory.class.getCanonicalName()+".createArray();");
+	protected void generateGetKeyPathMethod(SourcePrinter srcWriter)
+	{
+		srcWriter.println("protected Array<String> getKeyPath(){");
+		srcWriter.println("Array<String> keyPath = "+CollectionFactory.class.getCanonicalName()+".createArray();");
 	    for(String path: keyPath)
 		{
 			srcWriter.println("keyPath.add("+EscapeUtils.quote(path)+");");
 		}
-    }
-
-	protected void generateGetKeyPathMethod(SourcePrinter srcWriter)
-	{
-		srcWriter.println("protected Array<String> getKeyPath(){");
 		srcWriter.println("return keyPath;");
 		srcWriter.println("}");
 		srcWriter.println();
 	}
 	
-	protected void generateGetIndexedColumnNamesMethod(SourcePrinter srcWriter)
+	protected void generateGetIndexedColumnNamesMethod(SourcePrinter srcWriter, Set<String> indexColumns)
 	{
 		srcWriter.println("protected Array<String> getIndexedColumnNames(){");
+
+		srcWriter.println("Array<String> indexColumnNames = "+CollectionFactory.class.getCanonicalName()+".createArray();");
+		for (String col : indexColumns)
+		{
+			srcWriter.println("indexColumnNames.add("+EscapeUtils.quote(col)+");");
+		}
 		srcWriter.println("return indexColumnNames;");
 		srcWriter.println("}");
 		srcWriter.println();
 	}
 
-	@Override
-	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-	    super.generateProxyFields(srcWriter);
-		srcWriter.println("private "+Array.class.getCanonicalName()+"<String> keyPath;");
-		srcWriter.println("private "+Array.class.getCanonicalName()+"<String> indexColumnNames;");
-	}
-	
 	protected void generateGetKeyRangeFactoryMethod(SourcePrinter srcWriter, String parentName)
     {
 		srcWriter.println("public KeyRangeFactory<"+getKeyTypeName()+"> getKeyRangeFactory(){");

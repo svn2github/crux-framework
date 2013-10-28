@@ -45,8 +45,6 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 	@Override
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		srcWriter.println("private "+Array.class.getCanonicalName()+"<String> keyPath;");
-		srcWriter.println("private "+Array.class.getCanonicalName()+"<String> indexColumnNames;");
 	}
 	
 	@Override
@@ -54,7 +52,6 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 	{
 		srcWriter.println("public "+getProxySimpleName()+"(WSQLAbstractDatabase db, WSQLKeyRange<"+getKeyTypeName()+"> range, CursorDirection direction, WSQLTransaction transaction){");
 		srcWriter.println("super(db, range, "+EscapeUtils.quote(objectStoreName)+", direction, transaction);");
-		populateKeyPathVariable(srcWriter);
 		srcWriter.println("}");
 	}
 
@@ -68,7 +65,7 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 		{
 			generateFromNativeValueMethod(srcWriter, keyPath);
 		}
-		generateGetIndexedColumnNamesMethod(srcWriter);
+		generateGetIndexedColumnNamesMethod(srcWriter, objectStoreIndexColumns);
 		generateGetKeyPathMethod(srcWriter);
 		generateAddKeyRangeToQueryMethod(srcWriter);
 		generateAddKeyToQueryMethod(srcWriter);

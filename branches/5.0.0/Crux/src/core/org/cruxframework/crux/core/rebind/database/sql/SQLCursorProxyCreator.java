@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.collection.Array;
-import org.cruxframework.crux.core.client.collection.CollectionFactory;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.WSQLAbstractDatabase;
 import org.cruxframework.crux.core.client.db.WSQLCursor;
@@ -49,8 +48,8 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 	protected JClassType cursorType;
 	protected final String cursorName;
 	protected final String[] objectStoreKeyPath;
-	private final Set<String> objectStoreIndexColumns;
-	private final boolean autoIncrement;
+	protected final Set<String> objectStoreIndexColumns;
+	protected final boolean autoIncrement;
 
 	public SQLCursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName,
 								boolean autoIncrement, Set<String> objectStoreIndexColumns, String[] keyPath, String[] objectStoreKeyPath, 
@@ -69,13 +68,6 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 	{
 		srcWriter.println("public "+getProxySimpleName()+"(WSQLAbstractDatabase db, WSQLKeyRange<"+getKeyTypeName()+"> range, CursorDirection direction, WSQLTransaction transaction){");
 		srcWriter.println("super(db, range, "+EscapeUtils.quote(objectStoreName)+", "+autoIncrement+", direction, transaction);");
-		populateKeyPathVariable(srcWriter);
-		srcWriter.println("this.indexColumnNames = "+CollectionFactory.class.getCanonicalName()+".createArray();");
-		for (String col : objectStoreIndexColumns)
-		{
-			srcWriter.println("indexColumnNames.add("+EscapeUtils.quote(col)+");");
-		}
-
 		srcWriter.println("}");
 	}
 
@@ -89,7 +81,7 @@ public class SQLCursorProxyCreator extends SQLAbstractKeyValueProxyCreator
 		{
 			generateFromNativeValueMethod(srcWriter, keyPath);
 		}
-		generateGetIndexedColumnNamesMethod(srcWriter);
+		generateGetIndexedColumnNamesMethod(srcWriter, objectStoreIndexColumns);
 		generateGetKeyPathMethod(srcWriter);
 		generateAddKeyRangeToQueryMethod(srcWriter);
 		generateAddKeyToQueryMethod(srcWriter);

@@ -50,8 +50,10 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 	protected int length;
 	protected SQLResultSet resultSet;
 	protected DatabaseCursorCallback<K, V> callback;
-	private K cursorKey;
-	private final boolean autoIncrement;
+	protected Array<String> keyPath;
+	protected Array<String> indexColumnNames;
+	protected K cursorKey;
+	protected final boolean autoIncrement;
 	
 	protected WSQLCursor(WSQLAbstractDatabase db, WSQLKeyRange<K> range, String objectStoreName, boolean autoIncrement, CursorDirection direction, WSQLTransaction transaction)
 	{
@@ -63,6 +65,8 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 		this.transaction = transaction;
 		this.offset = NOT_INITIALIZED;
 		this.length = NOT_INITIALIZED;
+		this.keyPath = getKeyPath();
+		this.indexColumnNames = getIndexedColumnNames();
 	}
 
 	public void start(final DatabaseCursorCallback<K, V> c)
@@ -254,12 +258,11 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 						StringBuilder sql = new StringBuilder("UPDATE \"").append(objectStoreName).append("\" SET ");
 						final JsArrayMixed args = JsArrayMixed.createArray().cast();
 						args.push(encoded.toString());
-				    	Array<String> keys = getIndexedColumnNames();
 				    	JsArrayMixed sqlValues = JsArrayMixed.createArray().cast();
-				    	getIndexesValuesForObject(encoded.getJavaScriptObject(), keys, sqlValues);
-				    	for (int i=0; i< keys.size(); i++)
+				    	getIndexesValuesForObject(encoded.getJavaScriptObject(), indexColumnNames, sqlValues);
+				    	for (int i=0; i< indexColumnNames.size(); i++)
 				    	{
-				    		String key = keys.get(i);
+				    		String key = indexColumnNames.get(i);
 				    		sql.append(key +" = ?, ");
 				    	}
 						
@@ -314,7 +317,6 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 
 	protected void appendGroupColumns(StringBuilder sql)
 	{
-		Array<String> keyPath = getKeyPath();
 		for (int i=0; i< keyPath.size(); i++)
 		{
 			if (i > 0)
@@ -323,11 +325,6 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 			}
 			sql.append("\""+keyPath.get(i)+"\"");
 		}
-	}
-	
-	protected void fireSuccess()
-	{
-		callback.onSuccess(this);		
 	}
 	
 	protected SQLStatementErrorCallback getErrorHandler(final Callback callback)
@@ -389,7 +386,6 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 		{
 			throw new DatabaseException("Cursor is not initialized. Object store ["+objectStoreName+"]");
 		}
-		Array<String> keyPath = getKeyPath();
 		if (offset < length && keyPath != null && keyPath.size() > 0)
 		{
 			JsArrayMixed out = JsArrayMixed.createArray().cast();
@@ -401,6 +397,22 @@ public abstract class WSQLCursor<K, P, V> extends DBObject implements Cursor<K, 
 			return out;
 		}
 		return null;
+	}
+	
+	protected void fireSuccess()
+	{
+		delayCallbackSuccessCall(this);
+	}
+	
+	private native void delayCallbackSuccessCall(WSQLCursor<K, P, V> cursor)/*-{
+        setTimeout(function(){
+        	cursor.@org.cruxframework.crux.core.client.db.WSQLCursor::callCallbackSuccess()();
+        }, 0);
+	}-*/;
+	
+	private void callCallbackSuccess()
+	{
+		callback.onSuccess((offset < length)?this:null);		
 	}
 
 	protected abstract void setObjectKey(V object, P key);

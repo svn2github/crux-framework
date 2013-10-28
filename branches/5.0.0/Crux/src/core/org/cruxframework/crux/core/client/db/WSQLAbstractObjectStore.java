@@ -41,8 +41,10 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 {
 	protected final String name;
 	protected final WSQLTransaction transaction;
-	protected Array<String> indexAndKeyColumnNames;
 	protected final WSQLAbstractDatabase db;
+	protected Array<String> indexAndKeyColumnNames;
+	protected Array<String> keyPath;
+	protected Array<String> indexColumnNames;
 
 	protected WSQLAbstractObjectStore(WSQLAbstractDatabase db, String name, WSQLTransaction transaction)
 	{
@@ -50,6 +52,8 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		this.db = db;
 		this.name = name;
 		this.transaction = transaction;
+		this.keyPath = getKeyPath();
+		this.indexColumnNames = getIndexedColumnNames();
 		this.indexAndKeyColumnNames = getIndexAndKeyColumnNames();
 	}
 	
@@ -304,12 +308,11 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
     	}
     	else
     	{
-    		Array<String> indexedColumnNames = getIndexedColumnNames();
-    		getIndexesValuesForObject(encodedObject, indexedColumnNames, sqlValues);
+    		getIndexesValuesForObject(encodedObject, indexColumnNames, sqlValues);
     		
-    		for (int i=0; i< indexedColumnNames.size(); i++)
+    		for (int i=0; i< indexColumnNames.size(); i++)
     		{
-    			String k = indexedColumnNames.get(i);
+    			String k = indexColumnNames.get(i);
     			sqlStart.append(k +",");
     			sqlEnd.append("?,");
     		}
@@ -331,12 +334,11 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 			{
 		    	StringBuilder sql = new StringBuilder("UPDATE ").append("\""+ name +"\" SET ");
 		    	
-		    	Array<String> keys = getIndexedColumnNames();
 		    	JsArrayMixed sqlValues = JsArrayMixed.createArray().cast();
-		    	getIndexesValuesForObject(encoded.getJavaScriptObject(), keys, sqlValues);
-		    	for (int i=0; i< keys.size(); i++)
+		    	getIndexesValuesForObject(encoded.getJavaScriptObject(), indexColumnNames, sqlValues);
+		    	for (int i=0; i< indexColumnNames.size(); i++)
 		    	{
-		    		String key = keys.get(i);
+		    		String key = indexColumnNames.get(i);
 		    		sql.append(key +" = ?, ");
 		    	}
 		    	
@@ -354,16 +356,14 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 	protected Array<String> getIndexAndKeyColumnNames()
 	{
 		Array<String> indexAndKeys = CollectionFactory.createArray();
-		Array<String> indexKeys = getIndexedColumnNames();
-		Array<String> keyPath = getKeyPath();
 		for (int i=0; i< keyPath.size(); i++)
 		{
 			String k = keyPath.get(i);
 			indexAndKeys.add(k);
 		}
-		for (int i=0; i< indexKeys.size(); i++)
+		for (int i=0; i< indexColumnNames.size(); i++)
 		{
-			String k = indexKeys.get(i);
+			String k = indexColumnNames.get(i);
 			if (indexAndKeys.indexOf(k) == -1)
 			{
 				indexAndKeys.add(k);
