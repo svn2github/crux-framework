@@ -26,6 +26,8 @@ import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseDeleteCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
 import org.cruxframework.crux.core.client.db.DatabaseWriteCallback;
+import org.cruxframework.crux.core.client.db.Index;
+import org.cruxframework.crux.core.client.db.KeyRange;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.WSQLAbstractDatabase;
 import org.cruxframework.crux.core.client.db.WSQLAbstractObjectStore;
@@ -397,7 +399,9 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 				CursorDirection.class.getCanonicalName(), 
 				StringUtils.class.getCanonicalName(),
 				DatabaseDeleteCallback.class.getCanonicalName(), 
-				JsArrayMixed.class.getCanonicalName()
+				JsArrayMixed.class.getCanonicalName(), 
+				Index.class.getCanonicalName(), 
+				KeyRange.class.getCanonicalName()
 
 		};
 		return imports;
