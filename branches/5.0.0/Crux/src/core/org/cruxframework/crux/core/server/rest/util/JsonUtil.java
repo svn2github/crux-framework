@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.server.rest.util;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,9 +76,23 @@ public class JsonUtil
 					defaultMapper = new ObjectMapper();
 				}
 				
-				if (type instanceof Class) 
+				Class<?> clazz = null;
+				try
 				{
-					Class<?> clazz = (Class<?>) type;
+					if(type instanceof Class)
+					{
+						clazz = (Class<?>) type;	
+					} else if(type instanceof ParameterizedType)
+					{
+						clazz = (Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0];						
+					}
+				} catch (Exception e)
+				{
+					//DO NOTHING
+				}
+				
+				if (clazz != null) 
+				{
 					JsonSubTypes jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
 					if (jsonSubTypes != null && jsonSubTypes.value() != null)
 					{
