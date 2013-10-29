@@ -107,6 +107,8 @@ public class SlideshowPhotoPanel extends SlideshowComponent
 			mainPanel.setWidth("100%");
 			
 			photosPanel = new HorizontalSwapPanel();
+			photosPanel.setStyleName("crux-Photo");
+			
 			photosPanel.setWidth("100%");
 			//see @ note1.
 			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
