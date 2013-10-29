@@ -171,6 +171,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 		{
 			srcWriter.println("} else {");
 			srcWriter.println("reportError(db.messages.objectStoreDeriveKeyError(name));");
+			srcWriter.println("return null;");
 		}
 		srcWriter.println("}");
 		srcWriter.println("}");
@@ -281,6 +282,7 @@ public class SQLObjectStoreProxyCreator extends SQLAbstractKeyValueProxyCreator
 	        {
 	        	srcWriter.print(",");
 	        }
+	        first = false;
 	        srcWriter.print(EscapeUtils.quote(index.indexName));
         }
 		
