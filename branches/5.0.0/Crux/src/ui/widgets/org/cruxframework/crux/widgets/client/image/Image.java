@@ -39,16 +39,18 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 
 /**
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public class Image extends Composite implements HasSelectHandlers, HasLoadHandlers, HasErrorHandlers
+public class Image extends Composite implements HasSelectHandlers, HasLoadHandlers, HasErrorHandlers, HasEnabled
 {
-	static abstract class ImageImpl extends com.google.gwt.user.client.ui.Image implements HasSelectHandlers
+	static abstract class ImageImpl extends com.google.gwt.user.client.ui.Image implements HasSelectHandlers, HasEnabled
 	{
 		protected boolean preventDefaultTouchEvents = false;
+		private boolean enabled = true;
 		protected abstract void select();
 
 		public HandlerRegistration addSelectHandler(SelectHandler handler)
@@ -59,6 +61,18 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 		protected void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
 		{
 			this.preventDefaultTouchEvents = preventDefaultTouchEvents;
+		}
+		
+		@Override
+		public boolean isEnabled()
+		{
+		    return enabled;
+		}
+		
+		@Override
+		public void setEnabled(boolean enabled)
+		{
+			this.enabled = enabled;
 		}
 	}
 
@@ -71,10 +85,13 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 				@Override
 				public void onClick(ClickEvent event)
 				{
-					SelectEvent selectEvent = SelectEvent.fire(NoTouchImpl.this);
-					if (selectEvent.isCanceled())
+					if (isEnabled())
 					{
-						event.preventDefault();
+						SelectEvent selectEvent = SelectEvent.fire(NoTouchImpl.this);
+						if (selectEvent.isCanceled())
+						{
+							event.preventDefault();
+						}
 					}
 				}
 			});
@@ -114,7 +131,10 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 				event.preventDefault();
 			}
 			event.stopPropagation();
-			SelectEvent.fire(this);
+			if (isEnabled())
+			{
+				SelectEvent.fire(this);
+			}
 			resetHandlers();
 		}
 
@@ -324,6 +344,29 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 			callHowToImplementInnerSetVisibleRect();
 			impl.setVisible(!oldStyleHasDisplayNone);
 			impl.setTitle(title);
+		}
+	}
+	
+	@Override
+	public boolean isEnabled()
+	{
+		return impl.isEnabled();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled)
+	{
+		if (enabled != isEnabled())
+		{
+			impl.setEnabled(enabled);
+			if (enabled)
+			{
+				removeStyleDependentName("disabled");
+			}
+			else
+			{
+				addStyleDependentName("disabled");
+			}
 		}
 	}
 	

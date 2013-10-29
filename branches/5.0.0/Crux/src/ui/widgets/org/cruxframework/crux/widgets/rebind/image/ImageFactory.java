@@ -7,6 +7,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasEnabledFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.LoadErrorEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.LoadEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -38,7 +39,7 @@ import com.google.gwt.resources.client.ImageResource;
 	@TagEvent(SelectEvtBind.class)
 })
 public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
-						implements 	HasAllFocusHandlersFactory<WidgetCreatorContext>
+						implements HasAllFocusHandlersFactory<WidgetCreatorContext>, HasEnabledFactory<WidgetCreatorContext>
 {
 	public static class URLAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.widgets.client.offline;
+package org.cruxframework.crux.widgets.offline;
 
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.clientoffline.ApplicationCacheUIHandler;
@@ -76,5 +76,4 @@ public class ApplicationCacheUIHandlerImpl implements ApplicationCacheUIHandler
 			}
 		}, null);
     }
-
 }
