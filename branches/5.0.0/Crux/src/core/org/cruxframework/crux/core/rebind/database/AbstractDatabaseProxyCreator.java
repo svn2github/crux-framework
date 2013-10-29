@@ -257,6 +257,10 @@ public abstract class AbstractDatabaseProxyCreator extends AbstractInterfaceWrap
 		for (int i=0; i< keys.size(); i++)
 		{
 			int orderI = keys.get(i).order();
+			if (orderI < 0 && keys.size() > 1)
+			{
+        		throw new CruxGeneratorException("Crux object stores with composite keys must declare a valid order for its key's components");
+			}
 			int pos = i;
 			for (int j=i+1; j < keys.size(); j++)
 			{

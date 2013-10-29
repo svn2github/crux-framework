@@ -15,8 +15,6 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import org.cruxframework.crux.core.client.db.websql.SQLError;
-
 import com.google.gwt.i18n.client.Messages;
 
 /**

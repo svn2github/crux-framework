@@ -48,7 +48,7 @@ public @interface Store
 	public @interface Key
 	{
 		int order() default -1;
-		boolean autoIncrement() default false; // TODO somente campos numericos INT
+		boolean autoIncrement() default false; 
 	}
 
 	/**

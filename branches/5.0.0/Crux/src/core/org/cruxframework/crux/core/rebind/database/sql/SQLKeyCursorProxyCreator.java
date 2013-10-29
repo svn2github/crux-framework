@@ -20,7 +20,6 @@ import java.util.HashSet;
 
 import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.db.WSQLAbstractObjectStore.EncodeCallback;
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.client.JsArrayMixed;
@@ -48,30 +47,9 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 	}
 	
 	@Override
-	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-		srcWriter.println("public "+getProxySimpleName()+"(WSQLAbstractDatabase db, WSQLKeyRange<"+getKeyTypeName()+"> range, CursorDirection direction, WSQLTransaction transaction){");
-		srcWriter.println("super(db, range, "+EscapeUtils.quote(objectStoreName)+", direction, transaction);");
-		srcWriter.println("}");
-	}
-
-	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		generateGetNativeKeyMethod(srcWriter);
-		generateGetKeyMethod(srcWriter);
-		generateGetPrimaryKeyMethod(srcWriter);
-		if (hasCompositeKey())
-		{
-			generateFromNativeValueMethod(srcWriter, keyPath);
-		}
-		generateGetIndexedColumnNamesMethod(srcWriter, objectStoreIndexColumns);
-		generateGetKeyPathMethod(srcWriter);
-		generateAddKeyRangeToQueryMethod(srcWriter);
-		generateAddKeyToQueryMethod(srcWriter);
-		generateAddPrimaryKeyToQueryMethod(srcWriter);
-		generateDecodeObjectMethod(srcWriter);
-		generateEncodeObjectMethod(srcWriter);
+		super.generateProxyMethods(srcWriter);
 		generateUpdateMethod(srcWriter);
 	}
 	

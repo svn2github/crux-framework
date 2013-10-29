@@ -245,7 +245,7 @@ public class IDBIndexProxyCreator extends IDBAbstractKeyValueProxyCreator
 		
 		srcWriter.println("}");
 		srcWriter.println("}");
-		srcWriter.println("});");//TODO em chaves compostas, obrigar um order >=0. 
+		srcWriter.println("});"); 
 		//TODO ver possibiliade de aceitar date como chave
 		
 		srcWriter.println(cursorRequestVar+".onError(new IDBErrorEvent.Handler(){");
