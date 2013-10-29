@@ -24,6 +24,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface JsonSubTypes
 {
+	public static final String SUB_TYPE_SELECTOR = "__type__";
+
 	Type[] value();
 
 	@Retention(RetentionPolicy.RUNTIME)

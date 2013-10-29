@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.JsUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.shared.json.annotations.JsonIgnore;
@@ -488,25 +489,21 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JsonSubTypes jsonSubTypesClass = objectType.getAnnotation(JsonSubTypes.class);
 		if (jsonSubTypesClass != null && jsonSubTypesClass.value() != null)
 		{
-			//building all serializer names
-			int numberInnerClasses = jsonSubTypesClass.value().length;
-			int index = 0;
+			boolean first = true;
 			for(Type innerObject : jsonSubTypesClass.value())
 			{
-				index++;
-				//toString is overriden inside JsonObject and it adds a "" to the string.
-				srcWriter.println("if ("+jsonValueVar+".isObject().get(\"type\").isString().stringValue().equals(\""+innerObject.value().getName()+"\")){");
-
+				if (!first)
+				{
+					srcWriter.println("else ");
+				}
+				first = true;
+				srcWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals("+jsonValueVar+".isObject().get("+
+										EscapeUtils.quote(JsonSubTypes.SUB_TYPE_SELECTOR)+").isString().stringValue(),"+
+										EscapeUtils.quote(innerObject.value().getName())+")){");
 				JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
 				String serializerName = getSerializerForType(innerClass);
-				srcWriter.println("return ("+innerClass.getQualifiedSourceName()+") new "+serializerName+"().decode("+jsonValueVar+");");
-
-				if(index == numberInnerClasses)
-				{
-					srcWriter.println(" }");
-				} else {
-					srcWriter.println(" } else ");	
-				}
+				srcWriter.println(resultObjectVar+" = new "+serializerName+"().decode("+jsonValueVar+");");
+				srcWriter.println("}");
 			}
 			return;
 		}
@@ -528,6 +525,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		}
 
 		List<JMethod> setterMethods = JClassUtils.getSetterMethods(objectType);
+		srcWriter.println("if ("+jsonObjectVar+" != null) {");
 		for (JMethod method : setterMethods)
 		{
 			if (method.getAnnotation(JsonIgnore.class) == null)
@@ -535,11 +533,10 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType paramType = method.getParameterTypes()[0];
 				String serializerName = getSerializerForType(paramType);
-				srcWriter.println("if ("+jsonObjectVar+" != null) {");
 				srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
-				srcWriter.println("}");
 			}
 		}
+		srcWriter.println("}");
 	}
 
 	private String getSerializerForType(JType paramType) {
@@ -564,37 +561,28 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JsonSubTypes jsonSubTypesClass = objectType.getAnnotation(JsonSubTypes.class);
 		if (jsonSubTypesClass != null && jsonSubTypesClass.value() != null)
 		{
-			String getTypeMethodName = JClassUtils.getGetterMethod("type", objectType);
-
-			if(getTypeMethodName == null || getTypeMethodName == "")
-			{
-				throw new CruxGeneratorException("Property ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. Key type is missing.");	
-			}
-
-			//building all serializer names
-			int numberInnerClasses = jsonSubTypesClass.value().length;
-			int index = 0;
+			boolean first = true;
 			for(Type innerObject : jsonSubTypesClass.value())
 			{
-				index++;
-				srcWriter.println("if ("+objectVar+"."+getTypeMethodName+"().equals(\""+innerObject.value().getName()+"\")){");
-
+				if (!first)
+				{
+					srcWriter.print("else ");					
+				}
+				first = false;
+				srcWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals("+objectVar+".getClass().getName(),"+EscapeUtils.quote(innerObject.value().getName())+")){");
 				JClassType innerClass = context.getTypeOracle().findType(innerObject.value().getCanonicalName());
 				String serializerName = getSerializerForType(innerClass);
-				srcWriter.println("return new "+serializerName+"().encode(("+innerClass.getQualifiedSourceName()+")"+objectVar+");");
+				srcWriter.println(resultJSONValueVar+" = new "+serializerName+"().encode(("+innerClass.getQualifiedSourceName()+")"+objectVar+");");
 
-				if(index == numberInnerClasses)
-				{
-					srcWriter.println(" }");
-				} else {
-					srcWriter.println(" } else ");	
-				}
+				srcWriter.println("}");
 			}
+			srcWriter.println("if ("+resultJSONValueVar+" != null){");
+			srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(JsonSubTypes.SUB_TYPE_SELECTOR)+", new JSONString("+objectVar+".getClass().getName()));");
+			srcWriter.println("}");
 			return;
 		}
 		
 		srcWriter.println(resultJSONValueVar+" = new JSONObject();");
-		
 		List<JMethod> getterMethods = JClassUtils.getGetterMethods(objectType);
 		for (JMethod method : getterMethods)
 		{

@@ -83,7 +83,7 @@ public class JsonUtil
 					{
 						customMapper = new ObjectMapper();
 						
-						customMapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, "type");
+						customMapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, JsonSubTypes.SUB_TYPE_SELECTOR);
 						Class<?>[] innerClasses = new Class<?>[jsonSubTypes.value().length];
 						int i=0;
 						for(JsonSubTypes.Type innerObject : jsonSubTypes.value())
