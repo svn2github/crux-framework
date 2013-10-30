@@ -20,13 +20,10 @@ import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
 
-
-
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -91,9 +88,9 @@ public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
 	public Widget handleValidationError(Widget widget, String errorMessage) 
 	{
 		widget.addStyleName("error");
-		FlowPanel errorMsgPanel = new FlowPanel();
-		errorMsgPanel.setStyleName("errorMsg");
-		widget.getElement().appendChild(errorMsgPanel.getElement());
-		return errorMsgPanel;
+		DialogBox errorMsgDialog = new DialogBox();
+		errorMsgDialog.setStyleName("errorMsg");
+		errorMsgDialog.showRelativeTo(widget);
+		return errorMsgDialog;
 	}
 }
