@@ -326,7 +326,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 	protected FlowPanel initButtonsPanel()
     {
 	    FlowPanel buttonsPanel = new FlowPanel();
-	    buttonsPanel.setStyleName("wrappedFileInputButton");
+	    buttonsPanel.setStyleName("buttonsPanel");
 		fileInput = initFileInput();
 		buttonsPanel.add(fileInput);
 		sendButton = initSendButton();
