@@ -99,18 +99,11 @@ public class JsonUtil
 
 	private static boolean hasJsonSubTypes(Type type, Class<?> clazz, Set<Class<?>> searched)
     {
-		if (ClassUtils.isCollection(clazz))
+		while (ClassUtils.isCollection(clazz))
 		{
 			type = ClassUtils.getCollectionBaseType(clazz, type);
-			
-			if(type == null)
-			{
-				return false;
-			}
-			
 			clazz = ClassUtils.getRawType(type);
 		}
-		
 		if (!searched.contains(clazz))
 		{
 			searched.add(clazz);
@@ -123,7 +116,7 @@ public class JsonUtil
 				}
 			}
 			
-			PropertyInfo[] propertiesInfo = ClassUtils.extractBeanPropertiesInfo(type, true);
+			PropertyInfo[] propertiesInfo = ClassUtils.extractBeanPropertiesInfo(type);
 			if (propertiesInfo != null)
 			{
 				for (PropertyInfo propertyInfo : propertiesInfo)
