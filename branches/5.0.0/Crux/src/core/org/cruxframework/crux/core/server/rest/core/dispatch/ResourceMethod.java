@@ -17,7 +17,6 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -36,7 +35,6 @@ import org.cruxframework.crux.core.server.rest.state.ResourceStateConfig;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.JsonUtil;
 import org.cruxframework.crux.core.utils.ClassUtils;
-import org.cruxframework.crux.core.utils.ClassUtils.PropertyInfo;
 import org.cruxframework.crux.core.utils.EncryptUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,7 +55,7 @@ public class ResourceMethod
 	protected Class<?> resourceClass;
 	protected Type genericReturnType;
 	protected MethodInvoker methodInvoker;
-	private static Map<Type, ObjectWriter> writers;
+	protected ObjectWriter writer;
 	protected Map<String, ObjectWriter> exceptionWriters = new HashMap<String, ObjectWriter>();
 	protected Map<String, String> exceptionIds = new HashMap<String, String>();
 	protected CacheInfo cacheInfo;
@@ -184,9 +182,7 @@ public class ResourceMethod
 			}
 			else if (hasReturnType && rtn != null)
 			{
-				StringBuffer result = new StringBuffer();
-				writeJSONStringValue(result, rtn);
-				retVal = result.toString(); 
+				retVal = getReturnWriter().writeValueAsString(rtn);
 			}
 		}
 		catch (JsonProcessingException e)
@@ -196,45 +192,10 @@ public class ResourceMethod
 		return new MethodReturn(hasReturnType, retVal, exeptionData, cacheInfo, null, isEtagGenerationEnabled());
 	}
 
-	private void writeJSONStringValue(StringBuffer result, Object rtn) throws JsonProcessingException {
-		Class<?> clazz = null;
-		
-		try
-		{
-			if(rtn instanceof Class)
-			{
-				clazz = (Class<?>) rtn;	
-			} else if(rtn instanceof ParameterizedType)
-			{
-				clazz = (Class<?>) ((ParameterizedType) rtn).getActualTypeArguments()[0];						
-			}
-		} catch (Exception e)
-		{
-			//DO NOTHING
-		}
-		
-		if(clazz == null)
-		{
-			//TODO: join JSON string
-			result.append(getReturnWriter(rtn.getClass()).writeValueAsString(rtn));
-		}
-		else 
-		{
-			PropertyInfo[] properties = ClassUtils.extractBeanPropertiesInfo(clazz);
-			if (properties != null)
-			{
-				for (PropertyInfo property : properties)
-				{
-					writeJSONStringValue(result, property);
-				}
-			}
-		}
-	}
-
 	private String getExceptionData(Exception e) throws JsonProcessingException
-	{
-		return "{\"exId\": \"" + getExceptionId(e) + "\", \"exData\": " + getExceptionWriter(e).writeValueAsString(e) + "}";
-	}
+    {
+	    return "{\"exId\": \"" + getExceptionId(e) + "\", \"exData\": " + getExceptionWriter(e).writeValueAsString(e) + "}";
+    }
 
 	private String getExceptionId(Exception e)
 	{
@@ -259,23 +220,23 @@ public class ResourceMethod
 	}
 
 	private void initializeExceptionObjects(Exception e, String name)
-	{
-		exceptionlock.lock();
-		try
-		{
-			ObjectWriter objectWriter = exceptionWriters.get(name);
-			if (objectWriter == null)
-			{
-				objectWriter = JsonUtil.createWriter(e.getClass());
-				exceptionWriters.put(name, objectWriter);
-				exceptionIds.put(name, hash(name));
-			}
-		}
-		finally
-		{
-			exceptionlock.unlock();
-		}
-	}
+    {
+	    exceptionlock.lock();
+	    try
+	    {
+	    	ObjectWriter objectWriter = exceptionWriters.get(name);
+	    	if (objectWriter == null)
+	    	{
+	    		objectWriter = JsonUtil.createWriter(e.getClass());
+	    		exceptionWriters.put(name, objectWriter);
+	    		exceptionIds.put(name, hash(name));
+	    	}
+	    }
+	    finally
+	    {
+	    	exceptionlock.unlock();
+	    }
+    }
 
 	private String hash(String s)
 	{
@@ -288,26 +249,9 @@ public class ResourceMethod
 			throw new InternalServerErrorException("Error generating MD5 hash for String["+s+"]", "Error processing requested service", ns); 
 		}
 	}
-	
-	private ObjectWriter getReturnWriter(Type type)
+
+	private ObjectWriter getReturnWriter()
 	{
-		if (writers == null)
-		{
-			lock.lock();
-			try
-			{
-				if (writers == null)
-				{
-					writers = new HashMap<Type, ObjectWriter>();
-				}
-			}
-			finally
-			{
-				lock.unlock();
-			}
-		}
-		
-		ObjectWriter writer = writers.get(type);
 		if (writer == null)
 		{
 			lock.lock();
@@ -315,7 +259,7 @@ public class ResourceMethod
 			{
 				if (writer == null)
 				{
-					writer = JsonUtil.createWriter(type);
+					writer = JsonUtil.createWriter(genericReturnType);
 				}
 			}
 			finally

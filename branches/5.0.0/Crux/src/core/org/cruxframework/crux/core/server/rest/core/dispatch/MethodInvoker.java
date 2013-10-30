@@ -358,6 +358,4 @@ public class MethodInvoker
 					"parameters on body for GET methods.", "Can not execute requested service");
 		}
     }
-
-	
 }

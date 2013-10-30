@@ -27,9 +27,11 @@ import java.lang.reflect.TypeVariable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -638,19 +640,19 @@ public class ClassUtils
 		return null;
 	}
 	
-	public static Class<?> getCollectionBaseType(Class<?> type, Type genericType)
+	public static Type getCollectionBaseType(Class<?> type, Type genericType)
 	{
 		if (genericType instanceof ParameterizedType)
 		{
 			ParameterizedType parameterizedType = (ParameterizedType) genericType;
 			Type componentGenericType = parameterizedType.getActualTypeArguments()[0];
-			return getRawType(componentGenericType);
+			return componentGenericType;
 		}
 		else if (genericType instanceof GenericArrayType)
 		{
 			final GenericArrayType genericArrayType = (GenericArrayType) genericType;
 			Type componentGenericType = genericArrayType.getGenericComponentType();
-			return getRawType(componentGenericType);
+			return componentGenericType;
 		}
 		else if (type.isArray())
 		{
@@ -658,6 +660,12 @@ public class ClassUtils
 		}
 		return null;
 	}
+	
+	public static boolean isCollection(Class<?> type)
+	{
+		return (type.isArray() || Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type));
+	}
+	
 	
 	public static Class<?> getRawType(Type type)
 	{
