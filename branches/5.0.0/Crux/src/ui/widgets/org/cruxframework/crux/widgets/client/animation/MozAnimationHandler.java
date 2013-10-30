@@ -71,6 +71,10 @@ class MozAnimationHandler implements AnimationHandler
 	@Override
     public void setHeight(Widget widget, int height, int duration, Callback callback)
     {
+		if(widget == null)
+		{
+			return;
+		}
 		setHeight(widget, height+"px", duration, callback);
     }
 
@@ -100,6 +104,10 @@ class MozAnimationHandler implements AnimationHandler
 	@Override
 	public void hideBackface(Widget widget)
 	{
+		if(widget == null)
+		{
+			return;
+		}
 		widget.getElement().getStyle().setProperty("mozBackfaceVisibility", "hidden");
 	}
 	
@@ -185,6 +193,10 @@ class MozAnimationHandler implements AnimationHandler
 	@Override
 	public void clearFadeTransitions(Widget widget)
 	{
+		if(widget == null)
+		{
+			return;
+		}
 		widget.getElement().getStyle().setOpacity(1);
 	}
 	

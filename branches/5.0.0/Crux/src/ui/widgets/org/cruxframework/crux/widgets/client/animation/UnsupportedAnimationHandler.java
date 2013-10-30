@@ -34,6 +34,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
 	public void translateX(Widget widget, int diff, Callback callback)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		Element element = widget.getElement();
 		if (!hasOriginalLeft(element))
 		{
@@ -54,6 +59,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
 	public void resetTransition(Widget widget)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		Element element = widget.getElement();
 		if (hasOriginalLeft(element))
 		{
@@ -65,18 +75,33 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
 	public void translateX(Widget widget, final int diff, int duration, final Callback callback)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		translateX(widget, diff, callback);
 	}
 		
 	@Override
     public void setHeight(Widget widget, int height, int duration, Callback callback)
     {
+		if(widget == null)
+		{
+			return;
+		}
+		
 		setHeight(widget, height+"px", duration, callback);
     }
 
 	@Override
     public void setHeight(Widget widget, String height, int duration, Callback callback)
     {
+		if(widget == null)
+		{
+			return;
+		}
+		
 		widget.setHeight(height);
 		if (callback != null)
 		{
@@ -87,6 +112,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
     public void fade(Widget outWidget, Widget inWidget, int duration, Callback callback)
     {
+		if(inWidget == null || outWidget == null)
+		{
+			return;
+		}
+		
 		outWidget.getElement().getStyle().setOpacity(0);
 		inWidget.getElement().getStyle().setOpacity(1);
 		if (callback != null)
@@ -98,6 +128,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
     public void fadeOut(Widget outWidget, int duration, Callback callback)
     {
+		if(outWidget == null)
+		{
+			return;
+		}
+		
 		outWidget.getElement().getStyle().setOpacity(0);
 		if (callback != null)
 		{
@@ -108,6 +143,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
     public void fadeIn(Widget inWidget, int duration, Callback callback)
     {
+		if(inWidget == null)
+		{
+			return;
+		}
+		
 		inWidget.getElement().getStyle().setOpacity(1);
 		if (callback != null)
 		{
@@ -118,6 +158,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
 	public void clearFadeTransitions(Widget widget)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		widget.getElement().getStyle().setOpacity(1);
 	}
 

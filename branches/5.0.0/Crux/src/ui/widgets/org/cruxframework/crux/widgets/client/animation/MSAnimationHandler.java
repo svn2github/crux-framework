@@ -30,6 +30,11 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
 	public void translateX(Widget widget, int diff, Callback callback)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		Element element = widget.getElement();
 		if (callback != null)
 		{
@@ -41,13 +46,22 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
 	public void resetTransition(Widget widget)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		resetTransition(widget.getElement());
 	}
 
 	@Override
 	public void translateX(Widget widget, int diff, int duration, Callback callback)
 	{
-
+		if(widget == null)
+		{
+			return;
+		}
+		
 		Element element = widget.getElement();
 		if (callback != null)
 		{
@@ -59,12 +73,22 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
     public void setHeight(Widget widget, int height, int duration, Callback callback)
     {
+		if(widget == null)
+		{
+			return;
+		}
+		
 		setHeight(widget, height+"px", duration, callback);
     }
 	
 	@Override
     public void setHeight(Widget widget, String height, int duration, final Callback callback)
     {
+		if(widget == null)
+		{
+			return;
+		}
+		
 		final Element element = widget.getElement();
 		addCallbackHandler(element, new Callback()
 		{
@@ -89,6 +113,11 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
 	public void fade(Widget outWidget, Widget inWidget, int duration, final Callback callback)
 	{
+		if(inWidget == null || outWidget == null)
+		{
+			return;
+		}
+		
 		final Element outElement = outWidget.getElement();
 		final Element inElement = inWidget.getElement();
 		addCallbackHandler(outElement, new Callback()
@@ -118,6 +147,11 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
 	public void fadeOut(Widget outWidget, int duration, final Callback callback)
 	{
+		if(outWidget == null)
+		{
+			return;
+		}
+		
 		final Element outElement = outWidget.getElement();
 		addCallbackHandler(outElement, new Callback()
 		{
@@ -137,6 +171,11 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
 	public void fadeIn(Widget inWidget, int duration, final Callback callback)
 	{
+		if(inWidget == null)
+		{
+			return;
+		}
+		
 		final Element inElement = inWidget.getElement();
 		addCallbackHandler(inElement, new Callback()
 		{
@@ -156,6 +195,11 @@ class MSAnimationHandler implements AnimationHandler
 	@Override
 	public void clearFadeTransitions(Widget widget)
 	{
+		if(widget == null)
+		{
+			return;
+		}
+		
 		widget.getElement().getStyle().setOpacity(1);
 	}
 	
