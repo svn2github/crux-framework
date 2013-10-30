@@ -190,10 +190,13 @@ public class WSQLTransaction extends Transaction implements SQLDatabase.SQLTrans
 	@Override
 	public FileStore getFileStore()
 	{
-//		IDBObjectStore idbObjectStore = transaction.getObjectStore(FileStore.OBJECT_STORE_NAME);
-//		return new IDXFileStore(db, idbObjectStore);
-		//TODO
-		return null;
+		if (!containsObjectStore(FileStore.OBJECT_STORE_NAME))
+		{
+			onError(db.messages.databaseTransactionStoreNotFound(FileStore.OBJECT_STORE_NAME));
+			return null;
+		}
+//		return new WSQLFileStore(db, this);
+		return null;//TODO terminar o fileStore
 	}
 
 	public void addRequest(RequestOperation operation, Mode[] supportedMode)

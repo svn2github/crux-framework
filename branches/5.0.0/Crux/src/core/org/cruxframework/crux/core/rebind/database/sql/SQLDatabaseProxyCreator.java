@@ -94,8 +94,9 @@ public class SQLDatabaseProxyCreator extends AbstractDatabaseProxyCreator
 			srcWriter.println(objectStoreVar +" = getObjectStore("+EscapeUtils.quote(objectStoreName)+", null);");
 			
 			srcWriter.println(objectStoreVar+".createTable(tx, null);");
-			generateFileStoreCreation(srcWriter);		
         }
+
+		srcWriter.println("createFileStore(tx);");
 			
 		srcWriter.println("}");
 		srcWriter.println("}, getDeleteErrorHandler(callback), false);");
@@ -130,11 +131,6 @@ public class SQLDatabaseProxyCreator extends AbstractDatabaseProxyCreator
 		srcWriter.println();
     }
 
-	protected void generateFileStoreCreation(SourcePrinter srcWriter)
-	{
-//TODO		srcWriter.println("db.createObjectStore("+EscapeUtils.quote(IDXFileStore.OBJECT_STORE_NAME)+");");
-	}	
-	
 	@Override
 	protected String[] getImports()
 	{

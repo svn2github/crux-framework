@@ -35,7 +35,7 @@ import org.cruxframework.crux.core.client.file.Blob;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDXFileStore extends FileStore
+public class IDXFileStore extends DBObject implements FileStore
 {
 	protected final IDBObjectStore idbObjectStore;
 	protected final IDXAbstractDatabase db;
@@ -47,15 +47,28 @@ public class IDXFileStore extends FileStore
 		this.idbObjectStore = idbObjectStore;
 	}
 
+	@Override
+    public void add(Blob file, String fileName)
+    {
+		add(file, fileName, null);
+    }
+
+	@Override
+    public void put(Blob file, String fileName)
+    {
+		put(file, fileName, null);
+    }
+
+	@Override
+    public void delete(KeyRange<String> keyRange)
+    {
+		delete(keyRange, null);
+    }
+	
 	public void add(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback)
 	{
 		IDBObjectStoreRequest storeRequest = idbObjectStore.add(file, fileName);
 		handleWriteCallback(callback, storeRequest);
-	}
-
-	public void put(Blob file, String fileName)
-	{
-		put(file, fileName, null);
 	}
 
 	public void put(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback)

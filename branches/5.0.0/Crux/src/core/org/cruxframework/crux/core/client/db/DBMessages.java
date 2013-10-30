@@ -104,7 +104,7 @@ public interface DBMessages extends Messages
 	@DefaultMessage("Transaction on database [{0}] tries to execute an operation not supported for its transaction Mode (eg. writes on readOnly transactions).")
 	String databaseTransactionNotSupportedOperation(String name);
 
-	@DefaultMessage("Error executing operation on. Error [{0}]")
+	@DefaultMessage("Error executing operation on database. Error [{0}]")
 	String objectStoreOperationError(String error);
 
 	@DefaultMessage("Can not derive key for objectStore [{0}].")

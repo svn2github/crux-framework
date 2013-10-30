@@ -282,12 +282,12 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 			@Override
 			public void onEncode(JSONObject encoded)
 			{
-		    	insertObject(object, tx, callback, key, encoded);
+		    	insertObject(tx, callback, key, encoded);
 			}
 		});
     }
 
-	protected void insertObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key, JSONObject encoded)
+	protected void insertObject(final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key, JSONObject encoded)
 	{
 		StringBuilder sqlStart = new StringBuilder("INSERT INTO ").append("\""+ name +"\" (");
 		StringBuilder sqlEnd = new StringBuilder(" VALUES(");
@@ -322,7 +322,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		sqlEnd.append("?)");
 		sqlValues.push(encoded.toString());
 		String sqlStatement = sqlStart.toString()+" "+sqlEnd.toString() ;
-		runInsertQL(callback, tx, sqlValues, sqlStatement, key, object);
+		runInsertQL(callback, tx, sqlValues, sqlStatement, key);
 	}
 
 	protected void updateObject(final V object, final SQLTransaction tx, final DatabaseWriteCallback<K> callback, final K key)
@@ -348,7 +348,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 				addKeyToQuery(key, sql, sqlValues);
 				
 		        String sqlStatement = sql.toString();
-				runUpdateSQL(callback, tx, sqlValues, sqlStatement, key, object, encoded);
+				runUpdateSQL(callback, tx, sqlValues, sqlStatement, key, encoded);
 			}
 		});
     }
@@ -381,7 +381,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 	}
 
 	protected void runUpdateSQL(final DatabaseWriteCallback<K> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, 
-								final K key, final V object, final JSONObject encodedObject)
+								final K key, final JSONObject encodedObject)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -394,7 +394,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 			{
 				if (rs.getRowsAffected() == 0)
 				{
-					insertObject(object, tx, callback, key, encodedObject);
+					insertObject(tx, callback, key, encodedObject);
 				}
 				else
 				{
@@ -422,7 +422,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		}, getErrorHandler(callback));
     }
 	
-	protected void runInsertQL(final DatabaseWriteCallback<K> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, final K key, final V object)
+	protected void runInsertQL(final DatabaseWriteCallback<K> callback, final SQLTransaction tx, JsArrayMixed args, String sqlStatement, final K key)
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{

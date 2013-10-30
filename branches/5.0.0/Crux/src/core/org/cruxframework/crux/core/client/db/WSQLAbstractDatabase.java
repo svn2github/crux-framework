@@ -554,6 +554,29 @@ public abstract class WSQLAbstractDatabase extends AbstractDatabase
 		}, null, null);
 	}    
 	
+	protected void createFileStore(SQLTransaction tx)
+	{
+		String sql = "CREATE TABLE \""+FileStore.OBJECT_STORE_NAME+"\" (value BLOB, fileName TEXT PRIMARY KEY)";
+		JsArrayMixed args = JsArrayMixed.createArray().cast();
+		tx.executeSQL(sql, args, null, new SQLTransaction.SQLStatementErrorCallback()
+		{
+			@Override
+			public boolean onError(SQLTransaction tx, SQLError error)
+			{
+				String message = messages.objectStoreOperationError(error.getName() + " - " + error.getMessage());
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.SEVERE, message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
+				}
+				return true;
+			}
+		});
+	}
+	
 	protected abstract void updateDatabaseStructure(SQLTransaction tx, DatabaseCallback callback);
 	protected abstract <K, V> WSQLAbstractObjectStore<K, V> getObjectStore(String storeName, WSQLTransaction transaction);
 	

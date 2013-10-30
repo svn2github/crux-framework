@@ -22,46 +22,23 @@ import org.cruxframework.crux.core.client.file.Blob;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class FileStore extends DBObject
+public interface FileStore 
 {
 	public static final String OBJECT_STORE_NAME = "_CRUX_FILE_STORE_";
 
-	protected FileStore(AbstractDatabase db)
-	{
-		super(db);
-	}
-
-	public void add(Blob file, String fileName)
-	{
-		add(file, fileName, null);
-	}
-
-	public abstract void add(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback);
-
-	public abstract void put(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback);
-
-	public abstract void get(String key, DatabaseRetrieveCallback<Blob> callback);
-
-	public abstract void delete(String key, DatabaseDeleteCallback callback);
-
-	public void delete(KeyRange<String> keyRange)
-	{
-		delete(keyRange, null);
-	}
-
-	public abstract void delete(KeyRange<String> keyRange, DatabaseDeleteCallback callback);
-
-	public abstract void clear();
-
-	public abstract void openCursor(FileStoreCursorCallback callback);
-
-	public abstract void openCursor(KeyRange<String> keyRange, FileStoreCursorCallback callback);
-
-	public abstract void openCursor(KeyRange<String> keyRange, CursorDirection direction, FileStoreCursorCallback callback);
-
-	public abstract void count(DatabaseCountCallback callback);
-
-	public abstract void count(KeyRange<String> range, DatabaseCountCallback callback);
-
-	public abstract KeyRangeFactory<String> getKeyRangeFactory();
+	void add(Blob file, String fileName);
+	void put(Blob file, String fileName);
+	void add(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback);
+	void put(final Blob file, final String fileName, final DatabaseWriteCallback<String> callback);
+	void get(String key, DatabaseRetrieveCallback<Blob> callback);
+	void delete(String key, DatabaseDeleteCallback callback);
+	void delete(KeyRange<String> keyRange);
+	void delete(KeyRange<String> keyRange, DatabaseDeleteCallback callback);
+	void clear();
+	void openCursor(FileStoreCursorCallback callback);
+	void openCursor(KeyRange<String> keyRange, FileStoreCursorCallback callback);
+	void openCursor(KeyRange<String> keyRange, CursorDirection direction, FileStoreCursorCallback callback);
+	void count(DatabaseCountCallback callback);
+	void count(KeyRange<String> range, DatabaseCountCallback callback);
+	KeyRangeFactory<String> getKeyRangeFactory();
 }

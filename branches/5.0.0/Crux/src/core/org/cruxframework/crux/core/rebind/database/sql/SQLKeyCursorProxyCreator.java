@@ -51,7 +51,17 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 	{
 		super.generateProxyMethods(srcWriter);
 		generateUpdateMethod(srcWriter);
+		generateGetValue(srcWriter);
 	}
+	
+	@Override
+	protected void generateSetObjectKeyMethod(SourcePrinter srcWriter)
+	{
+		srcWriter.println("protected void setObjectKey("+getKeyTypeName(objectStoreKeyPath)+" object, "+getKeyTypeName(objectStoreKeyPath)+" key){");
+		srcWriter.println("}");
+		srcWriter.println();
+	}
+	
 	
 	protected void generateUpdateMethod(SourcePrinter srcWriter)
     {
@@ -61,7 +71,7 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 	
 	protected void generateGetValue(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void getValue("+getKeyTypeName(objectStoreKeyPath)+" value){");
+		srcWriter.println("public "+getKeyTypeName(objectStoreKeyPath)+" getValue("+getKeyTypeName(objectStoreKeyPath)+" value){");
 		srcWriter.println("return getPrimaryKey();");
 		srcWriter.println("}");
     }
