@@ -47,7 +47,7 @@ class GroupValueInjector implements ValueInjector
 					"this type of parameter. It can only be passed as a body parameter", "Can not execute requested service");
 		}
 		List<PropertyInfo> writeableProperties = new ArrayList<PropertyInfo>();
-		PropertyInfo[] properties = ClassUtils.extractBeanPropertiesInfo(type);
+		PropertyInfo[] properties = ClassUtils.extractBeanPropertiesInfo(type, false);
 
 		List<ValueInjector> injectors = new ArrayList<ValueInjector>();
 	    if (properties != null)

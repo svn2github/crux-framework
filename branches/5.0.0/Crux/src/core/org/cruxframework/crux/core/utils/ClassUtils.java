@@ -377,7 +377,7 @@ public class ClassUtils
 	 * @param type
 	 * @return
 	 */
-	public static PropertyInfo[] extractBeanPropertiesInfo(Type type)
+	public static PropertyInfo[] extractBeanPropertiesInfo(Type type, boolean allowCollection)
 	{
 		Class<?> rawType = getRawType(type);
 		List<PropertyInfo> result = new ArrayList<PropertyInfo>();
@@ -396,7 +396,7 @@ public class ClassUtils
 					if (getterProperty.equals(setterProperty))
 					{
 						Type returnType = getterMethod.getGenericReturnType();
-						Type propertyType = getPropertyType(returnType, type, rawType);
+						Type propertyType = getPropertyType(returnType, type, rawType, allowCollection);
 						result.add(new PropertyInfo(setterProperty, propertyType, getterMethod, setterMethod));
 						break;
 					}
@@ -411,7 +411,7 @@ public class ClassUtils
 		return result.toArray(new PropertyInfo[result.size()]);
 	}
 
-	private static Type getPropertyType(Type propertyType, Type baseClass, Class<?> baseRawType)
+	private static Type getPropertyType(Type propertyType, Type baseClass, Class<?> baseRawType, boolean allowCollection)
     {
 		Type result = null;
 		if (propertyType instanceof Class)
@@ -438,6 +438,10 @@ public class ClassUtils
 			{
 	        	throw new RuntimeException("Unable to determine property types for bean: " + baseRawType.getCanonicalName());
 			}
+		}
+		else if(allowCollection && isCollection(getRawType(propertyType)))
+		{
+			result = getRawType(propertyType);
 		}
 		else 
 		{

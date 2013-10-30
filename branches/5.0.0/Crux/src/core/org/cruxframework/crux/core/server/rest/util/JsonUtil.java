@@ -102,8 +102,15 @@ public class JsonUtil
 		if (ClassUtils.isCollection(clazz))
 		{
 			type = ClassUtils.getCollectionBaseType(clazz, type);
+			
+			if(type == null)
+			{
+				return false;
+			}
+			
 			clazz = ClassUtils.getRawType(type);
 		}
+		
 		if (!searched.contains(clazz))
 		{
 			searched.add(clazz);
@@ -116,7 +123,7 @@ public class JsonUtil
 				}
 			}
 			
-			PropertyInfo[] propertiesInfo = ClassUtils.extractBeanPropertiesInfo(type);
+			PropertyInfo[] propertiesInfo = ClassUtils.extractBeanPropertiesInfo(type, true);
 			if (propertiesInfo != null)
 			{
 				for (PropertyInfo propertyInfo : propertiesInfo)
