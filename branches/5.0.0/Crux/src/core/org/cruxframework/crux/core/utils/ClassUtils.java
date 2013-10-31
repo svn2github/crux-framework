@@ -414,7 +414,7 @@ public class ClassUtils
 	private static Type getPropertyType(Type propertyType, Type baseClass, Class<?> baseRawType)
     {
 		Type result = null;
-		if (propertyType instanceof Class)
+		if (propertyType instanceof Class || propertyType instanceof ParameterizedType)
 		{
 			result = propertyType;
 		}
@@ -438,10 +438,6 @@ public class ClassUtils
 			{
 	        	throw new RuntimeException("Unable to determine property types for bean: " + baseRawType.getCanonicalName());
 			}
-		}
-		else if (propertyType instanceof ParameterizedType)
-		{
-			result = propertyType;
 		}
 		else 
 		{
