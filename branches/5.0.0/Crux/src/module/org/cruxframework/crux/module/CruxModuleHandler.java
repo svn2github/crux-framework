@@ -35,7 +35,6 @@ import org.cruxframework.crux.classpath.URLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
-import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.module.config.CruxModuleConfigurationFactory;
 import org.cruxframework.crux.module.validation.CruxModuleValidator;
