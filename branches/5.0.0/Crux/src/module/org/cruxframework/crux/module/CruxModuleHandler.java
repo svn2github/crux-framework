@@ -132,10 +132,6 @@ public class CruxModuleHandler
 	 */
 	public static String[] getDevelopmentModules()
 	{
-		if (Environment.isProduction())
-		{
-			return null;
-		}
 		String developmentModules = CruxModuleConfigurationFactory.getConfigurations().developmentModules();
 		if (developmentModules == null)
 		{

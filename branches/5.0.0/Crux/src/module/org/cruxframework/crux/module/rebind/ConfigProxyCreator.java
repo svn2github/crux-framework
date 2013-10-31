@@ -17,6 +17,7 @@ package org.cruxframework.crux.module.rebind;
 
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.config.CruxClientConfigProxyCreator;
+import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.module.CruxModuleHandler;
 
 import com.google.gwt.core.ext.GeneratorContext;
@@ -43,7 +44,7 @@ public class ConfigProxyCreator extends CruxClientConfigProxyCreator
 		}
 		else
 		{
-			String[] developmentModules = CruxModuleHandler.getDevelopmentModules();
+			String[] developmentModules = Environment.isProduction()?null:CruxModuleHandler.getDevelopmentModules();
 			if (developmentModules != null)
 			{
 				sourceWriter.println("if (url == null){");
