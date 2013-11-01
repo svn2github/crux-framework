@@ -125,7 +125,7 @@ public class Row
 	 * Sets the style name of the row
 	 * @param rowIndex
 	 */
-	void setStyle(String styleName)
+	public void setStyle(String styleName)
 	{
 		elem.setClassName(styleName);
 	}
