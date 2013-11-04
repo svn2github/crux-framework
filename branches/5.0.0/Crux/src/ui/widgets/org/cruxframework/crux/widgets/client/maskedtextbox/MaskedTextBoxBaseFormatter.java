@@ -17,7 +17,6 @@ package org.cruxframework.crux.widgets.client.maskedtextbox;
 
 import org.cruxframework.crux.core.client.formatter.MaskedFormatter;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
