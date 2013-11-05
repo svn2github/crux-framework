@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.rss;
 
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.rss.feed.Entry;
 import org.cruxframework.crux.widgets.client.rss.feed.Feed;
@@ -50,6 +51,9 @@ public class RssPanel extends Composite
 	{
 		protected VerticalPanel rssPanel;
 		protected HTML title;
+		private String titleStyleName;
+		private String entryTitleStyleName = "entryTitle";
+		private String entryDateStyleName = "entryDate";
 		protected Grid body;
 		protected DateTimeFormat dateTimeFormat;
 		protected int maxTitleSize;
@@ -158,6 +162,55 @@ public class RssPanel extends Composite
 			
 			return title;
 		}
+		
+		/**
+		 * @param bodyStyleName the bodyStyleName to set
+		 */
+		public void setTitleStyleName(String titleStyleName)
+		{
+			this.titleStyleName = titleStyleName;
+			this.title.setStyleName(this.titleStyleName);
+		}
+
+		/**
+		 * @return the titleStyleName
+		 */
+		public String getTitleStyleName()
+		{
+			return titleStyleName;
+		}
+
+		/**
+		 * @return
+		 */
+		public String getEntryTitleStyleName() 
+		{
+			return entryTitleStyleName;
+		}
+
+		/**
+		 * @param entryTitleStyleName
+		 */
+		public void setEntryTitleStyleName(String entryTitleStyleName) 
+		{
+			this.entryTitleStyleName = entryTitleStyleName;
+		}
+
+		/**
+		 * @return
+		 */
+		public String getEntryDateStyleName() 
+		{
+			return entryDateStyleName;
+		}
+
+		/**
+		 * @param entryDateStyleName
+		 */
+		public void setEntryDateStyleName(String entryDateStyleName) 
+		{
+			this.entryDateStyleName = entryDateStyleName;
+		}
 	}
 	
 	/**
@@ -190,11 +243,11 @@ public class RssPanel extends Composite
 					Window.open(entry.getLink(), "", null);
 				}
 			});
-			entryTitle.setStyleName("entryTitle");
+			entryTitle.setStyleName(getEntryTitleStyleName());
 			entryTitle.setTitle(entry.getTitle());
 			
 			Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
-			entryDate.setStyleName("entryDate");
+			entryDate.setStyleName(getEntryDateStyleName());
 			
 			body.setWidget(row, 0, entryTitle);
 			body.setWidget(row, 1, entryDate);
@@ -245,24 +298,40 @@ public class RssPanel extends Composite
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public RssPanel()
-    {
-	    this(100);
-    }
-
-	/**
-	 * 
-	 * @param maxTitleSize
-	 */
-	public RssPanel(int maxTitleSize)
+	{
+		this(100,null,null);
+	}
+	
+	public RssPanel(Integer maxTitleSize, String entryTitleStyleName, String entryDateStyleName)
     {
 	    this.panelImpl = GWT.create(RssPanelImpl.class);
-	    panelImpl.setMaxTitleSize(maxTitleSize);
+	    setConstructorProperties(maxTitleSize, entryTitleStyleName, entryDateStyleName);
 	    initWidget(panelImpl);
     }
+
+	private void setConstructorProperties(Integer maxTitleSize,
+			String entryTitleStyleName, String entryDateStyleName) 
+	{
+		if(maxTitleSize == null)
+	    {
+	    	panelImpl.setMaxTitleSize(100);
+	    }
+	    else
+	    {
+	    	panelImpl.setMaxTitleSize(maxTitleSize);
+	    }
+	    
+	    if(!StringUtils.isEmpty(entryTitleStyleName))
+	    {
+	    	panelImpl.setEntryTitleStyleName(entryTitleStyleName);
+	    }
+	    
+	    if(!StringUtils.isEmpty(entryDateStyleName))
+	    {
+	    	panelImpl.setEntryDateStyleName(entryDateStyleName);
+	    }
+	}
 	
 	/**
 	 * 
@@ -323,4 +392,53 @@ public class RssPanel extends Composite
 	{
 		panelImpl.setMaxTitleSize(maxTitleSize);
 	}
+	
+	/**
+	 * @param bodyStyleName the bodyStyleName to set
+	 */
+	public void setTitleStyleName(String titleStyleName)
+	{
+		panelImpl.setTitleStyleName(titleStyleName);
+	}
+
+	/**
+	 * @return the titleStyleName
+	 */
+	public String getTitleStyleName()
+	{
+		return panelImpl.getTitleStyleName();
+	}
+	
+	/**
+	 * @return
+	 */
+	public String getEntryTitleStyleName() 
+	{
+		return panelImpl.getEntryTitleStyleName();
+	}
+
+	/**
+	 * @param entryTitleStyleName
+	 */
+	public void setEntryTitleStyleName(String entryTitleStyleName) 
+	{
+		panelImpl.setEntryTitleStyleName(entryTitleStyleName);
+	}
+
+	/**
+	 * @return
+	 */
+	public String getEntryDateStyleName() 
+	{
+		return panelImpl.getEntryDateStyleName();
+	}
+
+	/**
+	 * @param entryDateStyleName
+	 */
+	public void setEntryDateStyleName(String entryDateStyleName) 
+	{
+		panelImpl.setEntryDateStyleName(entryDateStyleName);
+	}
+	
 }

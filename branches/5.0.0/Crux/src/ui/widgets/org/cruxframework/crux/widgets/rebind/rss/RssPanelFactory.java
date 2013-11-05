@@ -33,10 +33,13 @@ import org.cruxframework.crux.widgets.client.rss.RssPanel;
  */
 @DeclarativeFactory(id="rssPanel", library="widgets", targetWidget=RssPanel.class)
 @TagAttributes({
-	@TagAttribute(value="title", required=true, supportsI18N=true)
+	@TagAttribute(value="title", required=true, supportsI18N=true),
+	@TagAttribute(value="titleStyleName", supportsResources=true)
 })
 @TagAttributesDeclaration({
-	@TagAttributeDeclaration(value="maxTitleSize", type=Integer.class) 
+	@TagAttributeDeclaration(value="maxTitleSize", type=Integer.class),
+	@TagAttributeDeclaration(value="entryTitleStyleName", supportsResources=true),
+	@TagAttributeDeclaration(value="entryDateStyleName", supportsResources=true)
 })
 public class RssPanelFactory extends WidgetCreator<WidgetCreatorContext>
 {
@@ -44,15 +47,15 @@ public class RssPanelFactory extends WidgetCreator<WidgetCreatorContext>
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		String className = getWidgetClassName();
-		String maxTitleSize = context.readWidgetProperty("maxTitleSize");
-		if (StringUtils.isEmpty(maxTitleSize))
-		{
-			out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
-		}
-		else
-		{
-			out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+Integer.parseInt(maxTitleSize)+");");
-		}
+		String maxTitleSize 	   = context.readWidgetProperty("maxTitleSize");
+		String entryTitleStyleName = context.readWidgetProperty("entryTitleStyleName");
+		String entryDateStyleName  = context.readWidgetProperty("entryDateStyleName");
+		
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+
+					(StringUtils.isEmpty(maxTitleSize) ? "null" : Integer.parseInt(maxTitleSize)) + "," +
+					(StringUtils.isEmpty(entryTitleStyleName) ? "null" : "\"" + entryTitleStyleName + "\"") + "," + 
+					(StringUtils.isEmpty(entryDateStyleName) ? "null" : "\"" + entryDateStyleName + "\"") +
+					");");
 	}
 	
 	@Override
