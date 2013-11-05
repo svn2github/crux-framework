@@ -134,6 +134,7 @@ public class AppCacheLinker extends AbstractLinker
 	{
 		String selectionScriptText;
 		StringBuffer buffer = readFileToStringBuffer(getSelectionScriptTemplate(logger, context), logger);
+	    appendPageLoaderFunction(logger, context, buffer);
 		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts);
 		//fix for some browsers like IE that cannot see the $doc variable outside the iframe tag.  
 		selectionScriptText = selectionScriptText.replace("$doc", "document");
@@ -141,6 +142,16 @@ public class AppCacheLinker extends AbstractLinker
 		selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
 		return selectionScriptText;
 	}
+
+	private void appendPageLoaderFunction(TreeLogger logger, LinkerContext context, StringBuffer buffer) throws UnableToCompleteException
+    {
+	    int startPos = buffer.indexOf("// __PAGE_LOADER_FUNCTION__");
+	    if (startPos != -1)
+	    {
+			StringBuffer pageLoader = readFileToStringBuffer(getPageLoadFunction(logger, context), logger);
+	    	buffer.insert(startPos, pageLoader.toString());
+	    }
+    }
 
 	protected StringBuffer readFileToStringBuffer(String filename, TreeLogger logger) throws UnableToCompleteException
 	{
@@ -186,6 +197,16 @@ public class AppCacheLinker extends AbstractLinker
 	private String getSelectionScriptTemplate(TreeLogger logger, LinkerContext context)
 	{
 	    return "org/cruxframework/crux/core/rebind/offline/OfflineSelectionTemplate.js";
+	}
+
+	private String getPageLoadFunction(TreeLogger logger, LinkerContext context)
+	{
+	    return "org/cruxframework/crux/core/rebind/offline/LoadPageFunction.js";
+	}
+
+	private String getCacheManifestLoaderTemplate(TreeLogger logger, LinkerContext context)
+	{
+	    return "org/cruxframework/crux/core/rebind/offline/CacheManifestLoaderTemplate.html";
 	}
 
 	private String getOfflinePageTemplate(TreeLogger logger, LinkerContext context)
@@ -296,12 +317,15 @@ public class AppCacheLinker extends AbstractLinker
 
 		if (startScreenId != null)
 		{
-			builder.append(startScreenId + "\n");
+			builder.append("/{context}" +(startScreenId.startsWith("/")?"":"/")+startScreenId + "\n");
 		}
 
 		for (String fn : artifacts)
 		{
-			builder.append("/{context}/" + moduleName + "/" + fn + "\n");
+			if (!fn.endsWith("hosted.html"))
+			{
+				builder.append("/{context}/" + moduleName + "/" + fn + "\n");
+			}
 		}
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");
@@ -311,15 +335,20 @@ public class AppCacheLinker extends AbstractLinker
 
 	private Artifact<?> createCacheManifestLoader(LinkerContext context, TreeLogger logger, String permutationName, String startScreenId) throws UnableToCompleteException
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("<!DOCTYPE html>\n");
-		builder.append("<html manifest=\"" + getManifestName(permutationName) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style></head>");
-		builder.append("<body style=\"margin:0px;padding:0px;overflow:hidden;\">");
-		builder.append("<script>var __Crux_Frame = true;</script>");
-		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"height:100%;width:100%;border: none;\" height=\"100%\" width=\"100%\" marginheight=\"0\" frameborder=\"0\"></iframe>");
-		builder.append("</body></html>");
+//		ViewProcessor.setForceIndent(true);
+//		ViewProcessor.setOutputCharset("UTF-8");
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		Document screen = ScreenResourceResolverInitializer.getScreenResourceResolver().getRootView(startScreenId, null);
+//		ViewProcessor.generateHTML(startScreenId, screen, out);
 
-		return emitString(logger, builder.toString(), getManifestLoaderName(permutationName));
+		
+		StringBuffer buffer = readFileToStringBuffer(getCacheManifestLoaderTemplate(logger, context), logger);
+		replaceAll(buffer, "__MANIFEST_NAME__", getManifestName(permutationName));
+		replaceAll(buffer, "__START_PAGE__", startScreenId);
+	    appendPageLoaderFunction(logger, context, buffer);
+//TODO		String loaderScript = context.optimizeJavaScript(logger, pageLoader.toString());
+
+		return emitString(logger, buffer.toString(), getManifestLoaderName(permutationName));
 	}
 
 	private String getTargetScreenId(LinkerContext context, TreeLogger logger, String screenID) throws UnableToCompleteException

@@ -54,19 +54,12 @@ function __MODULE_FUNC__() {
       // intentionally silent on property failure
       return;
     }
-    
-	window.__Crux_Frame = true; // Mark this page as a valid crux frame
-	
-	// Create the frame to load the offline content    
-    var wrapFrame = document.createElement('iframe');
-    wrapFrame.src = 'offlineLoader_'+initialHtml;
-	wrapFrame.frameborder = 0;
-	wrapFrame.style.height = '100%';
-	wrapFrame.style.width = '100%';
-	wrapFrame.width = '100%';
-	wrapFrame.height = '100%';
-	wrapFrame.style.border = "none";
-    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
+
+//	window.__Crux_Frame = true; // Mark this page as a valid crux frame
+
+// __PAGE_LOADER_FUNCTION__
+
+	loadPage('offlineLoader_'+initialHtml);
 }
 
 __MODULE_FUNC__();

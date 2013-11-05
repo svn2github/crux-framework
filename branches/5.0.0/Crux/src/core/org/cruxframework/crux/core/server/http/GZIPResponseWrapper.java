@@ -68,7 +68,14 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper
 
 	public void flushBuffer() throws IOException 
 	{
-		stream.flush();
+		if (stream != null)
+		{
+			stream.flush();
+		}
+		else if (origResponse != null)
+		{
+			origResponse.flushBuffer();
+		}
 	}
 
 	public ServletOutputStream getOutputStream() throws IOException 
