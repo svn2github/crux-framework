@@ -113,6 +113,23 @@
       		<when-property-is name="user.agent" value="ie8" />
     	</any>
     </replace-with>
+    
+    <!-- RssPanel widget -->
+    <replace-with class="org.cruxframework.crux.widgets.client.rss.RssPanel.RssPanelLargeImpl">
+        <when-type-assignable class="org.cruxframework.crux.widgets.client.rss.RssPanel.RssPanelImpl" />
+        <any>
+            <when-property-is name="device.features" value="largeDisplayMouse" />
+            <when-property-is name="device.features" value="largeDisplayTouch" />
+            <when-property-is name="device.features" value="largeDisplayArrows" />
+        </any>
+    </replace-with>
+    <replace-with class="org.cruxframework.crux.widgets.client.rss.RssPanel.RssPanelSmallImpl">
+        <when-type-assignable class="org.cruxframework.crux.widgets.client.rss.RssPanel.RssPanelImpl" />
+        <any>
+            <when-property-is name="device.features" value="smallDisplayTouch" />
+            <when-property-is name="device.features" value="smallDisplayArrows" />
+        </any>
+    </replace-with>
 
     <!-- TopToolBar panel animation handler -->
 	<replace-with class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarArrowsSmallController.WebkitPanelAnimation">
