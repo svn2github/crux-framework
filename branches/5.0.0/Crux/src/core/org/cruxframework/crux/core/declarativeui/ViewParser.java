@@ -719,7 +719,6 @@ public class ViewParser
 			Element cruxMetaData = htmlDocument.createElement("script");
 			cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
 			htmlHeadElement.appendChild(cruxMetaData);
-
 			Text textNode = htmlDocument.createTextNode("var __CruxScreen_ = \""+screenModule+"/"+HTMLUtils.escapeJavascriptString(screenId, escapeXML)+"\"");
 			cruxMetaData.appendChild(textNode);
 		}

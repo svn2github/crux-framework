@@ -46,6 +46,16 @@ public interface ScreenResourceResolver
 	Document getRootView(String screenId, String device) throws CruxGeneratorException;
 
 	/**
+	 * Gets the Document representing the root view for a given screenId
+	 * @param relativeScreenId
+	 * @param module
+	 * @param device
+	 * @return
+	 * @throws CruxGeneratorException 
+	 */
+	Document getRootView(String relativeScreenId, String module, String device) throws CruxGeneratorException;
+
+	/**
 	 * List all Crux screen IDs
 	 * @return
 	 * @throws ScreenConfigException 

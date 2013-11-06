@@ -89,7 +89,10 @@ public class DBUtil
 				}
 			});
 		}
-		callback.onEncode(JsUtils.toJSONValue(object).toString());
+		else
+		{
+			callback.onEncode(JsUtils.toJSONValue(object).toString());
+		}
 		return;
 	}
 	

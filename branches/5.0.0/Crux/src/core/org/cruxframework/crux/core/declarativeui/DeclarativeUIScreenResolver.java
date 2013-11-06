@@ -24,8 +24,11 @@ import java.util.Set;
 import org.cruxframework.crux.classpath.URLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
+import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolver;
+import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.core.utils.URLUtils;
@@ -47,6 +50,35 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 		return new DeclarativeUIScreenResourceScanner().getPages(module);
 	}
 
+	/**
+	 * 
+	 */
+	public Document getRootView(String relativeScreenId, String module, String device) throws CruxGeneratorException
+    {
+		try
+        {
+        	Set<String> screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(module);
+        	
+        	if (screenIDs == null)
+        	{
+        		throw new ScreenConfigException("Can not find the module ["+module+"].");
+        	}
+        	for (String screenID : screenIDs)
+        	{
+        		Screen screen = ScreenFactory.getInstance().getScreen(screenID, device);
+        		if(screen != null && screen.getRelativeId().equals(relativeScreenId))
+        		{
+        			return getRootView(screenID, device);
+        		}
+        	}
+        }
+        catch (ScreenConfigException e)
+        {
+			throw new CruxGeneratorException("Error obtaining screen resource. Screen id: ["+relativeScreenId+"].", e);
+        }
+        return null;
+    }
+	
 	/**
 	 * 
 	 */

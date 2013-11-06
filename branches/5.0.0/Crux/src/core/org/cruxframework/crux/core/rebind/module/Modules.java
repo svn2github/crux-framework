@@ -508,6 +508,15 @@ public class Modules
 					break;
 				}
 			}
+			int index = screenID.indexOf("/");
+			if (index > 0)
+			{
+				String possibleModule = screenID.substring(0, index);
+				if (possibleModule.equals(module.getName()))
+				{
+					screenID = screenID.substring(index+1);
+				}
+			}
 		}
 		if (screenID.startsWith("/"))
 		{
@@ -532,4 +541,23 @@ public class Modules
 		}
 		return screenID;
 	}
+
+	/**
+	 * 
+	 * @param screenId
+	 * @return
+	 */
+	public String removeModuleIfPresent(String screenId)
+    {
+	    int index = screenId.indexOf("/");
+	    if (index > 0)
+	    {
+	    	String currentModule = screenId.substring(0, index);
+	    	if (getModule(currentModule) != null)
+	    	{
+	    		screenId = screenId.substring(index+1);
+	    	}
+	    }
+	    return screenId;
+    }
 }

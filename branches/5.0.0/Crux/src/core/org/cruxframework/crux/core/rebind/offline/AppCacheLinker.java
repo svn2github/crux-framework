@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind.offline;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,10 +29,13 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.declarativeui.ViewProcessor;
 import org.cruxframework.crux.core.rebind.screen.OfflineScreen;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
+import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.CruxBridge;
+import org.w3c.dom.Document;
 
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -112,10 +116,10 @@ public class AppCacheLinker extends AbstractLinker
 		String screenID = getTargetScreenId(context, logger, offlineScreen.getRefScreen());
 		emitMainAppCache(logger, context, artifacts);
 		emitPermutationsAppCache(logger, context, artifacts, screenID);
-		emitOfflinePage(logger, context, artifacts, offlineScreen);
+		emitOfflinePage(logger, context, artifacts, offlineScreen.getId());
 	}
 
-	private void emitOfflinePage(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, OfflineScreen offlineScreen) throws UnableToCompleteException
+	private void emitOfflinePage(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, String offlineScreenId) throws UnableToCompleteException
 	{
 		permutationsUtil = new PermutationsUtil();
 		permutationsUtil.setupPermutationsMap(artifacts);
@@ -127,7 +131,7 @@ public class AppCacheLinker extends AbstractLinker
 	    	buffer.insert(startPos, ss);
 	    }
 		replaceAll(buffer, "__MANIFEST_NAME__", getManifestName());
-		artifacts.add(emitString(logger, buffer.toString(), offlineScreen.getId(), System.currentTimeMillis()));
+		artifacts.add(emitString(logger, buffer.toString(), offlineScreenId, System.currentTimeMillis()));
 	}
 
 	private String generateSelectionScript(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
@@ -202,11 +206,6 @@ public class AppCacheLinker extends AbstractLinker
 	private String getPageLoadFunction(TreeLogger logger, LinkerContext context)
 	{
 	    return "org/cruxframework/crux/core/rebind/offline/LoadPageFunction.js";
-	}
-
-	private String getCacheManifestLoaderTemplate(TreeLogger logger, LinkerContext context)
-	{
-	    return "org/cruxframework/crux/core/rebind/offline/CacheManifestLoaderTemplate.html";
 	}
 
 	private String getOfflinePageTemplate(TreeLogger logger, LinkerContext context)
@@ -317,7 +316,7 @@ public class AppCacheLinker extends AbstractLinker
 
 		if (startScreenId != null)
 		{
-			builder.append("/{context}" +(startScreenId.startsWith("/")?"":"/")+startScreenId + "\n");
+			builder.append("/{context}/" + moduleName + "/" + startScreenId + "\n");
 		}
 
 		for (String fn : artifacts)
@@ -335,20 +334,34 @@ public class AppCacheLinker extends AbstractLinker
 
 	private Artifact<?> createCacheManifestLoader(LinkerContext context, TreeLogger logger, String permutationName, String startScreenId) throws UnableToCompleteException
 	{
-//		ViewProcessor.setForceIndent(true);
-//		ViewProcessor.setOutputCharset("UTF-8");
-//		ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		Document screen = ScreenResourceResolverInitializer.getScreenResourceResolver().getRootView(startScreenId, null);
-//		ViewProcessor.generateHTML(startScreenId, screen, out);
+		try
+		{
+			ViewProcessor.setForceIndent(true);
+			ViewProcessor.setOutputCharset("UTF-8");
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			Document screen = ScreenResourceResolverInitializer.getScreenResourceResolver().getRootView(startScreenId, context.getModuleName(), null);
+			if (screen == null)
+			{
+	        	logger.log(TreeLogger.ERROR, "Error generating offline app page. Can not found target screen. ScreenID["+startScreenId+"]");
+	        	throw new UnableToCompleteException();
+			}
+			screen.getDocumentElement().setAttribute("manifest", getManifestName(permutationName));
+			ViewProcessor.generateHTML(startScreenId, screen, out);
+	        return emitString(logger, out.toString("UTF-8"), getManifestLoaderName(permutationName));
+        }
+        catch (Exception e)
+        {
+        	logger.log(TreeLogger.ERROR, "Error generating offline app page", e);
+        	throw new UnableToCompleteException();
+        }
 
-		
-		StringBuffer buffer = readFileToStringBuffer(getCacheManifestLoaderTemplate(logger, context), logger);
-		replaceAll(buffer, "__MANIFEST_NAME__", getManifestName(permutationName));
-		replaceAll(buffer, "__START_PAGE__", startScreenId);
-	    appendPageLoaderFunction(logger, context, buffer);
-//TODO		String loaderScript = context.optimizeJavaScript(logger, pageLoader.toString());
+//		StringBuffer buffer = readFileToStringBuffer(getCacheManifestLoaderTemplate(logger, context), logger);
+//		replaceAll(buffer, "__MANIFEST_NAME__", getManifestName(permutationName));
+//		replaceAll(buffer, "__START_PAGE__", startScreenId);
+//	    appendPageLoaderFunction(logger, context, buffer);
+//	//	String loaderScript = context.optimizeJavaScript(logger, pageLoader.toString());
+//		return emitString(logger, buffer.toString(), getManifestLoaderName(permutationName));
 
-		return emitString(logger, buffer.toString(), getManifestLoaderName(permutationName));
 	}
 
 	private String getTargetScreenId(LinkerContext context, TreeLogger logger, String screenID) throws UnableToCompleteException
@@ -366,6 +379,7 @@ public class AppCacheLinker extends AbstractLinker
 				throw new UnableToCompleteException();
 			}
 		}
+		//TODO checar se a pagina esta no lugar certo... aceitar apenas na raiz do modulo (/cruxsite/<nomePagina>.html)
 		return screenID;
 	}
 
