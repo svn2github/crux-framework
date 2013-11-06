@@ -139,6 +139,59 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	border-top: 0px;
 }
 
+/******************************************************************************
+    RSS Panel
+*******************************************************************************/
+@external crux-RssPanel, rssPanelTitle, rssPanelBody, crux-entryTitle, crux-entryDate
+.crux-RssPanel
+{
+    width: 285px;
+}
+
+.crux-RssPanel .rssPanelTitle
+{
+    margin-top: 0;
+    height: 50px;
+    margin-left: 12px;
+    font-weight: bold;  
+    font-size:22px;
+    text-shadow:0 2px 0 rgba(255,255,255,0.5);
+}
+.crux-RssPanel .rssPanelBody{
+    margin:12px;
+    border-radius:6px;
+    background:rgba(0,0,0,0.2);
+    -webkit-box-shadow:0 1px 4px rgba(0,0,0,0.5) inset, 0 2px 0 rgba(255,255,255,0.5);
+    overflow:hidden;
+    width: 100%;
+}
+.crux-RssPanel .rssPanelBody TD{
+    height: 40px;
+    background:-webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(0,0,0,0.2)),color-stop(1, rgba(0,0,0,0)));
+    border-bottom:1px solid #777;
+    -webkit-box-shadow: 0 1px rgba(255,255,255,0.3);
+}
+.crux-RssPanel .rssPanelBody TD:last-child{
+    border-bottom:none;
+}
+
+.crux-RssPanel .crux-entryTitle{
+    margin:0;
+    color:#fff;
+    text-shadow:0 2px 2px rgba(0,0,0,0.4);
+    font-size:13px;
+    padding-top:10px;
+    padding-left:10px;
+    width:100%;
+}
+.crux-RssPanel .crux-entryDate{
+    color:#fff;
+    text-shadow:0 2px 2px rgba(0,0,0,0.4);
+    padding-left:10px;
+    font-size:9px;
+}
+/******************************************************************************/
+
 @external gwt-TextBox;
 .gwt-TextBox
 {

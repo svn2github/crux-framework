@@ -52,8 +52,8 @@ public class RssPanel extends Composite
 		protected VerticalPanel rssPanel;
 		protected HTML title;
 		private String titleStyleName;
-		private String entryTitleStyleName = "entryTitle";
-		private String entryDateStyleName = "entryDate";
+		private String entryTitleStyleName = "crux-entryTitle";
+		private String entryDateStyleName = "crux-entryDate";
 		protected Grid body;
 		protected DateTimeFormat dateTimeFormat;
 		protected int maxTitleSize;
@@ -78,7 +78,7 @@ public class RssPanel extends Composite
 			rssPanel.add(body);
 			initWidget(rssPanel);
 			
-			setStyleName("site-RssPanel");
+			setStyleName("crux-RssPanel");
         }
 		
 		/**
@@ -284,11 +284,11 @@ public class RssPanel extends Composite
 					Window.open(entry.getLink(), "", null);
 				}
 			});
-			entryTitle.setStyleName("entryTitle");
+			entryTitle.setStyleName(getEntryTitleStyleName());
 			entryTitle.setTitle(entry.getTitle());
 			
 			Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
-			entryDate.setStyleName("entryDate");
+			entryDate.setStyleName(getEntryDateStyleName());
 			
 			FlowPanel entryPanel = new FlowPanel();
 			entryPanel.add(entryTitle);

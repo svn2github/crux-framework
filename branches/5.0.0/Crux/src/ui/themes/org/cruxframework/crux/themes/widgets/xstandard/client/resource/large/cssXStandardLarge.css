@@ -326,6 +326,61 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	margin-left: 10px;
 }
 
+/******************************************************************************
+    RSS Panel
+*******************************************************************************/
+@external crux-RssPanel, rssPanelTitle, rssPanelBody, crux-entryTitle, crux-entryDate
+.crux-RssPanel
+{
+    width: 100%;
+}
+.crux-RssPanel .rssPanelTitle
+{
+    margin-top: 0;
+    color: #004F5E;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+    font-size: 1.5em;
+    height: 50px;
+    margin-left: 10px;
+    font-weight: bold;  
+}
+
+.crux-RssPanel .rssPanelBody
+{
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 100%;
+}
+
+.crux-RssPanel .rssPanelBody TD
+{
+    height: 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px rgba(255,255,255,0.3);
+}
+
+.crux-RssPanel .crux-entryTitle
+{
+    color: #333;
+    font-size: 15px;
+    font-family: Helvetica;
+    cursor: pointer;
+}
+
+.crux-RssPanel .crux-entryDate
+{
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.4) inset, 0 1px 0 rgba(255,255,255,0.5);
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+    float: right;
+    padding: 3px 8px;
+}
+
+/******************************************************************************/
+
 @external gwt-TextBox;
 .gwt-TextBox
 {
