@@ -1,0 +1,185 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.cruxframework</groupId>
+	<artifactId>cross-device-showcase</artifactId>
+	<version>1.0.0</version>
+	<name>CrossDeviceShowcase</name>
+	<packaging>war</packaging>
+	<description>Crux Cross-Device Showcase of Features</description>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cruxVersion>5.0.3-RC1</cruxVersion>
+        <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
+		<webinf.lib.folder>${webappDirectory}/WEB-INF/lib/</webinf.lib.folder>
+		<webinf.classes.folder>${webappDirectory}/WEB-INF/classes/</webinf.classes.folder>
+		<webappSourceDir>${basedir}/src/main/webapp</webappSourceDir>
+		<sourceDir>${project.build.sourceDirectory}</sourceDir>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-dev</artifactId>
+			<version>${cruxVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-runtime</artifactId>
+			<version>${cruxVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-widgets</artifactId>
+			<version>${cruxVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-themes</artifactId>
+			<version>${cruxVersion}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<!-- Compile -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<!-- Update webapp folders -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.3</version>
+				<executions>
+					<execution>
+						<id>copy-web-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${webappDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${webappSourceDir}</directory>
+								</resource>
+							</resources>
+						</configuration>
+			          </execution>
+					<execution>
+						<id>copy-classes</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${webinf.classes.folder}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.outputDirectory}</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Generate the war -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>generate-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<webappDirectory>${webappDirectory}</webappDirectory>
+					<packagingExcludes>
+						**/gwt-dev*.jar,
+						**/gwt-user*.jar,
+						**/validation-api*.jar,
+						**/crux-dev*.jar,
+						**/crux-widgets*.jar,
+						**/crux-themes*.jar,
+						**/*.view.xml,
+						**/*.crux.xml,
+						**/*.template.xml,
+						**/*.offline.xml
+					</packagingExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- Run Crux Compiler -->
+			    <artifactId>maven-antrun-plugin</artifactId>
+			    <version>1.6</version>
+			    <executions>
+			        <execution>
+				    	<id>crux-compiler</id>
+			            <phase>prepare-package</phase>
+			            <configuration>
+				    		<target>
+								<echo message="Running Crux Compiler..." />
+								<property name="build.classpath" refid="maven.compile.classpath" />
+								<java classname="org.cruxframework.crux.tools.compile.CruxCompiler"
+									fork="true">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+									</classpath>
+									<arg value="sourceDir" />
+									<arg value="${sourceDir}" />
+							
+									<arg value="webDir" />
+									<arg value="${webappDirectory}" />
+							
+									<arg value="resourcesDir" />
+									<arg value="${webinf.classes.folder}" />
+							
+									<arg value="outputDir" />
+									<arg value="${webappDirectory}" />
+							
+									<arg value="outputCharset" />
+									<arg value="UTF-8" />
+							
+									<arg value="-localWorkers" />
+									<arg value="2" />
+							
+									<arg value="-logLevel" />
+									<arg value="INFO" />
+							
+									<arg value="pageFileExtension" />
+									<arg value="html" />
+							
+									<arg value="-keepPagesGeneratedFiles" />
+							
+									<arg value="-doNotPreCompileJavaSource" />
+							
+									<jvmarg value="-Xmx768M" />
+									<jvmarg value="-Xms256M" />
+									<jvmarg
+										value="-DCruxToolsConfig.compilerClass=org.cruxframework.crux.tools.compile.CruxModuleCompiler" />
+								</java>
+				    		</target>
+			            </configuration>
+			            <goals>
+			                <goal>run</goal>
+			            </goals>
+			       </execution>
+			   </executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+		
