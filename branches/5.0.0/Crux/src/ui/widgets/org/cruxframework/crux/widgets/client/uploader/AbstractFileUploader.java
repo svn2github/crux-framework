@@ -38,6 +38,7 @@ import org.cruxframework.crux.widgets.client.uploader.event.HasUploadCompleteHan
 import org.cruxframework.crux.widgets.client.uploader.event.HasUploadErrorHandlers;
 import org.cruxframework.crux.widgets.client.uploader.event.HasUploadStartHandlers;
 import org.cruxframework.crux.widgets.client.uploader.event.RemoveFileEvent;
+import org.cruxframework.crux.widgets.client.uploader.event.RemoveFileEvent.FileRemoveAction;
 import org.cruxframework.crux.widgets.client.uploader.event.RemoveFileHandler;
 import org.cruxframework.crux.widgets.client.uploader.event.UploadCanceledEvent;
 import org.cruxframework.crux.widgets.client.uploader.event.UploadCanceledHandler;
@@ -57,7 +58,6 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -101,6 +101,10 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 	
 	//TODO: Implement this behavior
 	protected boolean enabled = true;
+
+	//Indicates if user has informed at least one remove file handler.
+	//If so, file will only be removed is the removeAction is declared inside the event.
+	private boolean hasRemoveFileHandler;
 		
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
@@ -127,6 +131,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 	@Override
 	public HandlerRegistration addRemoveFileHandler(RemoveFileHandler handler)
 	{
+		this.hasRemoveFileHandler = true;
 	    return addHandler(handler, RemoveFileEvent.getType());
 	}
 
@@ -239,17 +244,12 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 		}
 	}
 
-	public void removeFile(String fileName)
+	public void removeFile(final String fileName)
 	{
-		removeFile(fileName, true);
-	}
-	
-	public void removeFile(String fileName, boolean fireEvents)
-	{
-		Widget filePanel = filePanelWidgets.get(fileName);
+		final Widget filePanel = filePanelWidgets.get(fileName);
 		if (filePanel != null)
 		{
-			if (fireEvents)
+			if (!hasRemoveFileHandler)
 			{
 				filePanelWidgets.remove(fileName);
 				filePanel.removeFromParent();
@@ -258,13 +258,16 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 			else
 			{
 				Blob removedFile = files.get(fileName);
-				RemoveFileEvent removeFileEvent = RemoveFileEvent.fire(this, removedFile, fileName);
-				if (!removeFileEvent.isCanceled())
+				RemoveFileEvent.fire(this, removedFile, fileName, new FileRemoveAction() 
 				{
-					filePanelWidgets.remove(fileName);
-					filePanel.removeFromParent();
-					files.remove(fileName);
-				}
+					@Override
+					public void removeFile() 
+					{
+						filePanelWidgets.remove(fileName);
+						filePanel.removeFromParent();
+						files.remove(fileName);
+					}
+				});
 			}
 		}
 	}

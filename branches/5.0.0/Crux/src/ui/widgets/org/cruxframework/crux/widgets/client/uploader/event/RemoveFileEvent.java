@@ -26,11 +26,17 @@ public class RemoveFileEvent extends AbstractFileEvent<RemoveFileHandler>
 {
 	private static Type<RemoveFileHandler> TYPE = new Type<RemoveFileHandler>();
 	
-	private boolean canceled = false;
-
-	protected RemoveFileEvent(Blob file, String fileName)
+	private FileRemoveAction fileRemoveAction;
+	
+	public static interface FileRemoveAction
+	{
+		public void removeFile();
+	}
+	
+	protected RemoveFileEvent(Blob file, String fileName, FileRemoveAction fileRemoveAction)
 	{
 		super(file, fileName);
+		this.fileRemoveAction = fileRemoveAction;
 	}
 
 	@Override
@@ -56,19 +62,13 @@ public class RemoveFileEvent extends AbstractFileEvent<RemoveFileHandler>
 	
 	/**
 	 * 
-	 * @return
 	 */
-	public boolean isCanceled()
+	public void doRemoveFile()
 	{
-		return canceled;
-	}
-	
-	/**
-	 * 
-	 */
-	public void cancel()
-	{
-		canceled = true;
+		if(fileRemoveAction != null)
+		{
+			fileRemoveAction.removeFile();
+		}
 	}
 
 	/**
@@ -78,9 +78,9 @@ public class RemoveFileEvent extends AbstractFileEvent<RemoveFileHandler>
 	 * @param removedFile 
 	 * @return
 	 */
-	public static RemoveFileEvent fire(HasRemoveFileHandlers source, Blob removedFile, String fileName)
+	public static RemoveFileEvent fire(HasRemoveFileHandlers source, Blob removedFile, String fileName, FileRemoveAction fileRemoveAction)
 	{
-		RemoveFileEvent event = new RemoveFileEvent(removedFile, fileName);
+		RemoveFileEvent event = new RemoveFileEvent(removedFile, fileName, fileRemoveAction);
 		source.fireEvent(event);
 		return event;
 	}	
