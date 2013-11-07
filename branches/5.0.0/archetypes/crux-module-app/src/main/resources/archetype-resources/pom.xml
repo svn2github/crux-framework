@@ -140,6 +140,34 @@
 			</activation>
 			<build>
 				<plugins>
+				<!-- Run Service Mapper -->
+	            <plugin>
+	                <artifactId>maven-antrun-plugin</artifactId>
+	                <version>1.6</version>
+	                <executions>
+	                    <execution>
+	                        <id>service-mapper</id>
+	                        <phase>prepare-package</phase>
+	                        <configuration>
+	                            <target>
+	                                <echo message="Running Service Mapper..." />
+	                                <property name="build.classpath" refid="maven.compile.classpath" />
+	                                <java classname="org.cruxframework.crux.tools.servicemap.ServiceMapper"
+	                                    fork="true">
+	                                    <classpath>
+	                                        <path refid="maven.compile.classpath" />
+	                                    </classpath>
+	                                    <arg value="projectDir" />
+	                                    <arg value="${webappDirectory}" />
+	                                </java>
+	                            </target>
+	                        </configuration>
+	                        <goals>
+	                            <goal>run</goal>
+	                        </goals>
+	                    </execution>
+	                </executions>
+	            </plugin>
 				<!-- Run Crux Compiler -->
 				<plugin>
 				    <artifactId>maven-antrun-plugin</artifactId>
