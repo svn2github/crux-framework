@@ -294,7 +294,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.println("JSONValue exId = jsonObject.get(\"exId\");");
 				srcWriter.println("if (exId == null){");
 				srcWriter.println("JSONValue jsonErrorMsg = jsonObject.get(\"message\");");
-				srcWriter.println("String stringJsonErrorMsg = jsonErrorMsg != null ? jsonErrorMsg.isString().stringValue() : null;");
+				srcWriter.println("String stringJsonErrorMsg = (jsonErrorMsg != null && jsonErrorMsg.isString() != null) ? jsonErrorMsg.isString().stringValue() : \"\";");
 				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), stringJsonErrorMsg));");
 				srcWriter.println("} else {");
 				srcWriter.println("String hash = exId.isString().stringValue();");
@@ -325,7 +325,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 			else
 			{
-				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), jsonObject.get(\"message\").isString().stringValue()));");
+				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), (jsonObject.get(\"message\") != null && jsonObject.get(\"message\").isString() != null) ? jsonObject.get(\"message\").isString().stringValue() : \"\"));");
 			}
 		}
 		catch (Exception e) 

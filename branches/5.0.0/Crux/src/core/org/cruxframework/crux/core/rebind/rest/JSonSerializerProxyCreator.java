@@ -514,7 +514,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		if (objectType.isAssignableTo(exceptionType) && objectType.findConstructor(new JType[]{stringType}) != null)
 		{
 			srcWriter.println("if ("+jsonObjectVar+".containsKey(\"message\")){");
-			srcWriter.println(resultObjectVar+" = new "+resultSourceName+"("+jsonObjectVar+".get(\"message\").isString().stringValue());");
+			srcWriter.println(resultObjectVar+" = new "+resultSourceName+"(("+jsonObjectVar+".get(\"message\") != null && "+jsonObjectVar+".get(\"message\").isString() != null) ? "+jsonObjectVar+".get(\"message\").isString().stringValue() : \"\");");
 			srcWriter.println("} else {");
 			srcWriter.println(resultObjectVar+" = GWT.create("+resultSourceName+".class);");
 			srcWriter.println("}");
