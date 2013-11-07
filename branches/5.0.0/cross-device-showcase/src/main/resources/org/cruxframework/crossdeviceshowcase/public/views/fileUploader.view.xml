@@ -1,0 +1,24 @@
+<v:view 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:v="http://www.cruxframework.org/view" 
+	xmlns:core="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	useController="mainController" title="StyledPanel"> 
+	
+	<center>
+		<crux:fileUploader id="fileUploader" multiple="true" fileInputText="Escolher Arquivos" autoUploadFiles="true"/>
+		
+		<div class="speechBubble">
+			<H1>FileUploader</H1>
+			<p>
+				O FileUploader é um componente capaz de transmitir arquivos existentes no dispositivo cliente
+				para  servidor de aplicação. Construído sobre a especificação XMLHttpRequest 2, é capaz de 
+				enviar múltiplos arquivos simultaneamente e prover feedback de progresso ao usuário.
+				Além disso, caso um arquivo enviado seja uma imagem, exibe uma miniatura desse arquivo, 
+				enriquecendo a usabilidade do sistema.
+			</p> 
+		</div>
+	</center>		
+	
+</v:view>
