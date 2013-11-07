@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper.DefaultTypeResolverBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;
 
 /**
@@ -48,6 +49,7 @@ public class JsonUtil
 	public static ObjectReader createReader(Type type)
 	{
 		ObjectMapper mapper = getObjectMapper(type);
+		setGlobalConfigurations(mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectReader reader = mapper.reader(paramJavaType);
 		return reader;
@@ -56,11 +58,17 @@ public class JsonUtil
 	public static ObjectWriter createWriter(Type type)
 	{
 		ObjectMapper mapper = getObjectMapper(type);
+		setGlobalConfigurations(mapper);
 		JavaType paramJavaType = mapper.getTypeFactory().constructType(type);
 		ObjectWriter writer = mapper.writerWithType(paramJavaType);
 		return writer;
 	}
 	
+	private static void setGlobalConfigurations(ObjectMapper mapper) 
+	{
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+	}
+
 	private static ObjectMapper getObjectMapper(Type type)
     {
 		if(defaultMapper == null)
