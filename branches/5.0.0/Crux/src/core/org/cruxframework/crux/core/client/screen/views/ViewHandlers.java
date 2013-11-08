@@ -384,7 +384,7 @@ public class ViewHandlers
 					int newClientHeight = Window.getClientHeight();
 					int newClientWidth = Window.getClientWidth();
 
-					if (this.clientHeight != newClientHeight || clientWidth != newClientWidth)
+					if (this.clientHeight != newClientHeight || clientWidth != newClientWidth || Screen.isIos())
 					{
 						handler.onOrientationChangeOrResize();
 					}
@@ -408,13 +408,7 @@ public class ViewHandlers
 		{
 			public void onResize(ResizeEvent event) 
 			{
-				if(Screen.isIos())
-				{
-					handler.onOrientationChangeOrResize();
-				} else
-				{
-					executor.execute();					
-				}
+				executor.execute();					
 			}
 		};
 		
