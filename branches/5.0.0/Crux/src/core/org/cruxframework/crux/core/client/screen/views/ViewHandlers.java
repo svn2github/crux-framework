@@ -408,7 +408,13 @@ public class ViewHandlers
 		{
 			public void onResize(ResizeEvent event) 
 			{
-				executor.execute();
+				if(Screen.isIos())
+				{
+					handler.onOrientationChangeOrResize();
+				} else
+				{
+					executor.execute();					
+				}
 			}
 		};
 		
