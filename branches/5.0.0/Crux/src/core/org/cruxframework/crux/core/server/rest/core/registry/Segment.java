@@ -95,7 +95,7 @@ public class Segment
 	protected boolean isResponseMediaTypeAllowed(List<MediaType> accepts)
 	{
 		boolean responseMediaTypeAllowed = false;
-		if (accepts == null)
+		if (accepts == null || accepts.isEmpty())
 		{ // assumes accepts '*' if not informed
 			responseMediaTypeAllowed = true;
 		}
