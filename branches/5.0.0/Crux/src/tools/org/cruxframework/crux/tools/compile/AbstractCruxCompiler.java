@@ -74,8 +74,8 @@ public abstract class AbstractCruxCompiler
 	private boolean preCompileJavaSource = true;
 	private List<CruxPreProcessor> preProcessors = new ArrayList<CruxPreProcessor>();
 
-	private File sourceDir;
-	private File resourcesDir;
+	protected File sourceDir;
+	protected File resourcesDir;
 	private File classpathDir;
 	
 	/**

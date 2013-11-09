@@ -111,6 +111,15 @@ public class MonolithicApplicationCompiler extends AbstractCruxCompiler
 	        result.addAll(MonolithicAppCompileUtils.getURLs(dir));
         }
 		
+		if (sourceDir != null)
+		{
+			result.addAll(MonolithicAppCompileUtils.getURLs(sourceDir));
+		}
+		if (resourcesDir != null)
+		{
+			result.addAll(MonolithicAppCompileUtils.getURLs(resourcesDir));
+		}
+		
 		return result;
 	}
 
