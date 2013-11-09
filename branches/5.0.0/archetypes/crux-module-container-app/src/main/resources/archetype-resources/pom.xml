@@ -41,6 +41,26 @@
 		</dependency>
 	</dependencies>
 	
+	<profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <devmode.start>&lt;!--</devmode.start>
+                <devmode.end>--&gt;</devmode.end>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <devmode.start></devmode.start>
+                <devmode.end></devmode.end>
+            </properties>
+        </profile>
+    </profiles>
+	
 	<build>
 		<plugins>
 			<!-- Compile -->
