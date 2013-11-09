@@ -354,14 +354,6 @@ public class AppCacheLinker extends AbstractLinker
         	logger.log(TreeLogger.ERROR, "Error generating offline app page", e);
         	throw new UnableToCompleteException();
         }
-
-//		StringBuffer buffer = readFileToStringBuffer(getCacheManifestLoaderTemplate(logger, context), logger);
-//		replaceAll(buffer, "__MANIFEST_NAME__", getManifestName(permutationName));
-//		replaceAll(buffer, "__START_PAGE__", startScreenId);
-//	    appendPageLoaderFunction(logger, context, buffer);
-//	//	String loaderScript = context.optimizeJavaScript(logger, pageLoader.toString());
-//		return emitString(logger, buffer.toString(), getManifestLoaderName(permutationName));
-
 	}
 
 	private String getTargetScreenId(LinkerContext context, TreeLogger logger, String screenID) throws UnableToCompleteException

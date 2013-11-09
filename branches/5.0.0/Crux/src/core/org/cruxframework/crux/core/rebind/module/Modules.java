@@ -552,12 +552,36 @@ public class Modules
 	    int index = screenId.indexOf("/");
 	    if (index > 0)
 	    {
-	    	String currentModule = screenId.substring(0, index);
-	    	if (getModule(currentModule) != null)
+	    	String possibleModule = screenId.substring(0, index);
+	    	Module currentModule = getModule(possibleModule);
+			if (currentModule != null)
 	    	{
-	    		screenId = screenId.substring(index+1);
+	    		String relativeScreenId = screenId.substring(index+1);
+	    		if (containsPage(currentModule, relativeScreenId))
+	    		{
+	    			screenId = relativeScreenId;
+	    		}
 	    	}
 	    }
 	    return screenId;
     }
+
+	/**
+	 * 
+	 * @param module
+	 * @param relativeScreenId
+	 * @return
+	 */
+	public boolean containsPage(Module module, String relativeScreenId)
+	{
+		String[] modulePages = searchModulePages(module);
+		for (String page : modulePages)
+        {
+	        if (page.equals(relativeScreenId))
+	        {
+	        	return true;
+	        }
+        }
+		return false;
+	}
 }

@@ -27,6 +27,6 @@ public class DeclarativeUIScreenResourceScanner extends ScreenResourcesScanner
 {
 	protected boolean accepts(String urlString)
 	{
-		return urlString != null && urlString.endsWith(".crux.xml");
+		return urlString != null && urlString.endsWith(".crux.xml")  && !urlString.endsWith("cruxViewTester.crux.xml");
 	}
 }

@@ -98,7 +98,18 @@ public class ScreenFactory
 			{
 				if (getFromCache(id, cacheId, lastModified) == null)
 				{
-					Document screenView = ScreenResourceResolverInitializer.getScreenResourceResolver().getRootView(id, device);
+					Document screenView;
+					String relativeScreenId = Modules.getInstance().removeModuleIfPresent(id);
+			    	if (!relativeScreenId.equals(id))
+			    	{
+			    		String module = id.substring(0, id.indexOf("/"));
+			    		screenView = ScreenResourceResolverInitializer.getScreenResourceResolver().getRootView(relativeScreenId, module, device);
+			    	}
+			    	else
+			    	{
+			    		screenView = ScreenResourceResolverInitializer.getScreenResourceResolver().getRootView(id, device);
+			    	}
+			    	
 					if (screenView == null)
 					{
 						throw new ScreenConfigException("Screen ["+id+"] not found!");

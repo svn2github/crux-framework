@@ -25,6 +25,7 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.CruxAbstractFilter;
 import org.cruxframework.crux.core.server.CruxBridge;
@@ -54,11 +55,28 @@ public class DeclarativeUIFilter extends CruxAbstractFilter
 			if (requestedScreen != null)
 			{
 				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
+				String module = null;
+			    int index = requestedScreen.indexOf("/");
+			    if (index > 0)
+			    {
+			    	String relativeScreenId = Modules.getInstance().removeModuleIfPresent(requestedScreen);
+			    	if (!relativeScreenId.equals(requestedScreen))
+			    	{
+			    		module = requestedScreen.substring(0, index);
+			    		requestedScreen = relativeScreenId;
+			    	}
+			    }
 				try
 				{
-					String screenId = requestedScreen.replace(".html", ".crux.xml");
-
-					InputStream screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(screenId);
+					InputStream screenResource;
+					if (module == null)
+					{
+						screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(requestedScreen);
+					}
+					else
+					{
+						screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(requestedScreen, module);
+					}
 					if (screenResource != null)
 					{
 						StreamUtils.write(screenResource, resp.getOutputStream(), false);

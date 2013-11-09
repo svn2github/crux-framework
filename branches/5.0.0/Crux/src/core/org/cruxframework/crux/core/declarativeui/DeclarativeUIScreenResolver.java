@@ -169,4 +169,16 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 		ViewProcessor.generateHTML(screenId, screen, out);			
 		return new ByteArrayInputStream(out.toByteArray());
     }
+
+	public InputStream getScreenResource(String screenId, String module) throws CruxGeneratorException
+    {
+		Document screen = getRootView(screenId, module, null);
+		if (screen == null)
+		{
+			return null;
+		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ViewProcessor.generateHTML(screenId, screen, out);			
+		return new ByteArrayInputStream(out.toByteArray());
+    }
 }

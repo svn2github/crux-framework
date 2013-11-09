@@ -37,6 +37,15 @@ public interface ScreenResourceResolver
 	InputStream getScreenResource(String screenId) throws CruxGeneratorException;
 	
 	/**
+	 * Gets the inputStream for a given screenId
+	 * @param screenId
+	 * @param module
+	 * @return
+	 * @throws CruxGeneratorException 
+	 */
+	InputStream getScreenResource(String screenId, String module) throws CruxGeneratorException;
+
+	/**
 	 * Gets the Document representing the root view for a given screenId
 	 * @param screenId
 	 * @param device

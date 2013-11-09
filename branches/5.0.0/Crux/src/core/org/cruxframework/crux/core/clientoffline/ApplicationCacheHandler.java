@@ -154,7 +154,7 @@ public class ApplicationCacheHandler implements EntryPoint
     {
         if (Screen.isAndroid()) 
         {
-            Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+            Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
                         @Override
                         public boolean execute() 
                         {
@@ -183,7 +183,7 @@ public class ApplicationCacheHandler implements EntryPoint
      * Check for updates to the application cache every 30 minutes
      */
     private void scheduleUpdateChecker() {
-        Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
             @Override
             public boolean execute() 
             {

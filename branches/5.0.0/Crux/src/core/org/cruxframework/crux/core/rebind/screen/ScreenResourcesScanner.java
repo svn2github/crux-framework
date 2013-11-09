@@ -25,10 +25,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
+import org.cruxframework.crux.core.server.scan.ScannerURLS;
 import org.cruxframework.crux.scannotation.archiveiterator.Filter;
 import org.cruxframework.crux.scannotation.archiveiterator.IteratorFactory;
 import org.cruxframework.crux.scannotation.archiveiterator.URLIterator;
+
+import com.sun.xml.internal.bind.v2.TODO;
 
 
 /**
@@ -43,7 +45,8 @@ public abstract class ScreenResourcesScanner
 	
 	private Set<String> scanArchives()
 	{
-		URL[] urls = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+//		URL[] urls = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+		URL[] urls = ScannerURLS.getWebURLsForSearch();
 		final Set<String> screens = new HashSet<String>();
 		final ScreenResourcesScanner scanner = this;
 		
