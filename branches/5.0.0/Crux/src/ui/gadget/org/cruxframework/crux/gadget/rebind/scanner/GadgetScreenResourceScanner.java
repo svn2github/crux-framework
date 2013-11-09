@@ -36,7 +36,7 @@ public class GadgetScreenResourceScanner extends DeclarativeUIScreenResourceScan
 	protected boolean accepts(String urlString)
 	{
 		boolean isValidGadget = false;
-		if (urlString != null && urlString.endsWith(".crux.xml"))
+		if (urlString != null && urlString.endsWith(".crux.xml") && !urlString.endsWith("cruxViewTester.crux.xml"))
 		{
 			try
 			{
