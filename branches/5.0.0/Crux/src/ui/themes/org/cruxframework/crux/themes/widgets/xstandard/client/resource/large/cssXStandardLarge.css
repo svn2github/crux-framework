@@ -329,7 +329,7 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 /******************************************************************************
     RSS Panel
 *******************************************************************************/
-@external crux-RssPanel, rssPanelTitle, rssPanelBody, crux-entryTitle, crux-entryDate
+@external crux-RssPanel, rssPanelTitle, rssPanelBody, crux-entryTitle, crux-entryDate;
 .crux-RssPanel
 {
     width: 100%;
