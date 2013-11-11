@@ -189,9 +189,20 @@ public class ApplicationCacheHandler implements EntryPoint
             {
                 if (obsolete)
                 {
-                	return false;
+                	if (LogConfiguration.loggingIsEnabled())
+                	{
+                		logger.log(Level.INFO, "Cache was obsolete. Swapping cache.");
+                	}
+                	swapCache();
                 }
-                updateCache();
+                else
+                {
+                	if (LogConfiguration.loggingIsEnabled())
+                	{
+                		logger.log(Level.INFO, "Trying to update cache...");
+                	}
+                	updateCache();
+                }
                 return true;
             }
         }, constants.updateCheckInterval());
@@ -209,6 +220,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, "Resources cached.");
 		}
     	uiHandler.hideMessage();
+    	updating = false;
     	fireApplicationCacheEvent(CacheEvent.onCached);
     }
 
@@ -253,6 +265,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, "No updates found");
 		}
     	uiHandler.hideMessage();
+    	updating = false;
     	fireApplicationCacheEvent(CacheEvent.onNoupdate);
     }
 
@@ -304,6 +317,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, messages.applicationCacheError());
 		}
     	uiHandler.hideMessage();
+    	updating = false;
     	fireApplicationCacheEvent(CacheEvent.onError);
     }
 
@@ -319,6 +333,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, messages.applicationCacheObsolete());
 		}
 		this.obsolete = true; 
+    	updating = false;
     	uiHandler.showMessage(messages.applicationCacheObsolete());
     	fireApplicationCacheEvent(CacheEvent.onObsolete);
     }

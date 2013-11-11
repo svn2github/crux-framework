@@ -30,8 +30,6 @@ import org.cruxframework.crux.scannotation.archiveiterator.Filter;
 import org.cruxframework.crux.scannotation.archiveiterator.IteratorFactory;
 import org.cruxframework.crux.scannotation.archiveiterator.URLIterator;
 
-import com.sun.xml.internal.bind.v2.TODO;
-
 
 /**
  * 

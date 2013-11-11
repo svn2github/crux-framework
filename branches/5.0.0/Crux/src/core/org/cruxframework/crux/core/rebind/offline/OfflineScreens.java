@@ -26,7 +26,7 @@ import org.cruxframework.crux.core.rebind.screen.OfflineScreen;
 import org.cruxframework.crux.core.rebind.screen.OfflineScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourcesScannerException;
-import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
+import org.cruxframework.crux.core.server.scan.ScannerURLS;
 import org.cruxframework.crux.scannotation.archiveiterator.Filter;
 import org.cruxframework.crux.scannotation.archiveiterator.IteratorFactory;
 import org.cruxframework.crux.scannotation.archiveiterator.URLIterator;
@@ -77,7 +77,8 @@ public class OfflineScreens
 
 	private static Set<URL> scanOfflineArchives()
 	{
-		URL[] urls = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+//		URL[] urls = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+		URL[] urls = ScannerURLS.getWebURLsForSearch();
 		final Set<URL> screens = new HashSet<URL>();
 		
 		for (URL url : urls)
