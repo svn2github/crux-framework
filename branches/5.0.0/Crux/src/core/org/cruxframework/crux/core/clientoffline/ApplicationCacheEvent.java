@@ -41,9 +41,9 @@ public class ApplicationCacheEvent extends BaseEvent<Network>
 	 * 
 	 * @param event current application cache event type
 	 */
-	protected ApplicationCacheEvent(CacheEvent event)
+	protected ApplicationCacheEvent(Network network, CacheEvent event)
 	{
-		super (Network.get());
+		super (network);
 		this.event = event;
 	}
 

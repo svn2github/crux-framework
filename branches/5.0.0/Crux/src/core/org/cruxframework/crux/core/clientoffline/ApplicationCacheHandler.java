@@ -55,8 +55,14 @@ public class ApplicationCacheHandler implements EntryPoint
 	private boolean obsolete = false;
 	private static FastList<ApplicationCacheEvent.Handler> cacheEventHandlers = null;
 
+	private Network network;
+
 	public static HandlerRegistration addApplicationCacheHandler(final ApplicationCacheEvent.Handler handler)
 	{
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Adding a new applicationCache event handler.");
+		}
 		if (cacheEventHandlers == null)
 		{
 			 cacheEventHandlers = new FastList<ApplicationCacheEvent.Handler>();
@@ -86,6 +92,10 @@ public class ApplicationCacheHandler implements EntryPoint
     	{
     		return;
     	}
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Starting application cache handler.");
+		}
     	
         hookAllListeners(this);
         scheduleUpdateChecker();
@@ -94,7 +104,7 @@ public class ApplicationCacheHandler implements EntryPoint
         	onDownloading();
         }
         
-        Network.get(); // initializes network monitor...
+        network = Network.get(); // initializes network monitor...
         // Sometimes android leaves the status indicator spinning and spinning
         // and spinning...
         pollForStatusOnAndroid();
@@ -142,7 +152,7 @@ public class ApplicationCacheHandler implements EntryPoint
     {
     	if (cacheEventHandlers != null)
     	{
-    		ApplicationCacheEvent event = new ApplicationCacheEvent(eventType);
+    		ApplicationCacheEvent event = new ApplicationCacheEvent(network, eventType);
     		for (int i=0; i< cacheEventHandlers.size(); i++)
     		{
     			cacheEventHandlers.get(i).onCacheEvent(event);

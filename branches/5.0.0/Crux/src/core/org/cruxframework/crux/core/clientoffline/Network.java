@@ -38,7 +38,7 @@ public class Network implements HasNetworkHandlers
 
 	public static abstract class Impl implements HasNetworkHandlers
 	{
-		private OfflineMessages messages = GWT.create(OfflineMessages.class);
+		protected OfflineMessages messages = GWT.create(OfflineMessages.class);
 		protected FastList<Handler> handlers = new FastList<NetworkEvent.Handler>();
 		
         public HandlerRegistration addNetworkHandler(final Handler handler)
@@ -69,19 +69,11 @@ public class Network implements HasNetworkHandlers
         
         protected void fireOnLineEvent()
         {
-    		if (LogConfiguration.loggingIsEnabled())
-    		{
-    			logger.log(Level.INFO, messages.networkOnLine());
-    		}
         	fireEvent(new NetworkEvent(true));
         }
         
         protected void fireOffLineEvent()
         {
-    		if (LogConfiguration.loggingIsEnabled())
-    		{
-    			logger.log(Level.INFO, messages.networkOffLine());
-    		}
         	fireEvent(new NetworkEvent(false));
         }
 
@@ -180,18 +172,30 @@ public class Network implements HasNetworkHandlers
 
 		private void onCacheHitEvent()
 		{
-			if (!isOnLine)
+    		if (LogConfiguration.loggingIsEnabled())
+    		{
+    			logger.log(Level.INFO, messages.networkOnLine());
+    			logger.log(Level.FINE, "onCacheHitEvent: old status: "+isOnLine);
+    		}
+			boolean oldStatus = isOnLine;
+			isOnLine = true;
+			if (!oldStatus)
 			{
-				isOnLine = true;
 				fireOnLineEvent();
 			}
 		}
 		
 		private void onCacheFailedEvent()
 		{
-			if (isOnLine)
+    		if (LogConfiguration.loggingIsEnabled())
+    		{
+    			logger.log(Level.INFO, messages.networkOffLine());
+    			logger.log(Level.FINE, "onCacheFailedEvent: old status: "+isOnLine);
+    		}
+			boolean oldStatus = isOnLine;
+			isOnLine = false;
+			if (oldStatus)
 			{
-				isOnLine = false;
 				fireOffLineEvent();
 			}
 		}
@@ -213,6 +217,10 @@ public class Network implements HasNetworkHandlers
 	{
 		if (instance == null)
 		{
+    		if (LogConfiguration.loggingIsEnabled())
+    		{
+    			logger.log(Level.FINE, "Creating new Network monitor");
+    		}
 			instance = new Network();
 		}
 		return instance;
