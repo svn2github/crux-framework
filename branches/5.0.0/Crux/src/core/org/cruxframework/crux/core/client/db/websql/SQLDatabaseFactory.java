@@ -15,7 +15,15 @@
  */
 package org.cruxframework.crux.core.client.db.websql;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.cruxframework.crux.core.client.db.DBMessages;
+import org.cruxframework.crux.core.client.db.DatabaseException;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.PartialSupport;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -24,13 +32,31 @@ import com.google.gwt.dom.client.PartialSupport;
 @PartialSupport
 public class SQLDatabaseFactory
 {
-	public static SQLDatabase openDatabase(String name, int version, String displayName, double estimatedSize)
+	protected static Logger logger = Logger.getLogger(SQLDatabaseFactory.class.getName());
+	public static SQLDatabase openDatabase(String name, String displayName, int estimatedSize)
 	{
-		return openDatabase(name, version, displayName, estimatedSize, null);
+		return openDatabase(name, displayName, estimatedSize, null);
 	}
 
-	public static native SQLDatabase openDatabase(String name, int version, String displayName, double estimatedSize, DatabaseCallback creationCallback)/*-{
-		return $wnd.openDatabase(name, version, displayName, estimatedSize, function(db){
+	public static SQLDatabase openDatabase(String name, String displayName, int estimatedSize, DatabaseCallback creationCallback)
+	{
+		try
+		{
+			return openDatabaseNative(name, displayName, estimatedSize, null);
+		}
+		catch (Exception e) 
+		{
+			DBMessages messages = GWT.create(DBMessages.class);
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.SEVERE, messages.databaseOpenError(name, e.getMessage()), e);
+			}
+			throw new DatabaseException(messages.databaseOpenError(name, e.getMessage()), e);
+		}
+	}
+	
+	private static native SQLDatabase openDatabaseNative(String name, String displayName, int estimatedSize, DatabaseCallback creationCallback)/*-{
+		return $wnd.openDatabase(name, '', displayName, estimatedSize, function(db){
 			if (creationCallback)
 			{
 				creationCallback.@org.cruxframework.crux.core.client.db.websql.SQLDatabaseFactory.DatabaseCallback::onCreated(Lorg/cruxframework/crux/core/client/db/websql/SQLDatabase;)(db);

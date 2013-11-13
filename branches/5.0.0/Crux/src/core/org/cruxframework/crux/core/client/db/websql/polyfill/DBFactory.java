@@ -94,7 +94,7 @@ public class DBFactory
 	{
 		if (!initialized)
 		{
-			systemDatabase = SQLDatabaseFactory.openDatabase("__sysdb__", 1, "System Database", DEFAULT_DB_SIZE);
+			systemDatabase = SQLDatabaseFactory.openDatabase("__sysdb__", "System Database", DEFAULT_DB_SIZE);
 			systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
 			{
 				
@@ -172,7 +172,7 @@ public class DBFactory
 
 	private void deleteDB(final DBOpenRequest request, final String name, final int version, final SQLStatementErrorCallback errorCallback)
 	{
-    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
+    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, name, DEFAULT_DB_SIZE);
     	database.transaction(new SQLDatabase.SQLTransactionCallback()
 		{
 			@Override
@@ -306,7 +306,7 @@ public class DBFactory
     private void openDB(final String name, final int oldVersion, final int newVersion, 
     					final DBOpenRequest request, final SQLTransaction.SQLStatementErrorCallback errorCallback)
     {
-    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
+    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, name, DEFAULT_DB_SIZE);
     	request.setReadyState("done");
     	if (newVersion <=0 || oldVersion > newVersion)
     	{

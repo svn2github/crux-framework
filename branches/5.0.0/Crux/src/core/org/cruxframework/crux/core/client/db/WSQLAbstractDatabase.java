@@ -53,7 +53,7 @@ public abstract class WSQLAbstractDatabase extends AbstractDatabase
 	{
 		if (!initialized)
 		{
-			systemDatabase = SQLDatabaseFactory.openDatabase("__sysdb__", 1, "System Database", DEFAULT_DB_SIZE);
+			systemDatabase = SQLDatabaseFactory.openDatabase("__sysdb__", "System Database", DEFAULT_DB_SIZE);
 			systemDatabase.transaction(new SQLDatabase.SQLTransactionCallback()
 			{
 				
@@ -239,7 +239,7 @@ public abstract class WSQLAbstractDatabase extends AbstractDatabase
     		callback.onError("Data Error - An attempt was made to open a database using a lower version than the existing version.");
     		return;
     	}
-    	database = SQLDatabaseFactory.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
+    	database = SQLDatabaseFactory.openDatabase(name, name, DEFAULT_DB_SIZE);
     	database.transaction(new SQLDatabase.SQLTransactionCallback()
 		{
 			
@@ -517,7 +517,7 @@ public abstract class WSQLAbstractDatabase extends AbstractDatabase
 	
 	protected void deleteDBTables(final DatabaseCallback callback, final SQLStatementErrorCallback errorCallback)
 	{
-    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, 1, name, DEFAULT_DB_SIZE);
+    	final SQLDatabase database = SQLDatabaseFactory.openDatabase(name, name, DEFAULT_DB_SIZE);
     	database.transaction(new SQLDatabase.SQLTransactionCallback()
 		{
 			@Override
