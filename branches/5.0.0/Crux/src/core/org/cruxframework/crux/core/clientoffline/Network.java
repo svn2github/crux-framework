@@ -180,20 +180,18 @@ public class Network implements HasNetworkHandlers
 
 		private void onCacheHitEvent()
 		{
-			boolean oldStatus = isOnLine;
-			isOnLine = true;
-			if (!oldStatus)
+			if (!isOnLine)
 			{
+				isOnLine = true;
 				fireOnLineEvent();
 			}
 		}
 		
 		private void onCacheFailedEvent()
 		{
-			boolean oldStatus = isOnLine;
-			isOnLine = false;
-			if (oldStatus)
+			if (isOnLine)
 			{
+				isOnLine = false;
 				fireOffLineEvent();
 			}
 		}
