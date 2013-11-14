@@ -30,6 +30,8 @@ import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -787,12 +789,19 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		if (!active)
 		{
 			active = true;
-			ViewActivateEvent event = new ViewActivateEvent(this, this.getId(), parameter);
-			for (int i = 0; i < attachHandlers.size(); i++)
+			final ViewActivateEvent event = new ViewActivateEvent(this, this.getId(), parameter);
+			Scheduler.get().scheduleDeferred(new ScheduledCommand()
 			{
-				ViewActivateHandler handler = attachHandlers.get(i);
-				handler.onActivate(event);
-			}
+				@Override
+				public void execute()
+				{
+					for (int i = 0; i < attachHandlers.size(); i++)
+					{
+						ViewActivateHandler handler = attachHandlers.get(i);
+						handler.onActivate(event);
+					}
+				}
+			});
 		}
 	}
 	
