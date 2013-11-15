@@ -33,11 +33,15 @@ public class ScreenBlocker
 		containerDiv.getStyle().setPropertyPx("left", 0);
 		containerDiv.getStyle().setPropertyPx("width", width);
 		containerDiv.getStyle().setPropertyPx("height", height);
-				
 		appendChildren(containerDiv, blockingDivStyleName);
+		addPreventTouchListener(containerDiv);
 		
 		return containerDiv;
 	}
+	
+	private native void addPreventTouchListener(Element element)/*-{
+		element.addEventListener("touchstart", function(e){ e.preventDefault(); }, false);
+	}-*/;
 	
 	/**
 	 * Browser specific implementations
@@ -48,11 +52,13 @@ public class ScreenBlocker
 	protected void appendChildren(Element containerDiv, String blockingDivStyleName)
 	{
 		Element blockingDiv = DOM.createDiv();
+		
 		blockingDiv.getStyle().setProperty("position", "absolute");
 		blockingDiv.getStyle().setPropertyPx("top", 0);
 		blockingDiv.getStyle().setPropertyPx("left", 0);
 		blockingDiv.getStyle().setProperty("width", "100%");
 		blockingDiv.getStyle().setProperty("height", "100%");
+		addPreventTouchListener(blockingDiv);
 		blockingDiv.setClassName(blockingDivStyleName);
 		containerDiv.appendChild(blockingDiv);
 	}
