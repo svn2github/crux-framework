@@ -129,10 +129,15 @@
     </replace-with>   
         
 	<!-- Specify ie6 implementation for screen blocker -->
-	<replace-with
-    	class="org.cruxframework.crux.core.client.screen.ScreenBlockerIE6">
-    	<when-type-is class="org.cruxframework.crux.core.client.screen.ScreenBlocker" />
+	<replace-with class="org.cruxframework.crux.core.client.screen.widgets.ScreenBlocker.ScreenBlockerIE6_7">
+    	<when-type-is class="org.cruxframework.crux.core.client.screen.widgets.ScreenBlocker.ScreenBlockerImpl" />
    		<when-property-is name="user.agent" value="ie6" />
+    </replace-with>    
+    <replace-with class="org.cruxframework.crux.core.client.screen.widgets.ScreenBlocker.ScreenBlockerOtherBrowsers">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.widgets.ScreenBlocker.ScreenBlockerImpl" />
+        <none>
+            <when-property-is name="user.agent" value="ie6" />
+        </none>
     </replace-with>    
 
 	<!-- Specify ie6 implementation for scriptInjector -->
