@@ -24,6 +24,7 @@ import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.widgets.ScreenBlocker;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -60,7 +61,6 @@ public class Screen
 	protected RootViewContainer rootViewContainer = null;
 	protected FastList<Element> blockingDivs = new FastList<Element>();
 	protected String id;
-	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
 	protected URLRewriter urlRewriter = GWT.create(URLRewriter.class);
 	private static HandlerRegistration refreshPreviewHandler;
 
@@ -294,10 +294,10 @@ public class Screen
 			blockingDiv.getStyle().setProperty("display", "none");
 		}
 		
-		Element body = RootPanel.getBodyElement();		
-		Element blockingDiv = screenBlocker.createBlockingDiv(blockingDivStyleName, body);
-		blockingDivs.add(blockingDiv);
-		body.appendChild(blockingDiv);
+		Element body = RootPanel.getBodyElement();
+		ScreenBlocker screenBlocker = new ScreenBlocker(blockingDivStyleName); 
+		blockingDivs.add(screenBlocker.getElement());
+		body.appendChild(screenBlocker.getElement());
 	}
 	
 	/**
