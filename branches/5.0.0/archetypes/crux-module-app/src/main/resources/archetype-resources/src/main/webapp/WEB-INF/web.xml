@@ -37,12 +37,9 @@
 	<!--
 	===========================================================================
 	Development time CRUX listener and filters: not required in production
-	environment. The comments "antReplacementBlockBegin" e "antReplacementBlockEnd"
-	are used by the ant task for removing the filters when generating the
-	application distribution file. Don't remove those comments.
+	environment.
 	===========================================================================
 	-->
-	${devmode.start}
 	<listener>
         <listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</listener-class>
     </listener>
@@ -63,6 +60,5 @@
         <servlet-name>testViewServlet</servlet-name>
         <url-pattern>/viewTester/*</url-pattern>
     </servlet-mapping>
-	${devmode.end}
 
 </web-app>
