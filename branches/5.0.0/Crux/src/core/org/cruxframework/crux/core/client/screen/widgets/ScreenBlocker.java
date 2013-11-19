@@ -36,6 +36,7 @@ public class ScreenBlocker extends Composite
 		public ScreenBlockerImpl() 
 		{
 			wrapper = new SimplePanel();
+			wrapper.addStyleName("crux-ScreenBlocker");
 			initWidget(wrapper);
 		}
 		
