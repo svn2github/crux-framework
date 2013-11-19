@@ -53,7 +53,7 @@
 										<include name="archetype-catalog.xml" />
 									</fileset>
 								</copy>
-								<replace file="${project.build.directory}/archetype-catalog.xml" token="[version]" value="${version}" />
+								<replace file="${project.build.directory}/archetype-catalog.xml" token="[version]" value="${project.version}" />
 							</target>
 						</configuration>
 						<goals>
