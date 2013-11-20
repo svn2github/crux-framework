@@ -637,6 +637,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        PrintStream out = new PrintStream(coreFile);
 	        out.println("<xs:schema ");
 	        out.println("xmlns=\"http://www.cruxframework.org/offline\" ");
+	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
 	        out.println("targetNamespace=\"" + targetNS + "\" >");
 	        
 	        generateOfflineScreenElement(out);
@@ -1211,7 +1212,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("<xs:complexType name=\"XDevice\">");
 			out.println("<xs:choice maxOccurs=\"unbounded\">");
 			out.println("<xs:group ref=\"c:widgetsCrossDev\" />");
-			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
+			out.println("<xs:any namespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:choice>");
 			out.println("<xs:attribute name=\"useController\" type=\"xs:string\" use=\"required\"/>");
 			out.println("<xs:attribute name=\"useResource\" type=\"xs:string\"/>");
@@ -1263,7 +1264,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("<xs:choice maxOccurs=\"unbounded\">");
 			out.println("<xs:element ref=\"c:crossDevice\" />");
 			out.println("<xs:group ref=\"c:widgets\" />");
-			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
+			out.println("<xs:any namespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:choice>");
 			generateElementAttributesForAllViewElements(out);
 			out.println("<xs:attribute name=\"onUnload\" type=\"xs:string\"/>");
