@@ -12,8 +12,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cruxVersion>5.0.3-RC1</cruxVersion>
         <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
-		<webinf.lib.folder>${webappDirectory}/WEB-INF/lib/</webinf.lib.folder>
-		<webinf.classes.folder>${webappDirectory}/WEB-INF/classes/</webinf.classes.folder>
+        <webinf.folder>${webappDirectory}/WEB-INF/</webinf.folder>
+        <webinf.lib.folder>${webinf.folder}/lib/</webinf.lib.folder>
+        <webinf.classes.folder>${webinf.folder}/classes/</webinf.classes.folder>
 		<webappSourceDir>${basedir}/src/main/webapp</webappSourceDir>
 		<sourceDir>${project.build.sourceDirectory}</sourceDir>
 	</properties>
@@ -40,27 +41,7 @@
 			<version>${cruxVersion}</version>
 		</dependency>
 	</dependencies>
-	
-	<profiles>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <devmode.start>&lt;!--</devmode.start>
-                <devmode.end>--&gt;</devmode.end>
-            </properties>
-        </profile>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <devmode.start></devmode.start>
-                <devmode.end></devmode.end>
-            </properties>
-        </profile>
-    </profiles>
-	
+		
 	<build>
 		<plugins>
 			<!-- Compile -->
@@ -134,6 +115,7 @@
 				</executions>
 				<configuration>
 					<webappDirectory>${webappDirectory}</webappDirectory>
+					<warSourceExcludes>WEB-INF/web.xml</warSourceExcludes>
 					<packagingExcludes>
 						**/gwt-dev*.jar,
 						**/gwt-user*.jar,
@@ -149,9 +131,8 @@
 					</packagingExcludes>
 				</configuration>
 			</plugin>
-			<!-- Run Service Mapper -->
+			<!-- Run Crux Compiler -->
 			<plugin>
-				<!-- Run Crux Compiler -->
 			    <artifactId>maven-antrun-plugin</artifactId>
 			    <version>1.6</version>
 			    <executions>
@@ -160,56 +141,45 @@
 			            <phase>prepare-package</phase>
 			            <configuration>
 				    		<target>
-                                <echo message="Running Service Mapper..." />
-                                <property name="build.classpath" refid="maven.compile.classpath" />
-                                <java classname="org.cruxframework.crux.tools.servicemap.ServiceMapper"
-                                    fork="true">
-                                    <classpath>
-                                        <path refid="maven.compile.classpath" />
-                                    </classpath>
-                                    <arg value="projectDir" />
-                                    <arg value="${webappDirectory}" />
-                                </java>
-								<echo message="Running Crux Compiler..." />
-								<property name="build.classpath" refid="maven.compile.classpath" />
-								<java classname="org.cruxframework.crux.tools.compile.CruxCompiler"
-									fork="true">
+								<taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
 									<classpath>
 										<path refid="maven.compile.classpath" />
 									</classpath>
-									<arg value="sourceDir" />
-									<arg value="${sourceDir}" />
-							
-									<arg value="webDir" />
-									<arg value="${webappDirectory}" />
-							
-									<arg value="resourcesDir" />
-									<arg value="${webinf.classes.folder}" />
-							
-									<arg value="outputDir" />
-									<arg value="${webappDirectory}" />
-							
-									<arg value="outputCharset" />
-									<arg value="UTF-8" />
-							
-									<arg value="-localWorkers" />
-									<arg value="2" />
-							
-									<arg value="-logLevel" />
-									<arg value="INFO" />
-							
-									<arg value="pageFileExtension" />
-									<arg value="html" />
-							
-									<arg value="-keepPagesGeneratedFiles" />
-							
-									<arg value="-doNotPreCompileJavaSource" />
-							
+								</taskdef>
+								
+								<blockremove beginmarker="&lt;!--antReplacementBlockBegin--&gt;" 
+											 endmarker="&lt;!--antReplacementBlockEnd--&gt;" file="${webinf.folder}/web.xml" />
+											 
+								<serviceMapper projectDir="${webappDirectory}">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+										<pathelement path="${webinf.classes.folder}" />
+									</classpath>
+								</serviceMapper>
+
+								<cruxmodulecompiler srcDir="${sourceDir}" keepPagesGeneratedFiles="true" outputDir="${webappDirectory}" 
+									          webDir="${webappDirectory}" pagesOutputDir="${webappDirectory}" outputCharset="UTF-8" 
+									          doNotPreCompileJavaSource="true" pageFileExtension="html">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+									</classpath>
+						
+									<!-- change these two parameters if you need to modify memory settings -->
 									<jvmarg value="-Xmx768M" />
 									<jvmarg value="-Xms256M" />
-									<jvmarg
-										value="-DCruxToolsConfig.compilerClass=org.cruxframework.crux.tools.compile.CruxModuleCompiler" />
-								</java>
+						
+									<arg value="-localWorkers" />
+									<arg value="2" />
+						
+									<!-- use these parameters if you want to modify GWT output settings
+									<jvmarg value="-Xdebug" />
+									<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" />
+									<arg value="-style"/>
+									<arg value="DETAILED"/>
+									<arg value="-logLevel"/>
+									<arg value="DEBUG"/>
+									-->
+								</cruxmodulecompiler>
 				    		</target>
 			            </configuration>
 			            <goals>
