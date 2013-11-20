@@ -2,7 +2,7 @@
 
 <project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <property name="dist" location="dist" />
-    <property name="version" value="5.0.3-RC1" />
+    <property name="version" value="5.0.4-RC-SNAPSHOT" />
 
     <!-- define Crux dist folder -->
     <property name="dist_crux" location="../../dist" />
