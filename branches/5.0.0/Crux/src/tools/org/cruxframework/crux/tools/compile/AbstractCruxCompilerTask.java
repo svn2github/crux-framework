@@ -49,6 +49,7 @@ public abstract class AbstractCruxCompilerTask extends Task
 	private Boolean indentPages;
 	private Boolean keepPagesGeneratedFiles;
 	private boolean failOnError = true;
+	private Boolean doNotPreCompileJavaSource;
 	
 	public void addClasspath(Path classpath)
 	{
@@ -113,6 +114,11 @@ public abstract class AbstractCruxCompilerTask extends Task
 	public void setKeepPagesGeneratedFiles(Boolean keepPagesGeneratedFiles)
     {
     	this.keepPagesGeneratedFiles = keepPagesGeneratedFiles;
+    }
+	
+	public void setDoNotPreCompileJavaSource(Boolean doNotPreCompileJavaSource)
+    {
+    	this.doNotPreCompileJavaSource = doNotPreCompileJavaSource;
     }
 
 	public void setSrcDir(File srcDir)
@@ -262,5 +268,11 @@ public abstract class AbstractCruxCompilerTask extends Task
 		{
 			javatask.createArg().setValue("-keepPagesGeneratedFiles");
 		}
+		
+		if (this.doNotPreCompileJavaSource != null && this.doNotPreCompileJavaSource)
+		{
+			javatask.createArg().setValue("-doNotPreCompileJavaSource");
+		}
+		
     }
 }
