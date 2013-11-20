@@ -1,0 +1,20 @@
+<v:view 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:v="http://www.cruxframework.org/view" 
+	xmlns:core="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	useController="mainController" title="Home" useResource="siteDeviceResources,siteCommonResources"> 
+	
+	<center>
+		<crux:promoBanner id="promoBanner" largeBannersHeight="300px" smallBannersHeight="250px" 
+			autoTransitionInterval="20000" transitionDuration="400" width="100%">
+			<crux:banner image="${siteDeviceResources.bannerWhatIsCrux}" buttonLabel="" title="O que é?" text="Crux é um framework inovador para desenvolvimento de sistemas Web. Com ele você cria aplicações velozes, interativas e portáveis, transparentemente."/>
+			<crux:banner image="${siteDeviceResources.bannerCrossDevice}" buttonLabel="" title="Multi-Dispositivo!" text="Com o Crux você desenvolve aplicações Web que se adequam automaticamente ao dispositivo cliente. Usabilidade máxima no celular, tablet ou desktop, simultaneamente."/>
+			<crux:banner image="${siteDeviceResources.bannerFast}" buttonLabel="" title="Ultra Veloz!" text="As aplicações desenvolvidas com o Crux são insuperavelmente rápidas e escaláveis. Baixo tráfego de rede, processamento cliente otimizado, e consumo de memória irrisório no servidor."/>
+			<crux:banner image="${siteDeviceResources.bannerSocial}" buttonLabel="" title="Open Source!" text="O Crux é um projeto de código aberto, disponibilizado sob a licença Apache 2.0. Venha fazer parte da comunidade Crux! Colabore, critique, codifique! O Crux é seu também!"/>
+			<crux:banner image="${siteDeviceResources.bannerJava}" buttonLabel="" title="Java!" text="Com o Crux você escreve em Java, sempre! Cliente e servidor conversam a mesma língua, enviando e recebendo objetos comuns aos dois lados. Já imaginou?"/>
+		</crux:promoBanner>
+	</center>
+	
+</v:view>
