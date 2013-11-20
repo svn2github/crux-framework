@@ -24,8 +24,11 @@ public class BlockRemoveTask extends Task
 			String content = read(file);
 			int indexBegin = content.indexOf(beginMarker);
 			int indexEnd = content.indexOf(endMarker);
-			content = content.substring(0, indexBegin) + content.substring(indexEnd + endMarker.length());
-			write(content, file);
+			if (indexBegin >= 0 && indexEnd > indexBegin)
+			{
+				content = content.substring(0, indexBegin) + content.substring(indexEnd + endMarker.length());
+				write(content, file);
+			}
 		}
 		catch (Exception e)
 		{
