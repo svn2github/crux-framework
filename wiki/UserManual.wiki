@@ -1,7 +1,11 @@
 #labels Featured,Phase-Implementation
 = Crux 4.0.0 =
 
+<font color="#D1B800">
+<b>
 Crux 5.0.0 is now released! Some of the features presented above are slightly different in new release. A new documentation is comming soon, so please stay tuned!
+</b>
+</font>
 
 = 1 Introduction =
 
