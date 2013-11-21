@@ -18,18 +18,18 @@ package org.cruxframework.crux.widgets.client.dialog;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.CancelEvent;
 import org.cruxframework.crux.widgets.client.event.CancelHandler;
 import org.cruxframework.crux.widgets.client.event.HasCancelHandlers;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAnimation;
@@ -335,9 +335,9 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 		okButton.setText(WidgetMsgFactory.getMessages().okLabel());
 		okButton.addStyleName("button");
 		okButton.addStyleName("okButton");
-		okButton.addClickHandler(new ClickHandler()
+		okButton.addSelectHandler(new SelectHandler()
 		{
-			public void onClick(ClickEvent event)
+			public void onSelect(SelectEvent event)
 			{
 				hide();
 				try
@@ -364,9 +364,9 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 		cancelButton.setText(WidgetMsgFactory.getMessages().cancelLabel());
 		cancelButton.addStyleName("button");
 		cancelButton.addStyleName("cancelButton");
-		cancelButton.addClickHandler(new ClickHandler()
+		cancelButton.addSelectHandler(new SelectHandler()
 		{
-			public void onClick(ClickEvent event)
+			public void onSelect(SelectEvent event)
 			{
 				hide();
 				try

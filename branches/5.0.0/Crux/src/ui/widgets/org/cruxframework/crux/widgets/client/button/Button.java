@@ -20,6 +20,8 @@ import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -129,7 +131,16 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 			event.stopPropagation();
 			if (isEnabled())
 			{
-				select();
+				//TODO: check this! Giving some time to onTouchEnd finalize.
+				//If we don't do it, focus events that runs inside any selectHandler
+				//will be overridden by (some crazy?) focus events onTouchEnd.
+				Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+					@Override
+					public boolean execute() {
+						select();
+						return false;
+					}
+				}, 500);
 			}
 			resetHandlers();
 		}
