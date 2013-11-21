@@ -119,6 +119,7 @@
 					<warSourceExcludes>WEB-INF/web.xml</warSourceExcludes>
                     <packagingExcludes>
                         **/gwt-dev*.jar,
+                        **/gwt-codeserver*.jar,
                         **/gwt-user*.jar,
                         **/validation-api*.jar,
                         **/crux-dev*.jar,
@@ -192,6 +193,7 @@
         </plugins>
     </build>
 	<profiles>
+		<!-- Run Schema Generator -->
 		<profile>
 			<id>generate-schemas</id>
 			<activation>
@@ -199,38 +201,66 @@
 			</activation>
 			<build>
 				<plugins>
-				<!-- Run Schema Generator -->
-				<plugin>
-				    <artifactId>maven-antrun-plugin</artifactId>
-				    <version>1.6</version>
-				    <executions>
-				        <execution>
-					    	<id>generate-xsds</id>
-				            <phase>compile</phase>
-				            <configuration>
-					    		<target>
-									<taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
-										<classpath>
-											<path refid="maven.compile.classpath" />
-										</classpath>
-									</taskdef>
-							        <generateSchemas outputDir="${xsd.dir}" inputCharset="UTF-8">
-							            <classpath>
-							                <path refid="maven.compile.classpath" />
-							                <pathelement location="${sourceDir}" />
-							            </classpath>
-							        </generateSchemas>
-					    		</target>
-				            </configuration>
-				            <goals>
-				                <goal>run</goal>
-				            </goals>
-				       </execution>
-				   </executions>
-				</plugin>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.6</version>
+						<configuration>
+							<target>
+								<taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+									</classpath>
+								</taskdef>
+								<generateSchemas outputDir="${xsd.dir}" inputCharset="UTF-8">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+										<pathelement location="${sourceDir}" />
+									</classpath>
+								</generateSchemas>
+							</target>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
+		<!-- Run Code Server -->
+		<profile>
+			<id>run-codeserver</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+					    <artifactId>maven-antrun-plugin</artifactId>
+					    <version>1.6</version>
+			            <configuration>
+				    		<target>
+								<echo message="Starting Code server..." />
+								<java classname="org.cruxframework.crux.tools.codeserver.CodeServer"
+									fork="true">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+						                <pathelement location="${webinf.classes.folder}" />
+									</classpath>
+									<arg value="-sourceDir" />
+									<arg value="${sourceDir}" />
+							
+									<arg value="-moduleName" />
+									<arg value="cruxsite" />
+							
+									<!--
+									<jvmarg value="-Xdebug" />
+									<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" />
+									-->
+									<jvmarg value="-Xmx768M" />
+									<jvmarg value="-Xms256M" />
+								</java>
+				    		</target>
+			            </configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>		
 	</profiles>
 </project>
-        
