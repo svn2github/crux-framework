@@ -74,6 +74,42 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	box-shadow: none;
 }
 
+/******************************************************************************
+    Screen Blocker
+*******************************************************************************/
+
+@external crux-DefaultScreenBlocker, crux-ProgressDialogScreenBlocker, crux-MessageDialog, crux-MessageDialogScreenBlocker;
+.crux-ProgressDialogScreenBlocker, .crux-MessageDialogScreenBlocker
+{
+    background-color: #000000;
+    filter:"alpha(opacity=45)";
+    -moz-opacity: 0.45;
+    opacity: .45;
+
+    display: block;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.45);
+    height: 200%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 200%;
+    z-index: 98;
+    -moz-box-sizing: border-box;
+}
+
+.crux-MessageDialog
+{
+    z-index: 99;
+}
+
+.crux-DefaultScreenBlocker
+{
+    background-color: #FFFFFF;
+    opacity: .01;
+    filter:"alpha(opacity=1)";
+    cursor: wait;
+}
+
 @external crux-MenuTabsDisposal, menuEntry, menuSection;
 .crux-MenuTabsDisposal
 {
