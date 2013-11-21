@@ -15,6 +15,7 @@
 		<webinf.classes.folder>${webappDirectory}/WEB-INF/classes/</webinf.classes.folder>
 		<webappSourceDir>${basedir}/src/main/webapp</webappSourceDir>
 		<sourceDir>${project.build.sourceDirectory}</sourceDir>
+        <xsd.dir>${basedir}/xsd</xsd.dir>
 	</properties>
 	
 	<dependencies>
@@ -194,6 +195,36 @@
 				       </execution>
 				   </executions>
 				</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- Run Schema Generator -->
+		<profile>
+			<id>generate-schemas</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.6</version>
+						<configuration>
+							<target>
+								<taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+									</classpath>
+								</taskdef>
+								<generateSchemas outputDir="${xsd.dir}" inputCharset="UTF-8">
+									<classpath>
+										<path refid="maven.compile.classpath" />
+										<pathelement location="${sourceDir}" />
+									</classpath>
+								</generateSchemas>
+							</target>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
