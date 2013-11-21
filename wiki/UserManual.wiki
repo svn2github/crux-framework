@@ -1,6 +1,8 @@
 #labels Featured,Phase-Implementation
 = Crux 4.0.0 =
 
+Crux 5.0.0 is now released! Some of the features presented above are slightly different in new release. A new documentation is comming soon, so please stay tuned!
+
 = 1 Introduction =
 
 _*Crux*_ applications are basically GWT applications. It means you must attempt to all GWT restrictions in terms of source code limitations 
