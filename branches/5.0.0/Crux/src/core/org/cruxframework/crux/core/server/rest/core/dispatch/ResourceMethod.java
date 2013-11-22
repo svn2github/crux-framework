@@ -157,6 +157,7 @@ public class ResourceMethod
 
 	private Object createTarget(HttpRequest request, HttpResponse response) throws InstantiationException, IllegalAccessException
 	{
+		//TODO criar um restServiceFactory para instanciar isso, a fim de permitir integracao com spring, guice, etc
 		Object target = resourceClass.newInstance();
 		if (isRequestAware)
 		{

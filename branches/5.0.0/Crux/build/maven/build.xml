@@ -68,6 +68,27 @@
         </copy>
     </target>
 
+	<target name="install" depends="copy-dist" description="install jars on local repository">
+		<artifact:install file="${maven-jar_crux-dev}">
+			<pom file="${poms}/pom_crux-dev.xml"/>
+		</artifact:install>
+		<artifact:install file="${maven-jar_crux-gadgets-runtime}">
+			<pom file="${poms}/pom_crux-gadgets-runtime.xml"/>
+		</artifact:install>
+		<artifact:install file="${maven-jar_crux-gadgets}">
+			<pom file="${poms}/pom_crux-gadgets.xml"/>
+		</artifact:install>
+		<artifact:install file="${maven-jar_crux-runtime}">
+			<pom file="${poms}/pom_crux-runtime.xml"/>
+		</artifact:install>
+		<artifact:install file="${maven-jar_crux-themes}">
+			<pom file="${poms}/pom_crux-themes.xml"/>
+		</artifact:install>
+		<artifact:install file="${maven-jar_crux-widgets}">
+			<pom file="${poms}/pom_crux-widgets.xml"/>
+		</artifact:install>
+	</target>
+	
 	<target name="deploy" depends="copy-dist" description="deploy snapshot version to Maven snapshot repository">
 		<artifact:mvn>
 			<arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
