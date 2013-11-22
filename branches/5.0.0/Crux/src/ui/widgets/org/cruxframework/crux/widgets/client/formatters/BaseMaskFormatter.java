@@ -21,7 +21,7 @@ import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.InvalidFormatException;
 import org.cruxframework.crux.widgets.client.maskedtextbox.MaskedTextBoxBaseFormatter;
 
-public class CustomFormatter extends MaskedTextBoxBaseFormatter implements Formatter
+public class BaseMaskFormatter extends MaskedTextBoxBaseFormatter implements Formatter
 {
 	private static FastMap<String> definitions = new FastMap<String>();
 	static
@@ -37,12 +37,7 @@ public class CustomFormatter extends MaskedTextBoxBaseFormatter implements Forma
 	private int length;
 	private String mask;
 	
-	@SuppressWarnings("unused")
-	private CustomFormatter()
-	{
-	}
-	
-	public CustomFormatter(String mask)
+	public BaseMaskFormatter(String mask)
 	{
 		int firstNonMaskPos = -1;
 		
