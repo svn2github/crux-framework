@@ -2,8 +2,8 @@
 
 <project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <property name="dist" location="dist" />
-    <property name="version" value="5.0.4-RC-SNAPSHOT" />
-
+    <property name="version" value="5.0.4" />
+    
     <!-- define Crux dist folder -->
     <property name="dist_crux" location="../../dist" />
     
@@ -59,16 +59,17 @@
 	<target name="init">
 	</target>
 
-    <target name="copy-dist">
+    <target name="copy-dist-deploy">
     	<delete dir="${dist}" failonerror="no" />
     	<mkdir dir="${dist}" />
+    	
         <copy todir="${dist}">
             <fileset dir="${dist_crux}" />
         	<globmapper from="*.jar" to="*-${version}.jar"/>
         </copy>
     </target>
 
-	<target name="install" depends="copy-dist" description="install jars on local repository">
+	<target name="install" description="install jars on local repository">
 		<artifact:install file="${maven-jar_crux-dev}">
 			<pom file="${poms}/pom_crux-dev.xml"/>
 		</artifact:install>
@@ -89,7 +90,63 @@
 		</artifact:install>
 	</target>
 	
-	<target name="deploy" depends="copy-dist" description="deploy snapshot version to Maven snapshot repository">
+    <target name="copy-dist-stage">
+        <delete dir="${dist}" failonerror="no" />
+        <mkdir dir="${dist}" />
+    	
+        <copy todir="${dist}">
+            <fileset dir="${dist_crux}" />
+            <globmapper from="*.jar" to="*-${version}.jar"/>
+        </copy>
+
+    	<!-- Tentativa 1 de gerar os arquivos -javadoc e -sources -->
+    	<!--
+    	<fileset id="fileName" dir="${dist_crux}">
+            <include name="*.jar" />
+        </fileset>
+    	<pathconvert property="files" refid="fileName" pathsep="," />
+    	
+    	<for list="${files}" param="f">
+	        <echo>@{f}</echo>
+		</for>
+    	-->
+    	
+    	<!-- Tentativa 2 de gerar os arquivos -javadoc e -sources -->
+    	<!--
+        <foreach target="compiledDir" param="fileName">
+            <fileset dir="${dist_crux}" casesensitive="yes">
+              <include name="*.jar"/>
+              <touch file="${fileName}-${version}-javadoc.jar"/>
+            </fileset>
+        </foreach>
+        
+        <target name="compiledDir">
+            <touch file="${fileName}-${version}-javadoc.jar"/>
+        </target>
+        -->
+    	
+    	<!-- Tentativa 3 de gerar os arquivos -javadoc e -sources -->
+    	<!--
+    	<dirset id="dist.contents" dir="${dist_crux}" includes="**"/>
+    	<property name="prop.dist.contents" refid="dist.contents"/>
+    	<echo>${prop.dist.contents}</echo>
+    	-->
+    	
+    	<!-- Tentativa 4 de gerar os arquivos -javadoc e -sources -->
+    	<!--
+        <copy todir="${dist}">
+            <fileset dir="${dist_crux}" />
+            <globmapper from="*.jar" to="*-${version}-javadoc.jar"/>
+        </copy>
+
+        <copy todir="${dist}">
+            <fileset dir="${dist_crux}" />
+            <globmapper from="*.jar" to="*-${version}-sources.jar"/>
+        </copy>
+        -->
+    </target>
+	
+	<target name="deploy" depends="copy-dist-deploy" description="deploy snapshot version to Maven snapshot repository">
 		<artifact:mvn>
 			<arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
 			<arg value="-Durl=${maven-snapshots-repository-url}" />
@@ -132,10 +189,12 @@
             <arg value="-DpomFile=${poms}/pom_crux-widgets.xml" />
             <arg value="-Dfile=${maven-jar_crux-widgets}" />
         </artifact:mvn>
+		
+		<delete dir="${dist}" failonerror="no" />
 	</target>
 
 	<!-- before this, update project version (both build.xml and pom.xml) from SNAPSHOT to RELEASE -->
-	<target name="stage" depends="copy-dist" description="deploy release version to Maven staging repository">
+	<target name="stage" depends="copy-dist-stage" description="deploy release version to Maven staging repository">
 		<!-- sign and deploy the main artifact -->
 		<artifact:mvn>
 			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
@@ -161,7 +220,6 @@
             <arg value="-Dfile=${maven-jar_crux-gadgets}" />
             <arg value="-Pgpg" />
         </artifact:mvn>		
-
 
         <artifact:mvn>
             <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
@@ -216,7 +274,6 @@
             <arg value="-Dclassifier=sources" />
             <arg value="-Pgpg" />
         </artifact:mvn>
-
 		
         <artifact:mvn>
             <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
@@ -302,6 +359,8 @@
             <arg value="-Dclassifier=javadoc" />
             <arg value="-Pgpg" />
         </artifact:mvn>
+		
+		<delete dir="${dist}" failonerror="no" />
 	</target>
 
 </project>
