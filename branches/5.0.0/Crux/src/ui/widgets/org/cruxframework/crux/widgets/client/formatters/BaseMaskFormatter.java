@@ -37,6 +37,9 @@ public class BaseMaskFormatter extends MaskedTextBoxBaseFormatter implements For
 	private int length;
 	private String mask;
 	
+	/**
+	 * @param mask the current field mask.
+	 */
 	public BaseMaskFormatter(String mask)
 	{
 		int firstNonMaskPos = -1;
@@ -65,6 +68,9 @@ public class BaseMaskFormatter extends MaskedTextBoxBaseFormatter implements For
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.cruxframework.crux.core.client.formatter.Formatter#format(java.lang.Object)
+	 */
 	public String format(Object input)
 	{
 		if (!(input instanceof String))
@@ -90,11 +96,6 @@ public class BaseMaskFormatter extends MaskedTextBoxBaseFormatter implements For
 		return new String(buffer);
 	}
 
-	/**
-	 *
-	 * @param pos
-	 * @return
-	 */
 	private int seekNext(int pos)
 	{
 		if (pos < -1)
