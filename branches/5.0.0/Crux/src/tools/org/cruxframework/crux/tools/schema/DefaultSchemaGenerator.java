@@ -1262,7 +1262,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("<xs:element name=\"view\" type=\"View\" />");
 			out.println("<xs:complexType name=\"View\">");
 			out.println("<xs:choice maxOccurs=\"unbounded\">");
-			out.println("<xs:element ref=\"c:crossDevice\" />");
 			out.println("<xs:group ref=\"c:widgets\" />");
 			out.println("<xs:any namespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:choice>");
