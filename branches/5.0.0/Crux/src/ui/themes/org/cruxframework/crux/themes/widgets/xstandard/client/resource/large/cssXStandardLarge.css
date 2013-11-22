@@ -334,8 +334,6 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 .crux-ProgressDialogScreenBlocker, .crux-MessageDialogScreenBlocker
 {
     background-color: #000000;
-    filter:"alpha(opacity=45)";
-    -moz-opacity: 0.45;
     opacity: .45;
 
     display: block;
@@ -346,7 +344,6 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
     top: 0;
     width: 200%;
     z-index: 98;
-    -moz-box-sizing: border-box;
 }
 
 .crux-MessageDialog
