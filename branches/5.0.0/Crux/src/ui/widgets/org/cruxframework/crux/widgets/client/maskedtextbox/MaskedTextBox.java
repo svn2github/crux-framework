@@ -108,7 +108,6 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 
 	/**
 	 * Constructor
-	 * If you don't inform the formatter right now, you can do it later...
 	 */
 	public MaskedTextBox()
 	{
