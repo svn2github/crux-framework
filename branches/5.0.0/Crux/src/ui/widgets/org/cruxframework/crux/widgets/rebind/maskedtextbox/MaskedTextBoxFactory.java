@@ -89,7 +89,7 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
 		}	
 		else
 		{
-			throw new CruxGeneratorException("The attribute formatter is required for MaskedTextBox.");	
+			out.println(className + " " + context.getWidget()+" = new "+className+"();");	
 		}
 	}	
 	

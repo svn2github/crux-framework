@@ -101,16 +101,28 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	 */
 	public static MaskedTextBox wrap(Element element, Formatter formatter) 
 	{
-		return new MaskedTextBox(TextBox.wrap(element), formatter);
+		MaskedTextBox maskedTextBox = new MaskedTextBox(TextBox.wrap(element));
+		maskedTextBox.setFormatter(formatter);
+		return maskedTextBox;
 	}
 
+	/**
+	 * Constructor
+	 * If you don't inform the formatter right now, you can do it later...
+	 */
+	public MaskedTextBox()
+	{
+		this(new TextBox());
+	}
+	
 	/**
 	 * Constructor
 	 * @param formatter
 	 */
 	public MaskedTextBox(Formatter formatter)
 	{
-		this(new TextBox(), formatter);
+		this(new TextBox());
+		setFormatter(formatter);
 	}
 	
 	/**
@@ -118,7 +130,7 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	 * @param textBox
 	 * @param formatter
 	 */
-	protected MaskedTextBox(TextBox textBox, Formatter formatter)
+	protected MaskedTextBox(TextBox textBox)
 	{
 		String id = textBox.getElement().getId();
 		if (id == null || id.length() == 0)
@@ -127,7 +139,6 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 		}
 		this.textBox = textBox;
 		this.textBox.setStyleName(DEFAULT_STYLE_NAME);
-		setFormatter(formatter);
 		initWidget(this.textBox);
 		PasteEventSourceRegisterFactory.getRegister().registerPasteEventSource(this, this.textBox.getElement());
 	}
