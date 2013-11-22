@@ -26,12 +26,9 @@ import com.google.gwt.core.client.JsArrayMixed;
  */
 public class IDXFileCursor extends IDXCursor<String, Blob> implements FileCursor
 {
-//	private boolean usesWebSQL;
-
 	protected IDXFileCursor(IDBCursorWithValue idbCursor)
     {
 	    super(idbCursor);
-//		usesWebSQL = NativeDBHandler.usesWebSQL();
     }
 
 	@Override
@@ -45,25 +42,7 @@ public class IDXFileCursor extends IDXCursor<String, Blob> implements FileCursor
 	@Override
     public void update(final Blob file)
     {
-//		if (usesWebSQL)
-//		{
-//			FileReader fileReader = FileReader.createIfSupported();
-//			assert(fileReader != null):"Unsupported browser";
-//			fileReader.readAsDataURL(file, new ReaderStringCallback()
-//			{
-//				@Override
-//				public void onComplete(String result)
-//				{
-//					FileInfo fileInfo = FileInfo.createObject().cast();
-//					fileInfo.setFileData(result);
-//					idbCursor.update(file);
-//				}
-//			});
-//		}
-//		else
-//		{
-			idbCursor.update(file);
-//		}
+		idbCursor.update(file);
     }
 
 	@Override
@@ -75,11 +54,6 @@ public class IDXFileCursor extends IDXCursor<String, Blob> implements FileCursor
 	@Override
     public Blob getValue()
     {
-//		if (usesWebSQL)
-//		{
-//		    FileInfo fileInfo = idbCursor.getValue().cast();
-//			return FileUtils.fromDataURI(fileInfo.getFileData());
-//		}
 	    return idbCursor.getValue().cast();
     }
 
