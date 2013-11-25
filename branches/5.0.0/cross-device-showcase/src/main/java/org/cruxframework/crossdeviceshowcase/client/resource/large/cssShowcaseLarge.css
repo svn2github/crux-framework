@@ -4,6 +4,17 @@ BODY
 	background-image: -webkit-linear-gradient(#EEEEEE,#CCCCCC);
 }	
 
+@external topBar;
+.topBar
+{
+	background-color: #444949;
+	height: 25px;
+	text-align: right;
+	width: 100%;
+	border: solid 0px;
+	border-bottom: solid 1px #FFFFFF;
+}
+
 @external speechBubble;
 .speechBubble
 {
@@ -49,11 +60,13 @@ BODY
 	padding-bottom: 10px;
 }
 
-@external crux-MenuTabsDisposal; 
-.crux-MenuTabsDisposal
+@external crux-MenuTabsDisposal, menuEntriesContainer, menuPanel;  
+.crux-MenuTabsDisposal .menuEntriesContainer
 {
-	width: 80%;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 0px;
+	padding-top: 90px;
+	background-repeat: no-repeat;
+	background-position: top;
+	padding-top: 80px;
+	background-image: url(img/logo-large.png);
+	background-position: center 10px;
 }
