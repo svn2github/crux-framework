@@ -59,37 +59,95 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	padding-bottom: 5px;
 }
 
-@external crux-MenuTabsDisposal, menuEntry, menuSection;
+@external crux-MenuTabsDisposal, menuTabsSplitPanel, menuEntriesContainer, menuPanel, menuEntry, menuSection, menuSectionEntries, menuSectionEntries-closed;
 .crux-MenuTabsDisposal
 {
-	padding: 5px;
+	height: 100%;
+	padding: 0px;
+}
+.crux-MenuTabsDisposal .menuTabsSplitPanel
+{
+	background-color: #FFFFFF;	
+}
+.crux-MenuTabsDisposal .menuEntriesContainer
+{
+	width: 300px;
+}
+/* Styling the TD that wraps the menu container */
+TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
+{
+	background-image: url(noise.png);
+	background-color: #EAEAEA;
+	width: 300px;
+	border: none;
+	border-right: solid 1px #EEEEEE;
 }
 .crux-MenuTabsDisposal .menuEntry
 {
-	width: 100%;
-	margin-bottom: 0px;
-	margin-top: 0px;
-	border-radius: 0px !important;
-	border-top: 0px;
-	min-height: 30px;
+	margin: 0px;
+	border: solid 0px;
+	height: 40px;
+	background: white;
+	width: 85%;
+	margin-left: 15%;
+	box-shadow: 0px -20px 10px 0px rgba(0,0,0,0.02) inset;
+	color: #4c6879;
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: none;
+	-webkit-user-select: none;
+	outline: 0;
+	position: relative;
+	border-radius: 0px;
+	cursor: pointer;
 }
+.crux-MenuTabsDisposal .menuEntry:after
+{
+	content: "";
+	height: 40px;
+	width: 30px;
+	border: none;
+	position: absolute;
+	top: 0px;
+	background: #81aa32;
+	right: 0px;
+	box-shadow: 0px -10px 15px -1px rgba(0,80,0,0.1) inset;
+	color: white;
+	padding: 0px;
+	overflow: auto;
+	background-image: url(right-arrow.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
 .crux-MenuTabsDisposal .menuSection
 {
-	color: #FFFFFF;
-	background-color: #606060;
-	text-shadow: 0 1px 0 #000000;
-	border-radius: 3px;
-	border-bottom-left-radius: 0px;
-	border-bottom-right-radius: 0px; 
+	height: 50px;
+	color: #fff;
+	background-color: #4496c6;
+	background-image: -webkit-linear-gradient(top, #4496c6, #3d8dbd);
+	font-size: 16px;
+	padding: 0px;
+	text-align: left;
+	line-height: 50px;
+	padding-left: 40px;
+	-webkit-font-smoothing: antialiased;
 	-webkit-user-select: none;
-	padding: 6px;
-	text-align: center;
-	border: 1px solid #000000;
-	border-bottom: 1px solid rgba(0,0,0,0.3);
+	outline: 0;
+	cursor: pointer;
+	border: solid 0px;
+	width: 100%;
 }
-.menuEntry~.menuSection 
+.crux-MenuTabsDisposal .menuSectionEntries
 {
-	margin-top: 5px;
+	max-height: 500px;
+	-webkit-transition: max-height 0.5s ease-in-out;
+	overflow: hidden;
+}
+.crux-MenuTabsDisposal .menuSectionEntries-closed
+{
+	max-height: 0px;    
 }
 
 @external crux-TabContainer, crux-TabPanelBottom; 
@@ -99,54 +157,66 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 @external crux-TabBarFirst-wrapper, crux-TabBarRest-wrapper;  
 .crux-TabContainer
 {
-	background-color: #606060;
-	border-radius: 3px;
-	box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+	background-color: #FFFFFF;
 }
 .crux-TabBar
 {
-	height: 30px;
+	height: 55px;
+	background-color: #E6E6E6;
+	box-shadow: inset 0 -20px 20px -10px rgba(0,0,0,0.2);
+	
 }
 .crux-TabPanelBottom
 {
-	border-radius: 3px;
-	background-color: #FCFCFC;
+	background-color: #FFFFFF;
 	height: 100%;
+	box-shadow: 10px 0px 20px -10px rgba(0,0,0,0.3) inset;
 }
 .crux-TabBarItem
 {
-	border: solid 1px #ddd;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
-	border-bottom: 0px;
-	height: 25px;
+	height: 43px;
+	min-width: 140px;
+	background-color: #636969;
 	opacity: 0.75;
-	background-color: #DDDDDD;
-	margin-left: 1px;
+	margin-left: 0px;
 	outline: 0px;
 	cursor: default;
+	-webkit-user-select: none;
+	box-shadow: inset -20px 0px 20px -10px rgba(0,0,0,0.2);
+	position: relative;
 }
 .crux-TabBarItem-selected
 {
-	background-color: #FCFCFC;
+	background-color: #4496C6;
 	opacity: 1;
+	box-shadow: none;
+}
+.crux-TabBarItem-selected:after
+{
+	position: absolute;
+	height: 0;
+	width: 0;
+	content: "";
+	border: solid 8px #fff;
+	-webkit-transform: rotate(45deg);
+	right: 7px;
+	bottom: -12px;
 }
 .crux-TabBarItem .flapLabel
 {
-	color: #1C5994;
-	text-shadow: 0px 1px #FFFFFF;
-	padding-top: 2px;
+	font-size: 18px;
+	color: #FFFFFF;
+	padding-top: 10px;
+	padding-left: 10px;
 	cursor: default;
+	-webkit-font-smoothing: antialiased;
 }
 .flapCloseButton 
 {
-	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
-	border: 1px solid #206080;
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-	border-radius: 2px;
+	background-color: transparent;
 	-webkit-user-select: none;
 	outline: 0;
-	transition: box-shadow ease-in-out 0.15s;	
+	transition: font-size ease-in-out 0.15s;	
 	height: 14px;
 	width: 14px;
 	margin-left: 5px;
@@ -157,44 +227,61 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 {
 	content: 'X';
 	color: #FFFFFF;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	-webkit-user-select: none;
 	font-size: 10px;
 	padding-right: 1px;
 }
 .flapCloseButton:hover 
 {
-	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+	font-size: 14px;
 }
 .crux-RollingPanelPreviousWrapper, .crux-RollingPanelNextWrapper 
 {
-	width: 25px;
-	height: 25px;
+	width: 40px;
+	height: 40px;
+}
+.crux-RollingPanelPreviousWrapper
+{
+	box-shadow: 10px 0px 20px -10px rgba(0,0,0,0.3) inset;
 }
 .crux-RollingPanelPrevious, .crux-RollingPanelNext
 {
-	height: 25px;
+	background-color: transparent;
+	height: 40px;
 	margin-top: 4px;
-	width: 24px;
-	color: #FFFFFF;
-	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
-	border: 1px solid #206080;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-	box-shadow: 0 1px 0 rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2);
+	width: 40px;
+	color: transparent !important;
 	text-align: center;
-	font-size: 12px;
+	font-size: 18px;
+	border: none;
+	position: relative;
+	cursor: pointer;
+	outline: 0;
 }
-.crux-RollingPanelPrevious
+
+.crux-RollingPanelPrevious:after, .crux-RollingPanelNext:after
 {
-	border-top-left-radius: 4px;
+	height: 40px;
+	width: 40px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-position: center;
+	background-repeat: no-repeat;
+	content: "";
+	cursor: pointer;
 }
-.crux-RollingPanelNext
+.crux-RollingPanelNext:after
 {
-	border-top-right-radius: 4px;
+	background-image: url(right-arrow.png);	
+}
+.crux-RollingPanelPrevious:after
+{
+	background-image: url(left-arrow.png);	
 }
 .crux-RollingPanelPrevious:hover, .crux-RollingPanelNext:hover 
 {
-	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+	color: #FFFFFF;
 }
 .crux-RollingPanelPreviousWrapper-disabled
 {
@@ -266,7 +353,7 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	box-shadow: 0 0 10px rgba(90,90,90,0.1);
 	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
 	padding: 10px;
-	width: calc(100% - 20px);
+	width:calc(100% - 20px);
 }
 .crux-FileUploader .filePanel .thumbnailImage
 {

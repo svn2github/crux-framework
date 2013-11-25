@@ -15,6 +15,9 @@
  */
 package org.cruxframework.crux.widgets.client.disposal.menutabsdisposal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.Screen;
@@ -28,7 +31,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author Gesse Dafe
@@ -40,6 +42,9 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 
 	private FlowPanel menuPanel;
 	private TabContainer viewContainer;
+	private Map<String, FlowPanel> sections = new HashMap<String, FlowPanel>();
+	private FlowPanel visibleItems = null;
+	private FlowPanel lastSectionAdded = null;
 	
 	@Override
 	public void addMenuEntry(final String label, final String targetView)
@@ -56,7 +61,14 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 			}
 		});
 		
-		menuPanel.add(menuItem);
+		if(lastSectionAdded == null)
+		{
+			menuPanel.add(menuItem);
+		}
+		else
+		{
+			lastSectionAdded.add(menuItem);
+		}
 	}
 	
 	@Override
@@ -105,12 +117,44 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	}
 
 	@Override
-	public void addMenuSection(String label)
+	public void addMenuSection(final String label)
 	{
-		Label separator = new Label();
+		Button separator = new Button();
 		separator.setStyleName("menuSection");
 		separator.getElement().getStyle().setDisplay(Display.BLOCK);
 		separator.setText(label);
+		
+		separator.addSelectHandler(new SelectHandler() 
+		{
+			@Override
+			public void onSelect(SelectEvent event) 
+			{
+				FlowPanel items = sections.get(label);
+				if(items != null)
+				{
+					if(items == visibleItems)
+					{
+						items.addStyleDependentName("closed");
+						visibleItems = null;
+					}
+					else
+					{
+						items.removeStyleDependentName("closed");
+						visibleItems = items;
+					}
+				}
+			}
+		});
+		
+		FlowPanel sectionItems = new FlowPanel();
+		sectionItems.setStyleName("menuSectionEntries");
+		sectionItems.addStyleDependentName("closed");
+		
+		sections.put(label, sectionItems);
+		lastSectionAdded = sectionItems;
+		
 		menuPanel.add(separator);
+		menuPanel.add(sectionItems);
+		
 	}
 }
