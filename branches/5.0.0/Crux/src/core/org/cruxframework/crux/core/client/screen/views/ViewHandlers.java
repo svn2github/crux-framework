@@ -118,7 +118,7 @@ public class ViewHandlers
 	    if (!hasWindowResizeHandler && viewContainer.hasResizeHandlers())
 	    {
 	    	hasWindowResizeHandler = true;
-	    	resizeHandler = Window.addResizeHandler(new ResizeHandler()
+	    	resizeHandler = addWindowResizeHandler(new ResizeHandler()
 			{
 				@Override
 				public void onResize(ResizeEvent event)
@@ -128,7 +128,7 @@ public class ViewHandlers
 						boundContainers.get(i).notifyViewsAboutWindowResize(event);
 					}
 				}
-			});
+			}, false);
 	    }
     }
 
@@ -413,12 +413,18 @@ public class ViewHandlers
 	 * @param handler
 	 * @return
 	 */
-	private static HandlerRegistration addWindowResizeHandler(final ResizeHandler handler) 
+	private static HandlerRegistration addWindowResizeHandler(final ResizeHandler handler, final boolean lazyCheck) 
 	{
 		ResizeHandler resizeHandler = new ResizeHandler() 
 		{
 			public void onResize(ResizeEvent event) 
 			{
+				if(!lazyCheck)
+				{
+					handler.onResize(event);
+					return;
+				}
+				
 				final ResizeBeginEndExecutor executor = new ResizeBeginEndExecutor(100, event) 
 				{
 					private int clientHeight = Window.getClientHeight();
