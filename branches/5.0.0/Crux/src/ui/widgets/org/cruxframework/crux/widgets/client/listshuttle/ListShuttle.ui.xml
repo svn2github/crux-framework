@@ -1,0 +1,37 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:gwt='urn:import:com.google.gwt.user.client.ui'
+	xmlns:cell='urn:import:com.google.gwt.user.cellview.client'>
+
+	<gwt:HTMLPanel styleName="list-shuttle">
+		<div ui:field="containerDiv" class="row-fluid" style="width: 100%;height: 100%;margin-top: 0;">
+			<div class="span5" style="height: inherit">
+				<fieldset style="height: 90%">
+					<legend><gwt:Label ui:field="availableLabel" styleName="available-label" /></legend>
+
+					<div style="overflow: auto; height: 100%;">
+						<cell:CellList ui:field="availableCellList">
+						</cell:CellList>
+					</div>
+				</fieldset>
+			</div>
+			<div class="span2 text-center" style="padding-top: 20px;">
+			    <gwt:Anchor ui:field="addAllAnchor" styleName="add-all" /><br />
+				<gwt:Anchor ui:field="addSelectedAnchor" styleName="add-selected" /><br />
+				<gwt:Anchor ui:field="removeSelectedAnchor" styleName="remove-selected" /><br />
+				<gwt:Anchor ui:field="removeAllAnchor" styleName="remove-all" /><br />
+			</div>
+			<div class="span5" style="height: inherit">
+				<fieldset style="height: 90%">
+					<legend><gwt:Label ui:field="selectedLabel" styleName="selected-label" /></legend>
+
+					<div style="overflow: auto; height: 100%;">
+						<cell:CellList ui:field="selectedCellList">
+						</cell:CellList>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</gwt:HTMLPanel>
+</ui:UiBinder>
