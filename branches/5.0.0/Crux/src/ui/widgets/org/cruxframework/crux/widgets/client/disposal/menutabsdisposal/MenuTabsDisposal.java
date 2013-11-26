@@ -33,5 +33,5 @@ public interface MenuTabsDisposal extends DeviceAdaptive
 {
 	void showMenu();
 	void addMenuEntry(String label, String targetView);
-	void addMenuSection(String label);
+	void addMenuSection(String label, String additionalStyleName);
 }

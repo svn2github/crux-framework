@@ -21,6 +21,7 @@ import java.util.Map;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
@@ -117,12 +118,17 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	}
 
 	@Override
-	public void addMenuSection(final String label)
+	public void addMenuSection(final String label, String additionalStyleName)
 	{
 		Button separator = new Button();
 		separator.setStyleName("menuSection");
 		separator.getElement().getStyle().setDisplay(Display.BLOCK);
 		separator.setText(label);
+		
+		if(!StringUtils.isEmpty(additionalStyleName))
+		{
+			separator.addStyleName(additionalStyleName);
+		}
 		
 		separator.addSelectHandler(new SelectHandler() 
 		{
@@ -155,6 +161,5 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		
 		menuPanel.add(separator);
 		menuPanel.add(sectionItems);
-		
 	}
 }

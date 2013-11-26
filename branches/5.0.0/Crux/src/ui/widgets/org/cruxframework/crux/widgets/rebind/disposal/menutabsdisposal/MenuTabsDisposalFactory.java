@@ -53,7 +53,8 @@ public class MenuTabsDisposalFactory extends WidgetCreator<WidgetCreatorContext>
 	
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="menuSection")
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true)
+		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
+		@TagAttributeDeclaration(value="additionalStyleName", required=false)
 	})
 	public static class MenuSectionProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
@@ -61,7 +62,8 @@ public class MenuTabsDisposalFactory extends WidgetCreator<WidgetCreatorContext>
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
 			String label = context.readChildProperty("label");
-			out.print(context.getWidget() + ".addMenuSection(" + getWidgetCreator().getDeclaredMessage(label) + ");");
+			String style = context.readChildProperty("additionalStyleName");
+			out.print(context.getWidget() + ".addMenuSection(" + getWidgetCreator().getDeclaredMessage(label) + ", " + EscapeUtils.quote(style, false) + ");");
 		}
 	}
 	

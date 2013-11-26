@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.disposal.menutabsdisposal;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
@@ -91,12 +92,18 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 	}
 
 	@Override
-	public void addMenuSection(String label)
+	public void addMenuSection(final String label, String additionalStyleName)
 	{
 		Label section = new Label();
 		section.setStyleName("menuSection");
 		section.getElement().getStyle().setDisplay(Display.BLOCK);
 		section.setText(label);
+
+		if(!StringUtils.isEmpty(additionalStyleName))
+		{
+			section.addStyleName(additionalStyleName);
+		}
+		
 		menuPanel.add(section);
 	}
 	
