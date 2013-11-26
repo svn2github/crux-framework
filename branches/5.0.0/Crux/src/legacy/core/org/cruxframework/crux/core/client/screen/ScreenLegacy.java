@@ -30,7 +30,7 @@ import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.event.Event;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewContainer;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
