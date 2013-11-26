@@ -163,7 +163,7 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 {
 	height: 55px;
 	background-color: #E6E6E6;
-	box-shadow: inset 0 -20px 20px -10px rgba(0,0,0,0.2);
+	box-shadow: inset 0 -20px 20px -10px rgba(0, 0, 0, 0.2), 5px -0px 10px -2px rgba(0,0,0,0.15) inset;
 	
 }
 .crux-TabPanelBottom
@@ -201,7 +201,7 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	content: "";
 	border: solid 8px #fff;
 	-webkit-transform: rotate(45deg);
-	right: 7px;
+	left: 80px;
 	bottom: -12px;
 }
 .crux-TabBarItem .flapLabel
