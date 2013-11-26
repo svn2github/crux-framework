@@ -12,18 +12,22 @@
 	</head>
 	
 	<body>
-		<script type="text/javascript" src="crossdeviceshowcase/crossdeviceshowcase.nocache.js"></script>
+		<script type="text/javascript" src="crossdeviceshowcase.nocache.js"></script>
 
 		<c:screen useController="mainController" useView="*" 
 				  smallViewport="user-scalable=no, width=320" 
 				  largeViewport="user-scalable=no, width=device-width, height=device-height" 
 				  useResource="xStandardResources,showcaseResources" height="100%"/>
 
+		<div class="topBar">
+			
+		</div>
+
 		<crux:menuTabsDisposal id="menuDisposal">
-			<crux:menuSection label="Elementos de Layout"/>
-			<crux:menuEntry label="StyledPanel" targetView="styledPanel"/>
-			<crux:menuEntry label="FormDisplay" targetView="formDisplay"/>
-			<crux:menuEntry label="FileUploader" targetView="fileUploader"/>
+			<crux:menuSection label="Elementos de Layout" additionalStyleName="layoutSectionIcon"/>
+			<crux:menuEntry label="Styled Panel" targetView="styledPanel"/>
+			<crux:menuEntry label="Form Display" targetView="formDisplay"/>
+			<crux:menuEntry label="File Uploader" targetView="fileUploader"/>
 			<crux:menuSection label="Seção 2"/>
 			<crux:menuEntry label="Exemplo 4" targetView="formDisplay"/>
 			<crux:menuEntry label="Exemplo 5" targetView="formDisplay"/>

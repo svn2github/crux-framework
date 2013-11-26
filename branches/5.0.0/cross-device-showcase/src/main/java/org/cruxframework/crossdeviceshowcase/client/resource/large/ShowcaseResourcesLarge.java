@@ -19,6 +19,7 @@ import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author Gesse Dafe
@@ -29,4 +30,7 @@ public interface ShowcaseResourcesLarge extends ClientBundle
 {
 	@Source("cssShowcaseLarge.css")
 	CssShowcaseLarge css();
+	
+	@Source("icon-layout.png")
+	ImageResource layoutSectionIcon();
 }

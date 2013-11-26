@@ -70,3 +70,9 @@ BODY
 	background-image: url(img/logo-large.png);
 	background-position: center 10px;
 }
+
+@external layoutSectionIcon;
+@sprite .layoutSectionIcon {
+  gwt-image: "layoutSectionIcon";
+  background-position: 12px center;
+}
