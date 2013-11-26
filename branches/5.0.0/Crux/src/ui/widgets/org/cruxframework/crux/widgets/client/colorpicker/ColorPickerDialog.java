@@ -19,6 +19,8 @@ package org.cruxframework.crux.widgets.client.colorpicker;
 import java.util.Arrays;
 import java.util.List;
 
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.button.Button;
@@ -28,7 +30,10 @@ import org.cruxframework.crux.widgets.client.util.ColorUtils;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.PartialSupport;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -37,6 +42,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -46,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author Thiago da Rosa de Bustamante
  */
-public class ColorPickerDialog extends DialogBox
+public class ColorPickerDialog extends DialogBox implements HasCloseHandlers<PopupPanel>, IsWidget, OrientationChangeHandler
 {
 	private SaturationLightnessPicker slPicker;
 	private HuePicker huePicker;
@@ -57,7 +63,8 @@ public class ColorPickerDialog extends DialogBox
 	private Button okButton;
 	private Button cancelButton;
 	private SimplePanel previewPanel;
-
+	private VerticalPanel panel;
+	
 	private SelectHandler buttonSelectHandler = new SelectHandler()
 	{
 		public void onSelect(SelectEvent event)
@@ -74,14 +81,43 @@ public class ColorPickerDialog extends DialogBox
 
 	private ColorPickerDialog()
 	{
-		VerticalPanel panel = new VerticalPanel();
+		panel = new VerticalPanel();
 		dialogArea = createDialogArea();
 		panel.add(dialogArea);
 		panel.add(createControlBar());
 		setStyleName("Crux-ColorPickerDialog");
 		setWidget(panel);
+		handleOrientationChangeHandlers();
 	}
 
+	private void handleOrientationChangeHandlers() 
+	{
+		this.addAttachHandler(new Handler()
+		{
+			private HandlerRegistration orientationHandlerRegistration;
+
+			@Override
+			public void onAttachOrDetach(AttachEvent event)
+			{
+				if (event.isAttached())
+				{
+					try
+					{
+						orientationHandlerRegistration = Screen.addOrientationChangeHandler(ColorPickerDialog.this);	
+					} catch (Exception e)
+					{
+						orientationHandlerRegistration = null;
+					}
+				}
+				else if (orientationHandlerRegistration != null)
+				{
+					orientationHandlerRegistration.removeHandler();
+					orientationHandlerRegistration = null;
+				}
+			}
+		});
+	}
+	
 	@Override
 	public HandlerRegistration addCloseHandler(CloseHandler<PopupPanel> handler)
 	{
@@ -192,5 +228,11 @@ public class ColorPickerDialog extends DialogBox
 			return new ColorPickerDialog();
 		}
 		return null;
+	}
+
+	@Override
+	public void onOrientationChange() 
+	{
+		center();
 	}
 }
