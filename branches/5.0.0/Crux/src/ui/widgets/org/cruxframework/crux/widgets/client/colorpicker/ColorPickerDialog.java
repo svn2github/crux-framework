@@ -21,17 +21,17 @@ import java.util.List;
 
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.button.Button;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.util.ColorUtils;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.PartialSupport;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -58,9 +58,9 @@ public class ColorPickerDialog extends DialogBox
 	private Button cancelButton;
 	private SimplePanel previewPanel;
 
-	private ClickHandler buttonClickHandler = new ClickHandler()
+	private SelectHandler buttonSelectHandler = new SelectHandler()
 	{
-		public void onClick(ClickEvent event)
+		public void onSelect(SelectEvent event)
 		{
 			Object button = event.getSource();
 			if (button == okButton)
@@ -128,7 +128,7 @@ public class ColorPickerDialog extends DialogBox
 
 	protected Button createButton(String text)
 	{
-		return new Button(text, buttonClickHandler);
+		return new Button(text, buttonSelectHandler);
 	}
 
 	protected HorizontalPanel createDialogArea()

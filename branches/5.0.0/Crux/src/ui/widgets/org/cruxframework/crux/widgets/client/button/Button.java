@@ -196,6 +196,13 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		setStyleName("crux-Button");
 	}
 
+	public Button(String text, SelectHandler buttonSelectHandler) 
+	{
+		this();
+		impl.setText(text);
+		impl.addSelectHandler(buttonSelectHandler);
+	}
+
 	@Override
 	public HandlerRegistration addSelectHandler(SelectHandler handler)
 	{

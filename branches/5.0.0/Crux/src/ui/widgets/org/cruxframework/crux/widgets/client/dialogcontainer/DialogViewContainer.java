@@ -18,11 +18,11 @@ package org.cruxframework.crux.widgets.client.dialogcontainer;
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.widgets.client.button.Button;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
 import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -94,17 +94,16 @@ public class DialogViewContainer extends SingleViewContainer
 		
 		if (closeable)
 		{
-			final Button closeBtn = new Button(" ");
-			closeBtn.setStyleName("closeButton");
-			closeBtn.getElement().getStyle().setFloat(Float.RIGHT);
-			
-			closeBtn.addClickHandler(new ClickHandler()
+			final Button closeBtn = new Button(" ", new SelectHandler()
 			{
-				public void onClick(ClickEvent event)
+				public void onSelect(SelectEvent event)
 				{
 					closeDialog();
 				}
 			});
+			closeBtn.setStyleName("closeButton");
+			closeBtn.getElement().getStyle().setFloat(Float.RIGHT);
+			
 			FlowPanel headerPanel = new FlowPanel();
 			headerPanel.setWidth("100%");
 			headerPanel.add(closeBtn);
