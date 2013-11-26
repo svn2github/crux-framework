@@ -556,9 +556,7 @@ public abstract class WSQLAbstractDatabase extends AbstractDatabase
 	
 	protected void createFileStore(SQLTransaction tx)
 	{
-		String sql = "CREATE TABLE \""+FileStore.OBJECT_STORE_NAME+"\" (value BLOB, fileName TEXT PRIMARY KEY)";
-		JsArrayMixed args = JsArrayMixed.createArray().cast();
-		tx.executeSQL(sql, args, null, new SQLTransaction.SQLStatementErrorCallback()
+		final SQLTransaction.SQLStatementErrorCallback errorCallback = new SQLTransaction.SQLStatementErrorCallback()
 		{
 			@Override
 			public boolean onError(SQLTransaction tx, SQLError error)
@@ -574,7 +572,24 @@ public abstract class WSQLAbstractDatabase extends AbstractDatabase
 				}
 				return true;
 			}
-		});
+		};
+
+		String sql = "INSERT INTO __sys__(name) VALUES (?)";
+		JsArrayMixed args = JsArrayMixed.createArray().cast();
+		args.push(FileStore.OBJECT_STORE_NAME);
+		tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+		{
+			@Override
+			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+			{
+				String sql = "CREATE TABLE \""+FileStore.OBJECT_STORE_NAME+"\" (value BLOB, fileName TEXT PRIMARY KEY)";
+				JsArrayMixed args = JsArrayMixed.createArray().cast();
+				tx.executeSQL(sql, args, null, errorCallback);
+			}
+		}, errorCallback);
+
+		
+		
 	}
 	
 	protected abstract void updateDatabaseStructure(SQLTransaction tx, DatabaseCallback callback);

@@ -170,6 +170,21 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 			@Override
 			public void doOperation(final SQLTransaction tx)
 			{
+				String sql = "DELETE FROM __sys__ WHERE name = ?";
+				JsArrayMixed args = JsArrayMixed.createArray().cast();
+				args.push(name);
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Running SQL ["+sql+"]");
+				}
+				tx.executeSQL(sql, args, null, getErrorHandler(callback));
+			}
+		}, new Mode[]{Mode.readWrite});
+    	transaction.addRequest(new WSQLTransaction.RequestOperation()
+		{
+			@Override
+			public void doOperation(final SQLTransaction tx)
+			{
 				String sql = "DELETE FROM \"" + name + "\"";
 				JsArrayMixed args = JsArrayMixed.createArray().cast();
 				runDatabaseSQL(callback, tx, args, sql);
@@ -183,9 +198,23 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		{
 			callback.setDb(db);
 		}
-		String sql = getCreateTableSQL();
+		String sql = "INSERT INTO __sys__(name) VALUES (?)";
 		JsArrayMixed args = JsArrayMixed.createArray().cast();
-		runDatabaseSQL(callback, tx, args, sql);
+		args.push(name);
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Running SQL ["+sql+"]");
+		}
+		tx.executeSQL(sql, args, new SQLTransaction.SQLStatementCallback()
+		{
+			@Override
+			public void onSuccess(SQLTransaction tx, SQLResultSet rs)
+			{
+				String sql = getCreateTableSQL();
+				JsArrayMixed args = JsArrayMixed.createArray().cast();
+				runDatabaseSQL(callback, tx, args, sql);
+			}
+		}, getErrorHandler(callback));
 	}
 	
 	@Override
