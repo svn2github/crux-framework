@@ -114,7 +114,7 @@ public class ApplicationCacheHandler implements EntryPoint
      * @return The status of the application cache.
      */
     private static native int getStatus()/*-{
-        return window.applicationCache.status;
+        return $wnd.applicationCache.status;
     }-*/;
 
     /**
@@ -141,11 +141,11 @@ public class ApplicationCacheHandler implements EntryPoint
      * Asks the application cache to update itself.
      */
     public static native void updateCacheNative()/*-{
-        window.applicationCache.update();
+        $wnd.applicationCache.update();
     }-*/;
 
     public static native void swapCache()/*-{
-        window.applicationCache.swapCache();
+        $wnd.applicationCache.swapCache();
     }-*/;
     
     private void fireApplicationCacheEvent(CacheEvent eventType)
@@ -390,35 +390,35 @@ public class ApplicationCacheHandler implements EntryPoint
      *            the instance to hook the listeners to.
      */
     protected final native void hookAllListeners(ApplicationCacheHandler instance)/*-{
-        window.applicationCache.addEventListener('cached',
+        $wnd.applicationCache.addEventListener('cached',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onCached()();
             }, false);
-        window.applicationCache.addEventListener('checking',
+        $wnd.applicationCache.addEventListener('checking',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onChecking()();
             }, false);
-        window.applicationCache.addEventListener('downloading',
+        $wnd.applicationCache.addEventListener('downloading',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onDownloading()();
             }, false);
-        window.applicationCache.addEventListener('noupdate',
+        $wnd.applicationCache.addEventListener('noupdate',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onNoUpdate()();
             }, false);
-        window.applicationCache.addEventListener('updateready',
+        $wnd.applicationCache.addEventListener('updateready',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onUpdateReady()();
             }, false);
-        window.applicationCache.addEventListener('progress',
+        $wnd.applicationCache.addEventListener('progress',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onProgress(Lorg/cruxframework/crux/core/clientoffline/ProgressEvent;)(event);
             }, false);
-        window.applicationCache.addEventListener('obsolete',
+        $wnd.applicationCache.addEventListener('obsolete',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onObsolete()();
             }, false);
-        window.applicationCache.addEventListener('error',
+        $wnd.applicationCache.addEventListener('error',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onError()();
             }, false);
