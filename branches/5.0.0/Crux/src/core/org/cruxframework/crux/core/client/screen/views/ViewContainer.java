@@ -501,12 +501,12 @@ public abstract class ViewContainer extends Composite
 	protected abstract boolean hasResizeHandlers();
 	protected abstract boolean hasWindowCloseHandlers();
 	protected abstract boolean hasWindowClosingHandlers();
-	protected abstract boolean hasOrientationChangeOrResizeHandlers();
+	protected abstract boolean hasOrientationChangeHandlers();
 	protected abstract boolean hasHistoryHandlers();
 	protected abstract void notifyViewsAboutWindowResize(ResizeEvent event);
 	protected abstract void notifyViewsAboutWindowClose(CloseEvent<Window> event);
 	protected abstract void notifyViewsAboutWindowClosing(ClosingEvent event);
-	protected abstract void notifyViewsAboutOrientationChangeOrResize();
+	protected abstract void notifyViewsAboutOrientationChange();
 	protected abstract void notifyViewsAboutHistoryChange(ValueChangeEvent<String> event);
 	protected abstract Panel getContainerPanel(View view);
 	protected abstract void handleViewTitle(String title, Panel containerPanel, String viewId);

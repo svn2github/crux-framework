@@ -46,13 +46,13 @@ public class ViewHandlers
 	private static boolean initialized = false;
 	private static FastList<ViewContainer> boundContainers = null;
 	private static boolean hasWindowResizeHandler = false;
-	private static boolean hasOrientationChangeOrResizeHandler = false;
+	private static boolean hasOrientationChangeHandler = false;
 	private static boolean hasWindowCloseHandler = false;
 	private static boolean hasWindowClosingHandler = false;
 	private static boolean hasHistoryHandler = false;
 	private static boolean historyFrameInitialized = false;
 	private static HandlerRegistration resizeHandler;
-	private static HandlerRegistration orientationChangeOrResizeHandler;
+	private static HandlerRegistration orientationChangeHandler;
 	private static HandlerRegistration closeHandler;
 	private static HandlerRegistration closingHandler;
 	private static HandlerRegistration historyHandler;
@@ -91,7 +91,7 @@ public class ViewHandlers
 	protected static void ensureViewContainerHandlers(ViewContainer viewContainer)
     {
 	    ensureViewContainerResizeHandler(viewContainer);
-	    ensureViewContainerOrientationChangeOrResizeHandler(viewContainer);
+	    ensureViewContainerOrientationChangeHandler(viewContainer);
 	    ensureViewContainerCloseHandler(viewContainer);
 	    ensureViewContainerClosingHandler(viewContainer);
 	    ensureViewContainerHistoryHandler(viewContainer);
@@ -103,7 +103,7 @@ public class ViewHandlers
 	protected static void removeViewContainerHandlers()
     {
 	    removeViewContainerResizeHandler();
-	    removeViewContainerOrientationChangeOrResizeHandler();
+	    removeViewContainerOrientationChangeHandler();
 	    removeViewContainerCloseHandler();
 	    removeViewContainerClosingHandler();
 	    removeViewContainerHistoryHandler();
@@ -159,24 +159,27 @@ public class ViewHandlers
 	/**
 	 * 
 	 * @param viewContainer
+	 * @return 
 	 */
-	protected static void ensureViewContainerOrientationChangeOrResizeHandler(ViewContainer viewContainer)
+	protected static HandlerRegistration ensureViewContainerOrientationChangeHandler(ViewContainer viewContainer)
     {
-	    if (!hasOrientationChangeOrResizeHandler && viewContainer.hasOrientationChangeOrResizeHandlers())
+	    if (!hasOrientationChangeHandler && viewContainer.hasOrientationChangeHandlers())
 	    {
-	    	hasOrientationChangeOrResizeHandler = true;
-	    	orientationChangeOrResizeHandler = addWindowOrientationChangeOrResizeHandler(new OrientationChangeOrResizeHandler()
+	    	hasOrientationChangeHandler = true;
+	    	orientationChangeHandler = addWindowOrientationChangeHandler(new OrientationChangeHandler()
 			{
 				@Override
-				public void onOrientationChangeOrResize()
+				public void onOrientationChange()
 				{
 					for (int i=0; i< boundContainers.size(); i++)
 					{
-						boundContainers.get(i).notifyViewsAboutOrientationChangeOrResize();
+						boundContainers.get(i).notifyViewsAboutOrientationChange();
 					}
 				}
 			});
+	    	return orientationChangeHandler;
 	    }
+	    return null;
     }
 
 	/**
@@ -228,27 +231,27 @@ public class ViewHandlers
 	/**
 	 * 
 	 */
-	private static void removeViewContainerOrientationChangeOrResizeHandler()
+	private static void removeViewContainerOrientationChangeHandler()
     {
-	    if (hasOrientationChangeOrResizeHandler)
+	    if (hasOrientationChangeHandler)
 		{
-	    	boolean hasOrientationOrResizeHandlers = false;
+	    	boolean hasOrientationHandlers = false;
 	    	for(int i=0; i< boundContainers.size(); i++)
 	    	{
-	    		if (boundContainers.get(i).hasOrientationChangeOrResizeHandlers())
+	    		if (boundContainers.get(i).hasOrientationChangeHandlers())
 	    		{
-	    			hasOrientationOrResizeHandlers = true;
+	    			hasOrientationHandlers = true;
 	    			break;
 	    		}
 	    	}
-	    	if (!hasOrientationOrResizeHandlers)
+	    	if (!hasOrientationHandlers)
 	    	{
-	    		if(orientationChangeOrResizeHandler != null)
+	    		if(orientationChangeHandler != null)
 	    		{
-	    			orientationChangeOrResizeHandler.removeHandler();
+	    			orientationChangeHandler.removeHandler();
 	    		}
-	    		orientationChangeOrResizeHandler = null;
-	    		hasOrientationChangeOrResizeHandler = false;
+	    		orientationChangeHandler = null;
+	    		hasOrientationChangeHandler = false;
 	    	}
 		}
     }
@@ -369,51 +372,91 @@ public class ViewHandlers
 	 * @param handler
 	 * @return
 	 */
-	private static HandlerRegistration addWindowOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler) 
+	private static HandlerRegistration addWindowOrientationChangeHandler(final OrientationChangeHandler handler) 
 	{
-		final BeginEndExecutor executor = new BeginEndExecutor(100) 
+		final JavaScriptObject orientationHandler = attachOrientationChangeHandler(handler);
+		
+		if(orientationHandler == null)
 		{
-			private int clientHeight = Window.getClientHeight();
-			private int clientWidth = Window.getClientWidth();
-
-			@Override
-			protected void doEndAction() 
+			return null;
+		}
+		
+		return new HandlerRegistration() 
+		{
+			public void removeHandler() 
 			{
-				if (!Screen.getCurrentDevice().equals(Device.largeDisplayMouse))
+				if(orientationHandler != null)
 				{
-					int newClientHeight = Window.getClientHeight();
-					int newClientWidth = Window.getClientWidth();
-
-					if (this.clientHeight != newClientHeight || clientWidth != newClientWidth || Screen.isIos())
-					{
-						handler.onOrientationChangeOrResize();
-					}
-					clientHeight = newClientHeight;
-					clientWidth  = newClientWidth;
+					removeOrientationChangeHandler(orientationHandler);
 				}
-				else
-				{
-					handler.onOrientationChangeOrResize();
-				}
-			}
-			
-			@Override
-			protected void doBeginAction() 
-			{
-				// nothing
 			}
 		};
+	}
+	
+	private abstract static class ResizeBeginEndExecutor extends BeginEndExecutor 
+	{
+		private ResizeEvent resizeEvent;
+
+		public ResizeBeginEndExecutor(int maxIntervalBetweenStartAndEnd, ResizeEvent resizeEvent) {
+			super(maxIntervalBetweenStartAndEnd);
+			this.resizeEvent = resizeEvent;
+		}
+
+		public ResizeEvent getResizeEvent() 
+		{
+			return resizeEvent;
+		}
 		
+	};
+	
+	/**
+	 * @param handler
+	 * @return
+	 */
+	private static HandlerRegistration addWindowResizeHandler(final ResizeHandler handler) 
+	{
 		ResizeHandler resizeHandler = new ResizeHandler() 
 		{
 			public void onResize(ResizeEvent event) 
 			{
+				final ResizeBeginEndExecutor executor = new ResizeBeginEndExecutor(100, event) 
+				{
+					private int clientHeight = Window.getClientHeight();
+					private int clientWidth = Window.getClientWidth();
+
+					@Override
+					protected void doEndAction() 
+					{
+						if (!Screen.getCurrentDevice().equals(Device.largeDisplayMouse))
+						{
+							int newClientHeight = Window.getClientHeight();
+							int newClientWidth = Window.getClientWidth();
+
+							if (this.clientHeight != newClientHeight || clientWidth != newClientWidth || Screen.isIos())
+							{
+								handler.onResize(getResizeEvent());
+							}
+							clientHeight = newClientHeight;
+							clientWidth  = newClientWidth;
+						}
+						else
+						{
+							handler.onResize(getResizeEvent());
+						}
+					}
+					
+					@Override
+					protected void doBeginAction() 
+					{
+						// nothing
+					}
+				};
+				
 				executor.execute();					
 			}
 		};
 		
 		final HandlerRegistration resizeHandlerRegistration = Window.addResizeHandler(resizeHandler);
-		final JavaScriptObject orientationHandler = attachOrientationChangeHandler(executor);
 		
 		return new HandlerRegistration() 
 		{
@@ -422,11 +465,6 @@ public class ViewHandlers
 				if(resizeHandlerRegistration != null)
 				{
 					resizeHandlerRegistration.removeHandler();
-				}
-				
-				if(orientationHandler != null)
-				{
-					removeOrientationChangeHandler(orientationHandler);
 				}
 			}
 		};
@@ -450,7 +488,7 @@ public class ViewHandlers
 	 * @param executor
 	 * @return
 	 */
-	private static native JavaScriptObject attachOrientationChangeHandler(BeginEndExecutor executor)/*-{
+	private static native JavaScriptObject attachOrientationChangeHandler(OrientationChangeHandler handler)/*-{
 	
 		var supportsOrientationChange = 'onorientationchange' in $wnd;
 		
@@ -462,7 +500,7 @@ public class ViewHandlers
 			    if($wnd.orientation !== $wnd.previousOrientation)
 			    {
 			        $wnd.previousOrientation = $wnd.orientation;
-		        	executor.@org.cruxframework.crux.core.client.executor.BeginEndExecutor::execute()();
+		        	handler.@org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler::onOrientationChange()();
 			    }
 			};
 		
@@ -473,7 +511,6 @@ public class ViewHandlers
 		
 		return null;
 	}-*/;
-
 	
 	/**
 	 * 

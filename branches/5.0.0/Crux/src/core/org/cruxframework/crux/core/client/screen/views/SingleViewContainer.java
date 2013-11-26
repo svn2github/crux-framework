@@ -99,9 +99,9 @@ public abstract class SingleViewContainer extends ViewContainer
 	}
 
 	@Override
-	protected boolean hasOrientationChangeOrResizeHandlers()
+	protected boolean hasOrientationChangeHandlers()
 	{
-	    return activeView!= null && activeView.hasOrientationChangeOrResizeHandlers();
+	    return activeView!= null && activeView.hasOrientationChangeHandlers();
 	}
 	
 	@Override
@@ -138,11 +138,11 @@ public abstract class SingleViewContainer extends ViewContainer
     }
 	
 	@Override
-	protected void notifyViewsAboutOrientationChangeOrResize()
+	protected void notifyViewsAboutOrientationChange()
 	{
 		if (activeView!= null)
 		{
-			activeView.fireOrientationOrResizeEvent();
+			activeView.fireOrientationEvent();
 		}
 	}
 	

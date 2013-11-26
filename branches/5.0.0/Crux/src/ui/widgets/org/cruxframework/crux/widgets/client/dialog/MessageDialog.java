@@ -18,7 +18,7 @@ package org.cruxframework.crux.widgets.client.dialog;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.button.Button;
@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler
+public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeHandler
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-MessageDialog";
 	private DialogBox dialogBox;
@@ -94,7 +94,7 @@ public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, Ori
 				{
 					try
 					{
-						orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(MessageDialog.this);	
+						orientationHandlerRegistration = Screen.addOrientationChangeHandler(MessageDialog.this);	
 					} catch (Exception e)
 					{
 						orientationHandlerRegistration = null;
@@ -334,7 +334,7 @@ public class MessageDialog implements HasOkHandlers, HasAnimation, IsWidget, Ori
     }
 
 	@Override
-	public void onOrientationChangeOrResize() {
+	public void onOrientationChange() {
 		if(openedDialogBoxes == null)
 		{
 			return;

@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasOrientationChangeOrResizeHandler 
+public interface HasOrientationChangeHandler 
 {
-	HandlerRegistration addWindowOrientationChangeOrResizeHandler(OrientationChangeOrResizeHandler handler);
+	HandlerRegistration addWindowOrientationChangeHandler(OrientationChangeHandler handler);
 }

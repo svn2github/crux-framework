@@ -113,12 +113,12 @@ public abstract class MultipleViewsContainer extends ViewContainer
 	}
 
 	@Override
-	protected boolean hasOrientationChangeOrResizeHandlers()
+	protected boolean hasOrientationChangeHandlers()
 	{
 		FastList<String> keys = activeViews.keys();
 		for (int i = 0; i < keys.size(); i++)
 		{
-			if (activeViews.get(keys.get(i)).hasOrientationChangeOrResizeHandlers())
+			if (activeViews.get(keys.get(i)).hasOrientationChangeHandlers())
 			{
 				return true;
 			}
@@ -173,12 +173,12 @@ public abstract class MultipleViewsContainer extends ViewContainer
     }
 	
 	@Override
-	protected void notifyViewsAboutOrientationChangeOrResize()
+	protected void notifyViewsAboutOrientationChange()
 	{
 		FastList<String> keys = activeViews.keys();
 		for (int i = 0; i < keys.size(); i++)
 		{
-			activeViews.get(keys.get(i)).fireOrientationOrResizeEvent();
+			activeViews.get(keys.get(i)).fireOrientationEvent();
 		}
 	}
 	

@@ -19,7 +19,7 @@ package org.cruxframework.crux.core.client.screen.views;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface OrientationChangeOrResizeHandler
+public interface OrientationChangeHandler
 {
-	void onOrientationChangeOrResize();
+	void onOrientationChange();
 }

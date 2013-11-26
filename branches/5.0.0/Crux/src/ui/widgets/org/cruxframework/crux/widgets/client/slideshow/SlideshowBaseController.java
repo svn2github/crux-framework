@@ -19,7 +19,7 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler;
 import org.cruxframework.crux.widgets.client.slideshow.data.AlbumService;
 import org.cruxframework.crux.widgets.client.slideshow.data.AlbumService.Callback;
 import org.cruxframework.crux.widgets.client.slideshow.data.Photo;
@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class SlideshowBaseController extends DeviceAdaptiveController implements Slideshow, OrientationChangeOrResizeHandler
+public abstract class SlideshowBaseController extends DeviceAdaptiveController implements Slideshow, OrientationChangeHandler
 {
 	protected static final boolean SCALE_IMAGES = true;//TODO make this customizable
 	protected static enum SlideshowEvent{AlbumLoaded, PhotoLoaded, StartPlaying, StopPlaying}
@@ -423,7 +423,7 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	}
 	
 	@Override
-    public void onOrientationChangeOrResize()
+    public void onOrientationChange()
     {
 		FastList<String> keys = imagesCache.keys();
 		
@@ -451,7 +451,7 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 				{
 					if (event.isAttached())
 					{
-						orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(SlideshowBaseController.this);
+						orientationHandlerRegistration = Screen.addOrientationChangeHandler(SlideshowBaseController.this);
 					}
 					else if (orientationHandlerRegistration != null)
 					{

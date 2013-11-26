@@ -32,6 +32,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -54,7 +55,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandlers, 
-									  HasViewActivateHandlers, HasOrientationChangeOrResizeHandler, 
+									  HasViewActivateHandlers, HasOrientationChangeHandler, 
 									  HasViewLoadHandlers
 {
 	private static Logger logger = Logger.getLogger(View.class.getName());
@@ -72,7 +73,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	protected FastList<ViewActivateHandler> attachHandlers = new FastList<ViewActivateHandler>();
 	protected FastList<ViewDeactivateHandler> detachHandlers = new FastList<ViewDeactivateHandler>();
 	protected FastList<ValueChangeHandler<String>> historyHandlers = new FastList<ValueChangeHandler<String>>();
-	protected FastList<OrientationChangeOrResizeHandler> orientationOrResizeHandlers = new FastList<OrientationChangeOrResizeHandler>();
+	protected FastList<OrientationChangeHandler> orientationHandlers = new FastList<OrientationChangeHandler>();
 	protected FastList<ViewLoadHandler> loadHandlers = new FastList<ViewLoadHandler>();
 	protected FastList<ViewUnloadHandler> unloadHandlers = new FastList<ViewUnloadHandler>();
 	protected boolean loaded = false;
@@ -413,22 +414,31 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 	
 	@Override
-	public HandlerRegistration addWindowOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler)
+	@PartialSupport
+	public HandlerRegistration addWindowOrientationChangeHandler(final OrientationChangeHandler handler)
 	{
-		orientationOrResizeHandlers.add(handler);
+		HandlerRegistration handlerRegistration = null;
 		if (isActive())
 		{	
-			ViewHandlers.ensureViewContainerOrientationChangeOrResizeHandler(getContainer());
+			handlerRegistration = 
+					ViewHandlers.ensureViewContainerOrientationChangeHandler(getContainer());
+			
+			if(handlerRegistration == null)
+			{
+				return null;
+			}
 		}
+		
+		orientationHandlers.add(handler);
 		return new HandlerRegistration()
 		{
 			@Override
 			public void removeHandler()
 			{
-				int index = orientationOrResizeHandlers.indexOf(handler);
+				int index = orientationHandlers.indexOf(handler);
 				if (index >= 0)
 				{
-					orientationOrResizeHandlers.remove(index);
+					orientationHandlers.remove(index);
 				}
 			}
 		};
@@ -648,9 +658,9 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * 
 	 * @return
 	 */
-	protected boolean hasOrientationChangeOrResizeHandlers()
+	protected boolean hasOrientationChangeHandlers()
 	{
-		return orientationOrResizeHandlers.size() > 0;
+		return orientationHandlers.size() > 0;
 	}
 	
 	/**
@@ -696,12 +706,12 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	/**
 	 * 
 	 */
-	protected void fireOrientationOrResizeEvent()
+	protected void fireOrientationEvent()
 	{
-		for (int i = 0; i < orientationOrResizeHandlers.size(); i++)
+		for (int i = 0; i < orientationHandlers.size(); i++)
         {
-			OrientationChangeOrResizeHandler handler = orientationOrResizeHandlers.get(i);
-	        handler.onOrientationChangeOrResize();
+			OrientationChangeHandler handler = orientationHandlers.get(i);
+	        handler.onOrientationChange();
         }
 	}
 	
@@ -894,7 +904,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	    attachHandlers = new FastList<ViewActivateHandler>();
 	    detachHandlers = new FastList<ViewDeactivateHandler>();
 	    historyHandlers = new FastList<ValueChangeHandler<String>>();
-	    orientationOrResizeHandlers = new FastList<OrientationChangeOrResizeHandler>();
+	    orientationHandlers = new FastList<OrientationChangeHandler>();
 	    loadHandlers = new FastList<ViewLoadHandler>();
 	    unloadHandlers = new FastList<ViewUnloadHandler>();
 	}
@@ -912,7 +922,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	    attachHandlers = null;
 	    detachHandlers = null;
 	    historyHandlers = null;
-	    orientationOrResizeHandlers = null;
+	    orientationHandlers = null;
 	    loadHandlers = null;
 	    unloadHandlers = null;
     }

@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.controller.RegisteredControllers;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.widgets.ScreenBlocker;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -190,9 +190,9 @@ public class Screen
 	 * @param handler
 	 * @return
 	 */
-	protected HandlerRegistration addWindowOrientationChangeOrResizeHandler(OrientationChangeOrResizeHandler handler)
+	protected HandlerRegistration addWindowOrientationChangeHandler(OrientationChangeHandler handler)
 	{
-		return getView().addWindowOrientationChangeOrResizeHandler(handler);
+		return getView().addWindowOrientationChangeHandler(handler);
 	}
  
 	/**
@@ -386,9 +386,9 @@ public class Screen
 	 * @param handler
 	 * @return
 	 */
-	public static HandlerRegistration addOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler) 
+	public static HandlerRegistration addOrientationChangeHandler(final OrientationChangeHandler handler) 
 	{
-		return Screen.get().addWindowOrientationChangeOrResizeHandler(handler);
+		return Screen.get().addWindowOrientationChangeHandler(handler);
 	}
 	
 	/**

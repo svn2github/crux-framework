@@ -72,9 +72,9 @@ public class SlideshowTouchController extends SlideshowBaseController
 	}
 
 	@Override
-	public void onOrientationChangeOrResize()
+	public void onOrientationChange()
 	{
-	    super.onOrientationChangeOrResize();
+	    super.onOrientationChange();
 	    adjustTableSize();
 	}
 	

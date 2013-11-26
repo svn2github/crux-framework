@@ -18,7 +18,7 @@ package org.cruxframework.crux.widgets.client.slider;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeHandler;
 import org.cruxframework.crux.widgets.client.animation.Animation;
 import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.event.swap.HasSwapHandlers;
@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  */
 public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidingHandlers, HasTapHandlers, 
-											TouchStartHandler, TouchMoveHandler, TouchEndHandler, OrientationChangeOrResizeHandler
+											TouchStartHandler, TouchMoveHandler, TouchEndHandler, OrientationChangeHandler
 {
 	private static final int TAP_EVENT_THRESHOLD = 5;
 
@@ -108,7 +108,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 			{
 				if (event.isAttached())
 				{
-					orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(TouchSlider.this);
+					orientationHandlerRegistration = Screen.addOrientationChangeHandler(TouchSlider.this);
 				}
 				else if (orientationHandlerRegistration != null)
 				{
@@ -360,7 +360,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 
 
 	@Override
-	public void onOrientationChangeOrResize()
+	public void onOrientationChange()
 	{
 		if (getWidgetCount() > 0)
 		{
