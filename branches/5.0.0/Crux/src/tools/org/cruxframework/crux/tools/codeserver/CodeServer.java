@@ -49,6 +49,7 @@ public class CodeServer
 	private String moduleName;
 	private String sourceDir;
 	private String bindAddress;
+	private boolean noPrecompile = false;
 	private String port;
 	private String workDir;
 	
@@ -123,6 +124,11 @@ public class CodeServer
 	protected String[] getServerParameters()
     {
 		List<String> args = new ArrayList<String>();
+
+		if (noPrecompile)
+		{
+			args.add("-noprecompile");
+		}
 		if (bindAddress != null && bindAddress.length() > 0)
 		{
 			args.add("-bindAddress");
@@ -158,6 +164,10 @@ public class CodeServer
 	        if (parameter.getName().equals("-moduleName"))
 	        {
 	        	moduleName = parameter.getValue();
+	        }
+	        else if (parameter.getName().equals("-noprecompile"))
+	        {
+	        	this.noPrecompile = true;
 	        }
 	        else if (parameter.getName().equals("-sourceDir"))
 	        {
@@ -195,6 +205,8 @@ public class CodeServer
 		parameter.addParameterOption(new ConsoleParameterOption("ip", "Ip address"));
 		parametersProcessor.addSupportedParameter(parameter);
 
+		parametersProcessor.addSupportedParameter(new ConsoleParameter("-noprecompile", "If informed, code server will not pre compile the source.", false, true));
+		
 		parameter = new ConsoleParameter("-port", "The port where the code server will run.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("port", "Port"));
 		parametersProcessor.addSupportedParameter(parameter);
