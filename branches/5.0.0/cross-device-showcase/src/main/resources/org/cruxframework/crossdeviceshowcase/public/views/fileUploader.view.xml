@@ -10,7 +10,7 @@
 		<crux:fileUploader id="fileUploader" multiple="true" fileInputText="Escolher Arquivos" autoUploadFiles="true"/>
 		
 		<div class="speechBubble">
-			<H1>FileUploader</H1>
+			<h1>FileUploader</h1>
 			<p>
 				O FileUploader é um componente capaz de transmitir arquivos existentes no dispositivo cliente
 				para  servidor de aplicação. Construído sobre a especificação XMLHttpRequest 2, é capaz de 

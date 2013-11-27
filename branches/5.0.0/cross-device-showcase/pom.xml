@@ -243,9 +243,11 @@
 									</classpath>
 									<arg value="-sourceDir" />
 									<arg value="${sourceDir}" />
-							
+
+<!-- 									<arg value="-noprecompile" /> -->
+									
 									<arg value="-moduleName" />
-									<arg value="${module-name}" />
+									<arg value="crossdeviceshowcase" />
 							
 									<jvmarg value="-Xmx768M" />
 									<jvmarg value="-Xms256M" />

@@ -28,8 +28,8 @@
 			<crux:menuEntry label="Styled Panel" targetView="styledPanel"/>
 			<crux:menuEntry label="Form Display" targetView="formDisplay"/>
 			<crux:menuEntry label="File Uploader" targetView="fileUploader"/>
-			<crux:menuSection label="Seção 2"/>
-			<crux:menuEntry label="Exemplo 4" targetView="formDisplay"/>
+			<crux:menuSection label="Banco de Dados"/>
+			<crux:menuEntry label="CRUD Simples" targetView="simpleDatabase"/>
 			<crux:menuEntry label="Exemplo 5" targetView="formDisplay"/>
 			<crux:menuEntry label="Exemplo 6" targetView="formDisplay"/>
 			<crux:menuEntry label="Exemplo 7" targetView="formDisplay"/>

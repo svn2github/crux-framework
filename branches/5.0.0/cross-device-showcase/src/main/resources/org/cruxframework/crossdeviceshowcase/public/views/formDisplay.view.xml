@@ -32,7 +32,7 @@
 		</crux:styledPanel>
 		
 		<div class="speechBubble">
-			<H1>FormDisplay</H1>
+			<h1>FormDisplay</h1>
 			<p>
 				O propósito do FormDisplay é organizar os elementos de um formulário, 
 				tornando mais simples a construção de telas cujo conteúdo seja essencialmente

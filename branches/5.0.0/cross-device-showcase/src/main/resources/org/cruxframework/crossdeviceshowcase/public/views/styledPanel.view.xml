@@ -11,7 +11,7 @@
 		</crux:styledPanel>
 		
 		<div class="speechBubble">
-			<H1>StyledPanel</H1>
+			<h1>StyledPanel</h1>
 			<p>
 				O StyledPanel é um painel simples, cuja utilidade é agrupar 
 				visualmente componentes que possuem algum tipo de relação entre sim. Em geral, é usado para 
