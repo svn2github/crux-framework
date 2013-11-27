@@ -161,7 +161,7 @@ public class ViewHandlers
 	 * @param viewContainer
 	 * @return 
 	 */
-	protected static HandlerRegistration ensureViewContainerOrientationChangeHandler(ViewContainer viewContainer)
+	protected static void ensureViewContainerOrientationChangeHandler(ViewContainer viewContainer)
     {
 	    if (!hasOrientationChangeHandler && viewContainer.hasOrientationChangeHandlers())
 	    {
@@ -177,9 +177,7 @@ public class ViewHandlers
 					}
 				}
 			});
-	    	return orientationChangeHandler;
 	    }
-	    return null;
     }
 
 	/**
@@ -495,10 +493,7 @@ public class ViewHandlers
 	 * @return
 	 */
 	private static native JavaScriptObject attachOrientationChangeHandler(OrientationChangeHandler handler)/*-{
-	
-		var supportsOrientationChange = 'onorientationchange' in $wnd;
-		
-		if (supportsOrientationChange)
+		if (@org.cruxframework.crux.core.client.screen.views.View::isOrientationChangeSupported()())
 		{	
 			$wnd.previousOrientation = $wnd.orientation;
 			var checkOrientation = function()

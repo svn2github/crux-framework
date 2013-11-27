@@ -413,23 +413,28 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		};
 	}
 	
+	/**
+	 * @return true is this page supports orientationChange and false otherwise.
+	 */
+	public static native boolean isOrientationChangeSupported()/*-{
+		return 'onorientationchange' in $wnd;
+	}-*/;
+	
 	@Override
 	@PartialSupport
 	public HandlerRegistration addWindowOrientationChangeHandler(final OrientationChangeHandler handler)
 	{
-		HandlerRegistration handlerRegistration = null;
-		if (isActive())
-		{	
-			handlerRegistration = 
-					ViewHandlers.ensureViewContainerOrientationChangeHandler(getContainer());
-			
-			if(handlerRegistration == null)
-			{
-				return null;
-			}
+		if(!isOrientationChangeSupported())
+		{
+			return null;
 		}
 		
 		orientationHandlers.add(handler);
+		if (isActive())
+		{	
+			ViewHandlers.ensureViewContainerOrientationChangeHandler(getContainer());
+		}
+		
 		return new HandlerRegistration()
 		{
 			@Override
