@@ -160,6 +160,14 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
     {
 		srcWriter.println("private void "+methodName+"("+getKeyTypeName(keyPath)+" key, "+JsArrayMixed.class.getCanonicalName()+" result){");
 
+		if (keyPath.length > 1)
+		{
+	    	srcWriter.println("if (key == null){");
+	    	srcWriter.println("result.push((String)null);");
+	    	srcWriter.println("return;");
+	    	srcWriter.println("}");
+		}
+		
 		int i=0;
 		for (String key : keyPath)
 		{
@@ -172,6 +180,11 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 			{
 				keyVar = "key";
 			}
+	    	srcWriter.println("if ("+keyVar+" == null){");
+	    	srcWriter.println("result.push((String)null);");
+	    	srcWriter.println("}");
+	    	srcWriter.println("else{");
+			
 			JType jType = JClassUtils.getTypeForProperty(key, targetObjectType);
 			if (jType == null)
 			{
@@ -197,6 +210,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 			{
 				throw new CruxGeneratorException("Invalid key type for objectStore ["+targetObjectType.getParameterizedQualifiedSourceName()+"]");
 			}
+	    	srcWriter.println("}");
 			i++;
 		}
 		srcWriter.println("}");

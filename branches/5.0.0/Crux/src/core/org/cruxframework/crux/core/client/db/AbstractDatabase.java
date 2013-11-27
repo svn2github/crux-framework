@@ -211,6 +211,16 @@ public abstract class AbstractDatabase implements Database
 		};
     }
 	
+	@Override
+	public void useIndexedDB()
+	{
+	}
+
+	@Override
+	public void useWebSQL()
+	{
+	}
+	
     protected abstract void doOpen(DatabaseCallback callback);
     protected abstract Transaction createTransaction(String[] storeNames, Transaction.Mode mode);
 }

@@ -331,7 +331,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
     		for (int i=0; i< indexAndKeyColumnNames.size(); i++)
     		{
     			String k = indexAndKeyColumnNames.get(i);
-    			sqlStart.append(k +",");
+    			sqlStart.append("\""+k +"\",");
     			sqlEnd.append("?,");
     		}
     	}
@@ -342,7 +342,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
     		for (int i=0; i< indexColumnNames.size(); i++)
     		{
     			String k = indexColumnNames.get(i);
-    			sqlStart.append(k +",");
+    			sqlStart.append("\""+k +"\",");
     			sqlEnd.append("?,");
     		}
     	}
@@ -368,7 +368,7 @@ public abstract class WSQLAbstractObjectStore<K, V> extends AbstractObjectStore<
 		    	for (int i=0; i< indexColumnNames.size(); i++)
 		    	{
 		    		String key = indexColumnNames.get(i);
-		    		sql.append(key +" = ?, ");
+		    		sql.append("\""+key +"\" = ?, ");
 		    	}
 		    	
 				sql.append("value = ?");

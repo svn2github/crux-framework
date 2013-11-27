@@ -123,27 +123,27 @@ public class IDBKeyCursorProxyCreator extends IDBAbstractKeyValueProxyCreator
 		}
 		else if (objectStoreKeyPath.length > 1)
 		{
-			srcWriter.println("return fromNativeValue("+idbCursorVariable+".getArrayValue());");
+			srcWriter.println("return fromNativeValue("+idbCursorVariable+".getObjectPrimaryKey());");
 		}
 		else if (keyTypeName.equals("String"))
 		{
-			srcWriter.println("return "+idbCursorVariable+".getStringValue();");
+			srcWriter.println("return "+idbCursorVariable+".getStringPrimaryKey();");
 		}
 		else if (keyTypeName.equals("Integer"))
 		{
-			srcWriter.println("return "+idbCursorVariable+".getIntValue();");
+			srcWriter.println("return "+idbCursorVariable+".getIntPrimaryKey();");
 		}
 		else if (keyTypeName.equals("Double"))
 		{
-			srcWriter.println("return "+idbCursorVariable+".getDoubleValue();");
+			srcWriter.println("return "+idbCursorVariable+".getDoublePrimaryKey();");
 		}
 		else if (keyTypeName.equals(Date.class.getCanonicalName()))
 		{
-			srcWriter.println("return "+idbCursorVariable+".getDateValue();");
+			srcWriter.println("return "+idbCursorVariable+".getDatePrimaryKey();");
 		}
 		else
 		{
-			srcWriter.println("return "+idbCursorVariable+".getObjectValue().cast();");
+			srcWriter.println("return "+idbCursorVariable+".getObjectPrimaryKey().cast();");
 		}
 		srcWriter.println("}");
     }

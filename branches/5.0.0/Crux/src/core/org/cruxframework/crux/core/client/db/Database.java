@@ -155,4 +155,18 @@ public interface Database
 	 * @return
 	 */
 	boolean isSupported();
+	
+	/**
+	 * Forces Crux to use WEB SQL implementation for its database.
+	 * This method should be called only for tests purposes. Crux already 
+	 * can detect and choose the better native implementation. 
+	 */
+	void useWebSQL();
+
+	/**
+	 * Forces Crux to use Indexed DB implementation for its database.
+	 * This method should be called only for tests purposes. Crux already 
+	 * can detect and choose the better native implementation. 
+	 */
+	void useIndexedDB();
 }

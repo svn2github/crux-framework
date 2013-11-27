@@ -70,6 +70,11 @@ public abstract class SQLAbstractKeyValueProxyCreator extends AbstractKeyValuePr
 		    srcWriter.println();
 
 		    srcWriter.println("private void getNativeKey("+getKeyTypeName()+" key, "+JsArrayMixed.class.getCanonicalName()+" result){");
+	    	srcWriter.println("if (key == null){");
+	    	srcWriter.println("result.push((String)null);");
+	    	srcWriter.println("return;");
+	    	srcWriter.println("}");
+
 		    JType jType = getPropertyType(keyPath[0]);
 		    if (jType.equals(stringType))
 		    {

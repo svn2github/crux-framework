@@ -71,7 +71,7 @@ public class SQLKeyCursorProxyCreator extends SQLCursorProxyCreator
 	
 	protected void generateGetValue(SourcePrinter srcWriter)
     {
-		srcWriter.println("public "+getKeyTypeName(objectStoreKeyPath)+" getValue("+getKeyTypeName(objectStoreKeyPath)+" value){");
+		srcWriter.println("public "+getKeyTypeName(objectStoreKeyPath)+" getValue(){");
 		srcWriter.println("return getPrimaryKey();");
 		srcWriter.println("}");
     }
