@@ -86,6 +86,10 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 					{
 						event.preventDefault();
 					}
+					if (selectEvent.isStopped())
+					{
+						event.stopPropagation();
+					}
 				}
 			});
 		}

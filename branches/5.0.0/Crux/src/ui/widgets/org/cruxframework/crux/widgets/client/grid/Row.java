@@ -16,11 +16,11 @@
 package org.cruxframework.crux.widgets.client.grid;
 
 import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.widgets.client.button.Button;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;

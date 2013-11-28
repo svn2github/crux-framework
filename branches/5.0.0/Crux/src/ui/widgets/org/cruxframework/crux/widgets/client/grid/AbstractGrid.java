@@ -24,6 +24,9 @@ import java.util.Map;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.button.Button;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.event.row.BeforeRowEditEvent;
 import org.cruxframework.crux.widgets.client.event.row.BeforeRowEditHandler;
 import org.cruxframework.crux.widgets.client.event.row.BeforeShowRowDetailsEvent;
@@ -55,7 +58,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
@@ -91,7 +93,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	/**
 	 * Handles the event fired when the details of some row becomes visible.
 	 */
-	static class RowDetailsCommandHandler<R extends Row> implements ClickHandler
+	static class RowDetailsCommandHandler<R extends Row> implements SelectHandler
 	{
 		private AbstractGrid<R> grid;
 		private R row;
@@ -104,7 +106,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 			this.showDetailsButton = showDetailsButton;
 		}
 		
-		public void onClick(ClickEvent event)
+		public void onSelect(SelectEvent event)
 		{
 			event.stopPropagation();
 			boolean show = !row.isDetailsShown();
@@ -652,9 +654,10 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	private Cell createRowDetailsCommandCell(R row)
 	{
-		Button button = new Button(" ");
+		Button button = new Button();
+		button.setText(" ");
 		button.setStyleName("rowDetailsCommandButton");
-		button.addClickHandler(new RowDetailsCommandHandler<R>(this, row, button));
+		button.addSelectHandler(new RowDetailsCommandHandler<R>(this, row, button));
 		Cell cell = createCell(button, false, false);
 		cell.addStyleName("rowDetailsCommandCell");		
 		return cell;

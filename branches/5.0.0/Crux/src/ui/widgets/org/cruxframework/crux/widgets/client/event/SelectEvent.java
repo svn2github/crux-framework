@@ -26,6 +26,7 @@ public class SelectEvent extends GwtEvent<SelectHandler>
 {
 	private static Type<SelectHandler> TYPE = new Type<SelectHandler>();
 	private boolean canceled = false;
+	private boolean stopped;
 	
 	/**
 	 * 
@@ -65,6 +66,16 @@ public class SelectEvent extends GwtEvent<SelectHandler>
 		return null;
 	}
 
+	public void stopPropagation()
+	{
+		this.stopped = true;
+	}
+	
+	public boolean isStopped()
+	{
+		return this.stopped;
+	}
+	
 	public boolean isCanceled()
     {
     	return canceled;
