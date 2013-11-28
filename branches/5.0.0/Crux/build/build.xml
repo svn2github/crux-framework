@@ -57,6 +57,18 @@
 		</classpath>
 	</taskdef>
 
+
+	<!-- 
+	========================================================================================================
+		Read SVN Revision number
+	========================================================================================================
+	-->
+	<loadfile srcfile=".svn/entries" property="svn.revision">
+		<filterchain>
+		  <headfilter lines="1" skip="3"/>
+		</filterchain>
+	</loadfile>
+	
 	<!-- 
 	========================================================================================================
 		Export crux-dev.jar (Creates the crux-dev.jar file and exports it to the dist folder)
@@ -150,8 +162,6 @@
 		<attribute name="sourceDir"/>
 		<attribute name="outputDir"/>
 		<sequential>
-			<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-			
 			<delete dir="@{outputDir}" failonerror="no" />
 			<mkdir dir="@{outputDir}" />
 			
@@ -161,10 +171,6 @@
 				</src>
 				<classpath refid="build.classpath" />
 			</javac>
-
-			<svn failonerror="false" javahl="false" svnkit="true">
-				<wcversion path="${basedir}" />
-			</svn>
 		</sequential>
 	</macrodef>
 
@@ -180,7 +186,7 @@
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
-					<attribute name="Implementation-Revision" value="${revision.max}" />
+					<attribute name="Implementation-Revision" value="${svn.revision}" />
 				</manifest>
 			</jar>
 		</sequential>
@@ -260,7 +266,7 @@
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
-					<attribute name="Implementation-Revision" value="${revision.max}" />
+					<attribute name="Implementation-Revision" value="${svn.revision}" />
 				</manifest>
 			</jar>
 		</sequential>
@@ -313,7 +319,7 @@
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
-					<attribute name="Implementation-Revision" value="${revision.max}" />
+					<attribute name="Implementation-Revision" value="${svn.revision}" />
 				</manifest>
 			</jar>
 			<jar jarfile="${dist.dir}/@{outputRuntimeFileName}">
@@ -323,7 +329,7 @@
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
-					<attribute name="Implementation-Revision" value="${revision.max}" />
+					<attribute name="Implementation-Revision" value="${svn.revision}" />
 				</manifest>
 			</jar>
 		</sequential>
@@ -379,7 +385,7 @@
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
-					<attribute name="Implementation-Revision" value="${revision.max}" />
+					<attribute name="Implementation-Revision" value="${svn.revision}" />
 				</manifest>
 			</jar>
 		</sequential>
@@ -422,13 +428,8 @@
 		<attribute name="outputFileName"/>
 		<attribute name="includesPattern"/>
 		<sequential>
-			<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 			<delete  file="${dist.dir}/@{outputFileName}" failonerror="no" />
-			
-			<svn failonerror="false" javahl="false" svnkit="true">
-				<wcversion path="${basedir}" />
-			</svn>
-			
+						
 			<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" encoding="UTF-8">
 				<src>
 					<pathelement location="@{sourcedir}"/>
@@ -446,7 +447,7 @@
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
-					<attribute name="Implementation-Revision" value="${revision.max}" />
+					<attribute name="Implementation-Revision" value="${svn.revision}" />
 				</manifest>
 			</jar>
 		</sequential>

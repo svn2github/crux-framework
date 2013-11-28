@@ -5,7 +5,8 @@
 		on your settings.xml file
 	 -->
     <property name="dist" value="dist" />
-    <property name="version" value="5.0.4" />
+	<property file="../version.properties" />
+	<property file="internal-version.properties" />
     
     <!-- define Crux dist folder -->
     <property name="dist_crux" value="../../dist" />
@@ -20,7 +21,6 @@
 	<property name="artifactId_crux-themes" value="crux-themes" />
 	<property name="artifactId_crux-widgets" value="crux-widgets" />
 
-	<property file="internal-version.properties" />
 
 	<path id="maven-ant-tasks.classpath" path="../../lib/maven-ant-tasks-2.1.3.jar" />
 	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
@@ -140,12 +140,28 @@
 		</sequential>
 	</macrodef>
 
+	<macrodef name="preparePom">
+		<attribute name="pomFileName"/>
+		<attribute name="versionValue"/>
+		<sequential>
+	        <copy todir="${dist}/poms">
+	            <fileset dir="${poms}">
+	    			<include name="@{pomFileName}" />
+	            </fileset>
+	        </copy>
+			<replace dir="${dist}/poms" includes="@{pomFileName}" propertyFile="internal-version.properties">
+				<replacefilter token="#version" value="@{versionValue}" />
+			</replace>
+		</sequential>
+	</macrodef>
+	
 	<macrodef name="installJar">
 		<attribute name="pomFileName"/>
 		<attribute name="artifactId"/>
 		<sequential>
+			<preparePom pomFileName="@{pomFileName}" versionValue="${version}"/>
 			<artifact:install file="${dist}/@{artifactId}-${version}.jar">
-				<pom file="${poms}/@{pomFileName}"/>
+				<pom file="${dist}/poms/@{pomFileName}"/>
 			</artifact:install>
 		</sequential>
 	</macrodef>
@@ -155,33 +171,19 @@
 		<attribute name="artifactId"/>
 		<attribute name="internalNumber"/>
 		<sequential>
-	        <copy todir="${dist}/poms">
-	            <fileset dir="${poms}">
-	    			<include name="@{pomFileName}" />
-	            </fileset>
-	        </copy>
-			<replace dir="${dist}/poms" includes="@{pomFileName}" propertyFile="internal-version.properties">
-				<replacefilter token="&lt;version&gt;${version}&lt;/version&gt;" value="&lt;version&gt;${version}.${build.number}&lt;/version&gt;" />
-			</replace>
+			<preparePom pomFileName="@{pomFileName}" versionValue="${version}.${build.number}"/>
 			<artifact:deploy file="${dist}/@{artifactId}-${version}.@{internalNumber}.jar" >
 				<remoterepository id="crux-internal-repository" url="http://repo.sysmap.com.br/artifactory/sysmap-internal"/>
 				<pom file="${dist}/poms/@{pomFileName}"/>
 			</artifact:deploy>
 		</sequential>
-	</macrodef>
+ 	</macrodef>
 
 	<macrodef name="deploySnapshotJar">
 		<attribute name="pomFileName"/>
 		<attribute name="artifactId"/>
 		<sequential>
-	        <copy todir="${dist}/poms">
-	            <fileset dir="${poms}">
-	    			<include name="@{pomFileName}" />
-	            </fileset>
-	        </copy>
-			<replace dir="${dist}/poms" includes="@{pomFileName}">
-				<replacefilter token="&lt;version&gt;${version}&lt;/version&gt;" value="&lt;version&gt;${version}-SNAPSHOT&lt;/version&gt;" />
-			</replace>
+			<preparePom pomFileName="@{pomFileName}" versionValue="${version}-SNAPSHOT"/>
 			<artifact:deploy file="${dist}/@{artifactId}-${version}-SNAPSHOT.jar" >
 				<remoterepository id="sonatype-nexus-snapshots" url="https://oss.sonatype.org/content/repositories/snapshots"/>
 				<pom file="${dist}/poms/@{pomFileName}"/>
@@ -193,9 +195,10 @@
 		<attribute name="pomFileName"/>
 		<attribute name="artifactId"/>
 		<sequential>
+			<preparePom pomFileName="@{pomFileName}" versionValue="${version}"/>
 <!-- 			<artifact:deploy file="${dist}/@{artifactId}-${version}.jar" profiles="gpg"> -->
 <!-- 				<remoterepository refid="sonatype-nexus-staging" /> -->
-<!-- 				<pom file="${poms}/@{pomFileName}"/> -->
+<!-- 				<pom file="${dist}/poms/@{pomFileName}"/> -->
 <!-- 				<attach file="${dist}/@{artifactId}-${version}-sources.jar" type="jar" classifier="sources"/> -->
 <!-- 			    <attach file="${dist}/@{artifactId}-${version}-javadoc.jar" type="jar" classifier="javadoc"/> -->
 <!-- 			</artifact:deploy> -->
@@ -203,7 +206,7 @@
 				<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
 				<arg value="-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2" />
 				<arg value="-DrepositoryId=sonatype-nexus-staging" />
-				<arg value="-DpomFile=${poms}/@{pomFileName}" />
+				<arg value="-DpomFile=${dist}/poms/@{pomFileName}" />
 				<arg value="-Dfile=${dist}/@{artifactId}-${version}.jar" />
 				<arg value="-Pgpg" />
 			</artifact:mvn>
@@ -211,7 +214,7 @@
 				<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
 				<arg value="-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2" />
 				<arg value="-DrepositoryId=sonatype-nexus-staging" />
-				<arg value="-DpomFile=${poms}/@{pomFileName}" />
+				<arg value="-DpomFile=${dist}/poms/@{pomFileName}" />
 				<arg value="-Dfile=${dist}/@{artifactId}-${version}-sources.jar" />
 				<arg value="-Dclassifier=sources" />
 				<arg value="-Pgpg" />
@@ -220,7 +223,7 @@
 				<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
 				<arg value="-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2" />
 				<arg value="-DrepositoryId=sonatype-nexus-staging" />
-				<arg value="-DpomFile=${poms}/@{pomFileName}" />
+				<arg value="-DpomFile=${dist}/poms/@{pomFileName}" />
 				<arg value="-Dfile=${dist}/@{artifactId}-${version}-javadoc.jar" />
 				<arg value="-Dclassifier=javadoc" />
 				<arg value="-Pgpg" />
