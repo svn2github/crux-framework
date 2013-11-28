@@ -30,6 +30,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 import org.json.JSONObject;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
@@ -99,21 +100,24 @@ public class ViewWidgetConsumer implements LazyCompatibleWidgetConsumer
     {
 		JType propertyType = JClassUtils.getTypeForProperty(bindPath, dataObjectType);
 		String propertyClassName = getPropertyClassName(propertyType);
+		String dataObjectClassName = dataObjectType.getParameterizedQualifiedSourceName();
 		if (dataObjectType != null && widgetClass != null)
 		{
 			srcWriter.println("if (dataObject != null){");
 			String getExpression;
 			if (widgetClass.isAssignableTo(hasValueType))
 			{
-				getExpression = "(w==null?null:(("+HasValue.class.getCanonicalName()+"<"+propertyClassName+">)"+widgetVariable+").getValue())";
+				getExpression = getNullSafeExpression("(("+HasValue.class.getCanonicalName()+"<"+propertyClassName+">)"+widgetVariable+").getValue()", 
+												propertyType, bindPath, dataObjectClassName);
 			}
 			else if (widgetClass.isAssignableTo(hasFormatterType))
 			{
-				getExpression = "(w==null?null:("+propertyClassName+")(("+HasFormatter.class.getCanonicalName()+")w).getUnformattedValue())";
+				getExpression = getNullSafeExpression("("+propertyClassName+")(("+HasFormatter.class.getCanonicalName()+")w).getUnformattedValue()", 
+												propertyType, bindPath, dataObjectClassName);
 			} 
 			else if (widgetClass.isAssignableTo(hasTextType))
 			{
-				getExpression = "(w==null?null:(("+HasText.class.getCanonicalName()+")w).getText())";
+				getExpression = getNullSafeExpression("(("+HasText.class.getCanonicalName()+")w).getText()", propertyType, bindPath, dataObjectClassName);
 			}
 			else
 			{
@@ -124,6 +128,29 @@ public class ViewWidgetConsumer implements LazyCompatibleWidgetConsumer
 		}
     }
 
+	protected String getNullSafeExpression(String expression, JType propertyType, String bindPath, String dataObjectClassName)
+	{
+		String getExpression;
+		JPrimitiveType primitiveType = propertyType.isPrimitive();
+		if (primitiveType == null)
+		{
+			getExpression = "(w==null?null:"+expression+")";
+		}
+		else if (primitiveType.equals(JPrimitiveType.BOOLEAN))
+		{
+			getExpression = "(w==null?false:"+expression+"==null?false:"+expression+")";
+		}
+		else if (!primitiveType.equals(JPrimitiveType.VOID))
+		{
+			getExpression = "(w==null?0:"+expression+"==null?0:"+expression+")";
+		}
+		else
+		{
+			throw new CruxGeneratorException("Invalid binding path ["+bindPath+"] on target dataobject ["+dataObjectClassName+"]. Property can not be void.");
+		}
+		return getExpression;
+	}
+	
 	protected void generateCopyToCode(SourcePrinter srcWriter, String dataObjectVariable, 
 			String widgetVariable, JClassType dataObjectType, JClassType widgetClass, String bindPath) throws NoSuchFieldException
 	{
