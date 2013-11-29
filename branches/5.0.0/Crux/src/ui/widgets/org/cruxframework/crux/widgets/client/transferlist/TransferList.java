@@ -43,6 +43,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * A decorated panel, with a title bar.
  * @author Gesse S. F. Dafe
  */
+@Deprecated
+/**
+ * @see ListShuttle that renders div, is crossdevice and supports drag and drop
+ */
 public class TransferList extends Composite implements HasBeforeMoveItemsHandlers, HasMoveItemsHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-TransferList" ;
