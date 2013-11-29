@@ -26,6 +26,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
+import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.scannotation.AbstractScanner;
 import org.w3c.dom.Document;
 
@@ -57,6 +58,22 @@ public class CrossDevicesScanner extends AbstractScanner
 		}
 	}
 
+	public static Templates getChildTagTemplatesAnnotation(Class<?> templateClass)
+	{
+		Templates attributes = templateClass.getAnnotation(Templates.class);
+		if (attributes == null)
+		{
+			Class<?> superClass = templateClass.getGenericInterfaces() != null ? 
+					ClassUtils.getRawType(templateClass.getGenericInterfaces()[0]) : null;
+			if (superClass != null && !superClass.equals(DeviceAdaptive.class))
+			{
+				attributes = getChildTagTemplatesAnnotation(superClass);
+			}
+		}
+
+		return attributes;
+	}
+
 	/**
 	 * 
 	 * @param urls
@@ -73,7 +90,7 @@ public class CrossDevicesScanner extends AbstractScanner
 					Class<?> deviceAdaptiveClass = Class.forName(deviceAdaptive);
 					if (deviceAdaptiveClass.isInterface() && !deviceAdaptiveClass.equals(DeviceAdaptive.class))
 					{
-						Templates templates = deviceAdaptiveClass.getAnnotation(Templates.class);
+						Templates templates = getChildTagTemplatesAnnotation(deviceAdaptiveClass);
 						if (templates == null)
 						{
 							throw new CrossDevicesException("DeviceAdaptive widget ["+deviceAdaptive+"] does not declare any templates. Use the annotation @Views to add templates to this widget.");
@@ -116,5 +133,5 @@ public class CrossDevicesScanner extends AbstractScanner
 	{
 		return instance;
 	}
-	
+
 }
