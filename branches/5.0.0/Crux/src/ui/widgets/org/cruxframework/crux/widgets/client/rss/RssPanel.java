@@ -55,7 +55,7 @@ public class RssPanel extends Composite
 		private String entryTitleStyleName = "crux-entryTitle";
 		private String entryDateStyleName = "crux-entryDate";
 		protected Grid body;
-		protected DateTimeFormat dateTimeFormat;
+		protected DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM);
 		protected int maxTitleSize;
 		
 		public abstract void addEntry(final Entry entry);
@@ -63,7 +63,6 @@ public class RssPanel extends Composite
 		public RssPanelImpl()
         {
 			setMaxTitleSize(100);
-			dateTimeFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM);
 			
 			rssPanel = new VerticalPanel();
 			title = new HTML();
@@ -210,6 +209,11 @@ public class RssPanel extends Composite
 		public void setEntryDateStyleName(String entryDateStyleName) 
 		{
 			this.entryDateStyleName = entryDateStyleName;
+		}
+
+		public void setDateTimeFormat(DateTimeFormat dateTimeFormat) 
+		{
+			this.dateTimeFormat = dateTimeFormat;
 		}
 	}
 	
@@ -439,6 +443,14 @@ public class RssPanel extends Composite
 	public void setEntryDateStyleName(String entryDateStyleName) 
 	{
 		panelImpl.setEntryDateStyleName(entryDateStyleName);
+	}
+
+	/**
+	 * @param dateTimeFormat
+	 */
+	public void setDateTimeFormat(DateTimeFormat dateTimeFormat)
+	{
+		panelImpl.setDateTimeFormat(dateTimeFormat);
 	}
 	
 }
