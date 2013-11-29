@@ -78,6 +78,19 @@ public class ClassUtils
 	 * @param type
 	 * @return
 	 */
+	public static boolean isSimpleTypeAndHasStringConstructor(Type type)
+	{
+		Class<?> rawType = getRawType(type);
+		return isSimpleType(rawType.getCanonicalName()) 
+				&&
+				!rawType.getCanonicalName().equals(Character.TYPE.getCanonicalName());
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public static boolean isSimpleType(Type type)
 	{
 		Class<?> rawType = getRawType(type);

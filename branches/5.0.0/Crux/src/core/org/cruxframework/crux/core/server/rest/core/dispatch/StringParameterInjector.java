@@ -54,7 +54,7 @@ public class StringParameterInjector
 		this.defaultValue = defaultValue;
 		this.isDate = Date.class.isAssignableFrom(type);
 
-		if (!type.isPrimitive())
+		if (ClassUtils.isSimpleTypeAndHasStringConstructor(type))
 		{
 			try
 			{
