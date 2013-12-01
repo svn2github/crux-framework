@@ -45,15 +45,6 @@ public class HttpRequest
 		this.uri = uri;
 	}
 	
-	/**
-	 * @see request.getRemoteAddr();
-	 * @return a <code>String</code> containing the fully 
-     *			qualified name of the client
-	 */
-	public String getRemoteAddr() {
-		return request.getRemoteAddr();
-	}
-
 	public MultivaluedMap<String, String> getPutFormParameters()
 	{
 		if (formParameters != null)
@@ -232,10 +223,48 @@ public class HttpRequest
 	}
 
 	/**
+	 * @see request.getLocale();
 	 * @return the current locale.
 	 */
-	public Locale getLocale() {
+	public Locale getLocale() 
+	{
 		return request.getLocale();
 	}
+	
+	/**
+	 * @see request.getRemoteHost();
+	 * @return a <code>String</code> container the remote host.
+	 */
+	public String getRemoteHost() 
+	{
+		return request.getRemoteHost();
+	}
 
+	/**
+	 * @see request.getRemoteAddr();
+	 * @return a <code>String</code> containing the fully 
+     *			qualified name of the client
+	 */
+	public String getRemoteAddr() 
+	{
+		return request.getRemoteAddr();
+	}
+	
+	/**
+	 * @see request.getRemotePort();
+	 * @return a <code>int</code> container the remote port.
+	 */
+	public int getRemotePort() 
+	{
+		return request.getRemotePort();
+	}
+	
+	/**
+	 * @see request.getRemoteUser();
+	 * @return a <code>String</code> container the remote user.
+	 */
+	public String getRemoteUser() 
+	{
+		return request.getRemoteUser();
+	}
 }
