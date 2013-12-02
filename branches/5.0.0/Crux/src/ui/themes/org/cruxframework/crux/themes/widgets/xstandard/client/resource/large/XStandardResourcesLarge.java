@@ -22,7 +22,6 @@ import com.google.gwt.resources.client.ClientBundle;
 
 /**
  * @author Gesse Dafe
- *
  */
 @Resource(value="xStandardResources", supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch})
 public interface XStandardResourcesLarge extends ClientBundle

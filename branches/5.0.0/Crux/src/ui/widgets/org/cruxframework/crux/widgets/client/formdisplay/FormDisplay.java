@@ -16,7 +16,6 @@
 package org.cruxframework.crux.widgets.client.formdisplay;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
@@ -57,7 +56,7 @@ public class FormDisplay extends Composite
 	{
 		protected IsWidget widget;
 		protected String label;
-		protected HorizontalAlignmentConstant align;
+		protected HorizontalAlignmentConstant align = HasHorizontalAlignment.ALIGN_LEFT;
 		
 		/**
 		 * @param panel
@@ -73,30 +72,21 @@ public class FormDisplay extends Composite
 				panel.setWidget(numRows, 0, new Label(label));
 				cellFormatter.setStyleName(numRows, 0, "formEntryLabel");
 				cellFormatter.getElement(numRows, 0).getStyle().setProperty("display", "table-cell");
+				cellFormatter.getElement(numRows, widgetColumnIndex).getStyle().setProperty("textAlign", align.getTextAlignString());
 				widgetColumnIndex = 1;
 			}
 			
 			panel.setWidget(numRows, widgetColumnIndex, widget);
 			cellFormatter.setStyleName(numRows, widgetColumnIndex, "formEntryData");
 			cellFormatter.getElement(numRows, widgetColumnIndex).getStyle().setProperty("display", "table-cell");
-			applyHorizontalAlignment(widget, align);
+			cellFormatter.getElement(numRows, widgetColumnIndex).getStyle().setProperty("textAlign", align.getTextAlignString());
 			
 			if(label == null)
 			{
 				cellFormatter.setColSpan(numRows, widgetColumnIndex, 2);
 			}
 		}
-		
-		public static void applyHorizontalAlignment(IsWidget child, HorizontalAlignmentConstant align)
-		{
-			String left = HasHorizontalAlignment.ALIGN_RIGHT.equals(align) || HasHorizontalAlignment.ALIGN_CENTER.equals(align) ? "auto" : "";
-			String right = HasHorizontalAlignment.ALIGN_LEFT.equals(align) || HasHorizontalAlignment.ALIGN_CENTER.equals(align) ? "auto" : "";
-
-			Style style = child.asWidget().getElement().getStyle();
-			style.setProperty("marginLeft", left);
-			style.setProperty("marginRight", right);
-		}
-		
+				
 		public void setHorizontalAlignment(HorizontalAlignmentConstant align)
 		{
 			this.align = align;
@@ -137,7 +127,7 @@ public class FormDisplay extends Composite
 			panel.setWidget(numRows, 0, widget);
 			cellFormatter.setStyleName(numRows, 0, "formEntryData");
 			cellFormatter.getElement(numRows, 0).getStyle().setProperty("display", "table-cell");
-			applyHorizontalAlignment(widget, align);
+			cellFormatter.getElement(numRows, 0).getStyle().setProperty("textAlign", align.getTextAlignString());
 		}
 	}
 }

@@ -12,51 +12,68 @@ BODY
 }
 DIV, TD, LABEL, SPAN, INPUT, BUTTON
 {
-	font-size: 12px;
+	font-size: 16px;
 	font-family:OpenSans,Verdana,Helvetica,Arial,sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+INPUT, BUTTON
+{
+	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+INPUT:focus, BUTTON:focus
+{
+	border-color: #66AFE9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+DIV, INPUT, BUTTON
+{
+	box-sizing: border-box;
 }
 
-@external crux-StyledPanel, crux-StyledPanelOuter;
+@external crux-StyledPanel, crux-StyledPanelOuter, crux-FileUploader, dropArea;
 .crux-StyledPanelOuter
 {
 	padding: 8px;
 	min-width: 400px;
 }
-.crux-StyledPanel
+.crux-StyledPanel, .crux-FileUploader .dropArea
 {
 	display: block;
 	border: solid #EAEAEA 1px;
 	border-radius: 3px;
 	box-shadow: 0px 0px 10px rgba(90,90,90,0.1);
 	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
-	padding: 10px;
+	padding: 15px;
 }
 
-@external crux-Button;
-.crux-Button
-{
-	color: #FFFFFF;
-	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
-	border: 1px solid #206080;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-	border-radius: 2px;
-	min-height: 32px;
-	min-width: 100px;
+@external crux-Button, crux-FileUploader, fileInputButton;
+.crux-Button, .crux-FileUploader .fileInputButton
+{	    
+	color: #FFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	text-shadow: none;
+	border-radius: 1px;
+	height: 45px;
+	min-width: 110px;
 	-webkit-user-select: none;
 	padding: 8px 13px;
 	outline: 0;
-	transition: background-image ease-in-out 0.15s;	
+	background-color: #81AA32;
+	box-shadow: 0px -20px 20px rgba(0, 0, 0, 0.1) inset;	
+	transition: box-shadow ease-in-out 0.15s;
 }
-.crux-Button:hover
+.crux-Button:hover, .crux-FileUploader .fileInputButton:hover
 {
-	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+	box-shadow: none;
 }
+
 
 @external crux-FormDisplay, formEntryLabel, formEntryData;
 .crux-FormDisplay .formEntryData, .crux-FormDisplay .formEntryLabel
 {
-	padding-bottom: 5px;
+	padding-bottom: 10px;
 }
 
 @external crux-MenuTabsDisposal, menuTabsSplitPanel, menuEntriesContainer, menuPanel, menuEntry, menuSection, menuSectionEntries, menuSectionEntries-closed;
@@ -171,6 +188,8 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-color: #FFFFFF;
 	height: 100%;
 	box-shadow: 10px 0px 20px -10px rgba(0,0,0,0.3) inset;
+	padding-bottom: 10px;
+	padding-top: 20px;
 }
 .crux-TabBarItem
 {
@@ -228,15 +247,24 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 }
 .flapCloseButton:before 
 {
-	content: 'X';
-	color: #FFFFFF;
+	content: "X";
+	color: rgb(255, 255, 255);
 	-webkit-user-select: none;
-	font-size: 10px;
 	padding-right: 1px;
+	font-family: arial;
+	font-size: 14px;
+	top: 8px;
+	position: absolute;
+	right: 8px;
+	-webkit-transition: all ease-in-out 0.1s;
 }
 .flapCloseButton:hover 
 {
 	font-size: 14px;
+}
+.flapCloseButton:hover:before 
+{
+	font-size: 16px;
 }
 .crux-RollingPanelPreviousWrapper, .crux-RollingPanelNextWrapper 
 {
@@ -299,55 +327,37 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	display: none;
 }
 
-@external crux-FileUploader, dropArea, filesArea, filePanel, crux-ProgressBar, percentBar, cancelUploadButton, fileInputButton, thumbnailImage;
+@external crux-FileUploader, dropArea, filesArea, filePanel, crux-ProgressBar, percentBar, cancelUploadButton, fileInputButton, thumbnailImage, chooseButton;
 .crux-FileUploader
 {
 	width: 400px;
 	margin-top: 10px;
 }
+.crux-FileUploader .chooseButton
+{
+	cursor: pointer;
+}
 .crux-FileUploader .fileInputButton
 {
-	/*helped a lot: http://gradients.glrzad.com */
-	background-image: linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
-	background-image: -o-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
-	background-image: -moz-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
-	background-image: -webkit-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
-	background-image: -ms-linear-gradient(bottom, rgb(206,213,235) 20%, rgb(91,64,189) 78%);
-	    
-    color: #FFFFFF;
-	border: 1px solid #206080;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-	border-radius: 2px;
-	-webkit-user-select: none;
-	outline: 0;
-	transition: background-image ease-in-out 0.15s;
-	height: 30px;
-	line-height: 30px;
-	margin-top: 10px;
-	text-align: center;
-}
-.crux-FileUploader .fileInputButton:hover
-{
-	/*helped a lot: http://gradients.glrzad.com */
-    background-image: linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
-	background-image: -o-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
-	background-image: -moz-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
-	background-image: -webkit-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
-	background-image: -ms-linear-gradient(bottom, rgb(155,174,235) 20%, rgb(91,64,189) 78%);
+	background-color: #4496C6;
+	position: relative;
+	display: inline-block;
+	width: 170px;
+	line-height: 40px;
+	margin-top: 10px;	
+	cursor: pointer;
 }
 .crux-FileUploader .dropArea
 {
-    /* height hack */
-    min-height:100px;
-    height:auto !important;
-    height:100px;
-    
-    width: 100%;
-    border-color: #D0D0D0;
-    border-radius: 20px 20px 20px 20px;
-    border-style: dotted;
-    border-width: 3px;
+    border-style: dashed;
+	min-height: 160px;
+	background-image: url(upload-icon.png);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.crux-FileUploader .filesArea
+{
+	background-color: #FFFFFF;
 }
 .crux-FileUploader .filePanel
 {
@@ -357,63 +367,91 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
 	padding: 10px;
 	width:calc(100% - 20px);
+	position: relative;
+	width: 100%;
+	height: 60px;
 }
 .crux-FileUploader .filePanel .thumbnailImage
 {
-	border: 1px solid #206080;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-	height: 50px;
-    width: 50px;
+	border: solid 1px #FFF;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+	height: 40px;
+	width: 40px;
+	display: inline;
+	position: absolute;
+	top: 8px;
+	left: 8px;
 }
 .crux-FileUploader .filePanel .cancelUploadButton
 {
-	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
-	border: 1px solid #206080;
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-	border-radius: 2px;
+	border: 0px solid;
 	-webkit-user-select: none;
 	outline: 0;
-	transition: box-shadow ease-in-out 0.15s;	
-	height: 18px;
-	width: 18px;
+	transition: box-shadow ease-in-out 0.15s;
+	height: 20px;
+	width: 20px;
 	text-align: center;
 	padding: 0px;
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	background: transparent;
+	cursor: pointer;
 }
-.crux-FileUploader .filePanel .cancelUploadButton:before 
+.crux-FileUploader .filePanel .cancelUploadButton:after 
 {
-	content: 'X';
-	color: #FFFFFF;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	content: "X";
 	-webkit-user-select: none;
-	font-size: 10px;
-	padding-right: 1px;
+	font-size: 14px;
+	line-height: 20px;
+	position: absolute;
+	top: -5px;
+	right: 0px;
+	color: #4496C6;
+	font-weight: normal;
+	cursor: pointer;
 }
 .crux-FileUploader .filePanel .crux-ProgressBar
 {
-	width: 150px;
-	padding-right: 2px;
-	background-color: #abb2bc;
-	border-radius: 2px;
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #b6bcc6), color-stop(1, #9da5b0));
-	box-shadow: inset 0px 3px 10px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px #FFF, 0 0 10px rgba(0,0,0,0.2);
+	width: 280px;
+	border-radius: 1px;
 	height: 18px;
+	position: absolute;
+	top: 30px;
+	left: 55px;
+	margin: 0px;
+	padding: 0px;
+	border-top: solid 2px #EEE;;
 }
 
 .crux-FileUploader .filePanel .crux-ProgressBar .percentBar
 {
-	height: 16px !important; 
-	border-radius: 2px;
-	border: 1px solid rgba(0,0,0,0.2);
-	background: -webkit-linear-gradient(top,#4095D0,#4090B1);
-	color: rgba(255,255,255,0.9);
-	text-shadow: 0px -1px 0px rgba(0,0,0,0.5);
+	height: 18px !important;
+	border-radius: 1px;
+	border-top: solid 2px #A1CA52;
+	color: #618A12;
+	font-size: 11px;
+	line-height: 18px;
+	padding-left: 10px;
+	box-sizing: border-box;
+	position: absolute;
+	top: -2px;
 }
 
 .crux-FileUploader .filePanel .gwt-Label
 {
 	overflow: hidden;
-	width: 210px;
+	width: 280px;
 	margin-left: 10px;
+	color: #4C6879;
+	position: absolute;
+	left: 55px;
+	top: 6px;
+	text-align: left;
+	padding: 0px;
+	box-sizing: border-box;
+	margin: 0px;
+	white-space: nowrap;
 }
 
 /******************************************************************************
@@ -507,20 +545,12 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 @external gwt-TextBox;
 .gwt-TextBox
 {
-	height: 22px;
-	border: solid 1px rgba(0,0,0,.3);
+	height: 38px;
+	border: solid 1px rgba(28, 89, 148, 0.4);
 	width: 100%;
-	border-radius: 3px;
-	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;	
+	border-radius: 2px;
+	padding: 5px;	
 }
-.gwt-TextBox:focus
-{
-	border-color: #66AFE9;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-}
-
 @external gwt-Label;
 .gwt-Label
 {
