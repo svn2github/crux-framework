@@ -7,14 +7,14 @@
 	useController="mainController" title="Styled Panel"> 
 	
 	<center>
-		<crux:styledPanel id="panel1">
+		<crux:styledPanel id="panel1" width="60%" height="200px">
 		</crux:styledPanel>
 		
 		<div class="speechBubble">
 			<h1>StyledPanel</h1>
 			<p>
 				O StyledPanel é um painel simples, cuja utilidade é agrupar 
-				visualmente componentes que possuem algum tipo de relação entre sim. Em geral, é usado para 
+				visualmente componentes que possuem algum tipo de relação entre si. Em geral, é usado para 
 				delimitar fomrulários, menus e criar barras de ferramentas. Sua estrutura interna é leve, sendo 
 				constituído por duas DIVs aninhadas, o que permite uma grande flexibilidade de estulização 
 				através dos recursos CSS3.

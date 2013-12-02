@@ -6,6 +6,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <property name="context-root" value="cross-device-showcase"/>
         <property name="java-output-path" value="/cross-device-showcase/target/classes"/>
-        <property name="component.exclusion.patterns" value="**/gwt-dev*.jar,**/gwt-user*.jar,**/validation-api*.jar,**/crux-dev*.jar,**/crux-widgets*.jar,**/crux-themes*.jar,**/*.view.xml,**/*.crux.xml,**/*.template.xml,**/*.offline.xml"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/web.xml,**/gwt-dev*.jar,**/gwt-codeserver*.jar,**/gwt-user*.jar,**/validation-api*.jar,**/crux-dev*.jar,**/crux-widgets*.jar,**/crux-themes*.jar,**/*.view.xml,**/*.crux.xml,**/*.template.xml,**/*.offline.xml,**/*.xdevice.xml"/>
     </wb-module>
 </project-modules>

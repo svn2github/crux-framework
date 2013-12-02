@@ -25,8 +25,8 @@
 						<gwt:checkBox id="tabletCheckBox" text="Tablet" checked="true"/>
 					</gwt:horizontalPanel>
 				</crux:entry>			
-				<crux:entry>
-					<crux:button id="btn" text="Fechar" onSelect="mainController.showMenu"/>	
+				<crux:entry horizontalAlignment="center">
+					<crux:button id="btn" text="Fechar" onSelect="mainController.showMenu" style="margin-top:20px"/>	
 				</crux:entry>
 			</crux:formDisplay>	
 		</crux:styledPanel>
