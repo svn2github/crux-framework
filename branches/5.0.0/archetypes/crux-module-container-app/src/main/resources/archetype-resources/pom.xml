@@ -245,7 +245,7 @@
 									<arg value="${sourceDir}" />
 							
 									<arg value="-moduleName" />
-									<arg value="${module-name}" />
+									<arg value="${module-short-name}" />
 							
 									<jvmarg value="-Xmx768M" />
 									<jvmarg value="-Xms256M" />
