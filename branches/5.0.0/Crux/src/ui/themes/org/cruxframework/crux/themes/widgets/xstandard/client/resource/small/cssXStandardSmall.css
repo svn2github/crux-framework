@@ -42,7 +42,11 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 .crux-Button
 {
 	color: #FFFFFF;
-	background-image: -webkit-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
+	background: -webkit-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
+	background: -moz-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
+	background: -ms-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
+	background: -o-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
+	background: linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
 	border: 1px solid rgba(45, 102, 195, 1);
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
@@ -247,4 +251,85 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 {
 	color: rgba(0,0,0,0.8);
 	text-shadow: 0px 1px #FFFFFF;
+}
+
+
+/******************************************************************************
+	ListShuffle
+*******************************************************************************/
+
+@external crux-ListShuttle, toSelectColumn, selectedColumn, buttonsColumn;
+
+.crux-ListShuttle .buttonsColumn{
+    margin:10px;
+    text-align:center
+}
+.crux-ListShuttle .buttonsColumn button{
+    border-radius:0;
+    margin-left:-1px;
+    width:25% !important;
+    min-width:0;
+    position:relative;
+}
+.crux-ListShuttle .buttonsColumn button{
+    text-shadow:none;
+    color:rgba(0,0,0,0); 
+}
+.crux-ListShuttle .buttonsColumn button:first-child{
+    border-radius:3px 0 0 3px;    
+}
+.crux-ListShuttle .buttonsColumn button:before{
+    position:absolute;
+    color:white;
+    text-shadow:0 1px 1px rgba(0,0,0,0.2);
+    z-index:4;
+    font-size:17px;
+}
+.crux-ListShuttle .buttonsColumn button:nth-child\(1\):before{
+    content:'\25bc';
+}
+.crux-ListShuttle .buttonsColumn button:nth-child\(2\):before{
+    content:'\25bc \ \25bc';
+    width:1px;
+    line-height:6px;
+    margin-top:5px;
+    left:50%;
+    margin-left:-7px
+}
+.crux-ListShuttle .buttonsColumn button:nth-child\(3\):before{
+    content:'\25b2';
+}
+.crux-ListShuttle .buttonsColumn button:nth-child\(4\):before{
+    content:'\25b2 \ \25b2';
+    width:1px;
+    line-height:6px;
+    margin-top:3px;
+    left:50%;
+    margin-left:-7px
+}
+.crux-ListShuttle .buttonsColumn button:last-child{
+    border-radius:0 3px 3px 0;
+}
+
+.crux-ListShuttle fieldset{
+    border:1px solid #aaa;
+    border-radius:3px;
+    padding:20px 0;
+    box-shadow:0 2px 2px rgba(0,0,0,0.1) inset
+}
+.crux-ListShuttle fieldset div div div{
+    padding:10px;
+    border-bottom:1px solid #ccc;
+}
+.crux-ListShuttle fieldset div div div:last-child{
+    border-bottom:none
+}
+.crux-ListShuttle fieldset legend{
+    background:#aaa;
+    padding:0 5px;
+    border-radius:5px;
+    margin-left:2%;
+    font-weight:bold;
+    color:white;
+    font-size:12px;
 }
