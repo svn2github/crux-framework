@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.client.permission;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A Default UI handler for user lack of permissions scenarios.
@@ -32,7 +33,10 @@ public class DefaultPermissionsUIHandler implements PermissionsUIHandler
     public void markAsUnauthorizedForEdition(HasEnabled widget)
     {
 		widget.setEnabled(false);
-		((IsWidget)widget).asWidget().addStyleDependentName("disabled");
+		Widget asWidget = ((IsWidget)widget).asWidget();
+		//here we have the pre compiled styleName so we will only add a suffix to it
+		//and the developer can define it's behavior in a global css class .disabled
+		asWidget.setStyleName(asWidget.getStylePrimaryName() + " disabled");
     }
 
 	@Override
