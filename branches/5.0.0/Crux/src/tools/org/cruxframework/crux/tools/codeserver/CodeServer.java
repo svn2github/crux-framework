@@ -111,14 +111,23 @@ public class CodeServer
 		URL[] urls = ClasspathUrlFinder.findClassPaths();
 		ModuleUtils.initializeScannerURLs(urls);
 		ClassScanner.initialize(urls);
-    	Set<String> screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(moduleName);
-    	if (screenIDs != null && !screenIDs.isEmpty())
+		Set<String> screenIDs = null;
+		try
+        {
+	        screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(moduleName);
+        }
+    	catch (Exception e)
     	{
-    		logger.info("Starting code server for module ["+moduleName+"]");
-    		CruxBridge.getInstance().registerLastPageRequested(screenIDs.iterator().next());
-    		String[] args = getServerParameters();
-    		com.google.gwt.dev.codeserver.CodeServer.main(args);
+    		logger.info("Error retrieving crux pages list for module ["+moduleName+"]. "
+    				+ "Please, verify if the module name parameter matches the module short name on your .gwt file", e);
     	}
+		if (screenIDs != null && !screenIDs.isEmpty())
+		{
+			logger.info("Starting code server for module ["+moduleName+"]");
+			CruxBridge.getInstance().registerLastPageRequested(screenIDs.iterator().next());
+			String[] args = getServerParameters();
+			com.google.gwt.dev.codeserver.CodeServer.main(args);
+		}
     }
 
 	protected String[] getServerParameters()
