@@ -37,7 +37,7 @@ public class Main
 		if(StringUtils.isEmpty(file))
 		{
 			//throw new RuntimeException("Please inform a config file!");
-			file = "E:\\desenv\\workspaces\\workspace-crux-5\\AntToMaven\\entrada.txt";
+			file = "sampleInput.txt";
 		}
 
 		String mavenHome = null;
