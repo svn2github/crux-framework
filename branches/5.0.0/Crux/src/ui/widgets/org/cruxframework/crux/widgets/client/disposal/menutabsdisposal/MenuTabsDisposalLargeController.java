@@ -44,7 +44,6 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	private FlowPanel menuPanel;
 	private TabContainer viewContainer;
 	private Map<String, FlowPanel> sections = new HashMap<String, FlowPanel>();
-	private FlowPanel visibleItems = null;
 	private FlowPanel lastSectionAdded = null;
 	
 	@Override
@@ -138,17 +137,20 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 				FlowPanel items = sections.get(label);
 				if(items != null)
 				{
-					if(items == visibleItems)
+					if(itemsVisible(items))
 					{
 						items.addStyleDependentName("closed");
-						visibleItems = null;
 					}
 					else
 					{
 						items.removeStyleDependentName("closed");
-						visibleItems = items;
 					}
 				}
+			}
+
+			private boolean itemsVisible(FlowPanel items) 
+			{
+				return !items.getStyleName().contains("-closed");
 			}
 		});
 		

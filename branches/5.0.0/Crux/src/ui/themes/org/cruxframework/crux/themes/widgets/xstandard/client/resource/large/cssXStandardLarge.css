@@ -354,6 +354,7 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-image: url(upload-icon.png);
 	background-position: center;
 	background-repeat: no-repeat;
+	outline: none;
 }
 .crux-FileUploader .filesArea
 {
@@ -393,8 +394,8 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	text-align: center;
 	padding: 0px;
 	position: absolute;
-	right: 8px;
-	top: 8px;
+	right: 0px;
+	top: 0px;
 	background: transparent;
 	cursor: pointer;
 }
@@ -405,8 +406,8 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	font-size: 14px;
 	line-height: 20px;
 	position: absolute;
-	top: -5px;
-	right: 0px;
+	top: 0px;
+	right: 5px;
 	color: #4496C6;
 	font-weight: normal;
 	cursor: pointer;
