@@ -27,19 +27,12 @@
 			<crux:menuSection label="Elementos de Layout" additionalStyleName="layoutSectionIcon"/>
 			<crux:menuEntry label="Styled Panel" targetView="styledPanel"/>
 			<crux:menuEntry label="Form Display" targetView="formDisplay"/>
+			<crux:menuSection label="Elementos de Dados"/>
 			<crux:menuEntry label="File Uploader" targetView="fileUploader"/>
-			<crux:menuEntry label="Slideshow" targetView="slideshow"/>
+			<crux:menuSection label="Elementos de Imagem"/>
+			<crux:menuEntry label="Slide Show" targetView="slideshow"/>
 			<crux:menuSection label="Banco de Dados"/>
 			<crux:menuEntry label="CRUD Simples" targetView="simpleDatabase"/>
-			<crux:menuEntry label="Exemplo 5" targetView="formDisplay"/>
-			<crux:menuEntry label="Exemplo 6" targetView="formDisplay"/>
-			<crux:menuEntry label="Exemplo 7" targetView="formDisplay"/>
-			<crux:menuSection label="Seção 3"/>
-			<crux:menuEntry label="Exemplo 8" targetView="formDisplay"/>
-			<crux:menuEntry label="Exemplo 9" targetView="formDisplay"/>
-			<crux:menuEntry label="Exemplo 10" targetView="formDisplay"/>
-			<crux:menuEntry label="Exemplo 11" targetView="formDisplay"/>
-			<crux:menuEntry label="Exemplo 12" targetView="formDisplay"/>
 		</crux:menuTabsDisposal>
 	
 	</body>
