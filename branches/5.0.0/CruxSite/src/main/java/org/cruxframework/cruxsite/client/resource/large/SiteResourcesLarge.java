@@ -38,20 +38,11 @@ public interface SiteResourcesLarge extends ClientBundle
 	@Source("noise.png")
 	DataResource noiseBg();
 	
-	@Source("banner-what-is-crux.jpg")
-	ImageResource bannerWhatIsCrux();
-	
 	@Source("banner-cross-device.jpg")
 	ImageResource bannerCrossDevice();
 	
 	@Source("banner-fast.jpg")
 	ImageResource bannerFast();
-	
-	@Source("banner-social.jpg")
-	ImageResource bannerSocial();
-	
-	@Source("banner-java.jpg")
-	ImageResource bannerJava();
 	
 	@Source("banner-right-arrow.png")
 	ImageResource bannerRightArrow();
@@ -64,4 +55,37 @@ public interface SiteResourcesLarge extends ClientBundle
 	
 	@Source("mountain-bg.png")
 	DataResource mountainBg();
+	
+	@Source("crux-header-logo.png")
+	DataResource cruxHeaderLogo();
+	
+	@Source("br-flag.png")
+	DataResource brFlag();
+	
+	@Source("uk-flag.png")
+	DataResource ukFlag();
+	
+	@Source("showcase-tip.png")
+	DataResource showcaseTip();
+	
+	@Source("logo-vivo.png")
+	ImageResource logoVivo();
+	
+	@Source("logo-tim.png")
+	ImageResource logoTim();
+	
+	@Source("logo-unimed.png")
+	ImageResource logoUnimed();
+	
+	@Source("logo-natura.png")
+	ImageResource logoNatura();
+	
+	@Source("icon-arrow-btn.png")
+	DataResource iconArrowBtn();
+	
+	@Source("crux-footer-logo.png")
+	ImageResource cruxFooterLogo();
+
+	@Source("triggo-footer-logo.png")
+	ImageResource triggoFooterLogo();
 }

@@ -33,4 +33,10 @@ public interface SiteCommonResources extends ClientBundle
 	
 	@Source("code.jpg")
 	ImageResource codeBg();
+	
+	@Source("project-running.jpg")
+	ImageResource projectRunning();
+	
+	@Source("project-structure.jpg")
+	ImageResource projectStructure();
 }

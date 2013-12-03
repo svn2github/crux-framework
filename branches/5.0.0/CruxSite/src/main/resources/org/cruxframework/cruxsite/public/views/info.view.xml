@@ -6,30 +6,11 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	useController="mainController" title="Downloads"> 
 	
-	<div class="viewTextPanel">
-		
-		<h1>Descubra mais</h1>
-		
-		<p>Entenda por que o Crux Framework pode ser a alternativa que você precisa para seu novo projeto:</p>
-		
-		<center>
-			<div class="itemSlot infoSlot fastInfo">
-				<crux:button id="fastLabel" text="Aplicações super leves e rápidas" onSelect="mainController.showViewFast" styleName="infoButton"/>
-			</div>
-			
-			<div class="itemSlot infoSlot javaInfo">
-				<crux:button id="javaLabel" text="Escreva Java, sempre!" onSelect="mainController.showViewJava" styleName="infoButton"/>
-			</div>
-			
-			<div class="itemSlot infoSlot crossInfo">
-				<crux:button id="crossLabel" text="Multi-plataforma sem retrabalho" onSelect="mainController.showViewCrossDev" styleName="infoButton"/>
-			</div>
-			
-			<div class="itemSlot infoSlot aboutInfo">
-				<crux:button id="aboutLabel" text="100% Open-source" onSelect="mainController.showViewAbout" styleName="infoButton"/>
-			</div>
-		</center>
-	
-	</div>
+	<gwt:HTMLPanel id="infoContainer">
+		<section class="container">	
+			<h2>Descubra mais</h2>	
+			<p>Entenda por que o Crux Framework pode ser a alternativa que você precisa para seu novo projeto:</p>
+		</section>
+	</gwt:HTMLPanel>
 	
 </v:view>
