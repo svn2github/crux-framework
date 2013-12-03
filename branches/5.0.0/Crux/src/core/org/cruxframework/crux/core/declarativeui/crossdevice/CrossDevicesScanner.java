@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.declarativeui.crossdevice;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -63,11 +64,16 @@ public class CrossDevicesScanner extends AbstractScanner
 		Templates attributes = templateClass.getAnnotation(Templates.class);
 		if (attributes == null)
 		{
-			Class<?> superClass = templateClass.getGenericInterfaces() != null ? 
-					ClassUtils.getRawType(templateClass.getGenericInterfaces()[0]) : null;
-			if (superClass != null && !superClass.equals(DeviceAdaptive.class))
+			if(templateClass.getGenericInterfaces() != null)
 			{
-				attributes = getChildTagTemplatesAnnotation(superClass);
+				for(Type type : templateClass.getGenericInterfaces())
+				{
+					Class<?> rawType = ClassUtils.getRawType(type);
+					if (!rawType.equals(DeviceAdaptive.class))
+					{
+						attributes = getChildTagTemplatesAnnotation(rawType);
+					}
+				}
 			}
 		}
 
