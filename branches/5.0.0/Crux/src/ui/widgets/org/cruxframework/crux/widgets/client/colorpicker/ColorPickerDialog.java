@@ -29,6 +29,7 @@ import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.util.ColorUtils;
 
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
@@ -70,12 +71,12 @@ public class ColorPickerDialog extends DialogBox implements HasCloseHandlers<Pop
 		public void onSelect(SelectEvent event)
 		{
 			Object button = event.getSource();
-			if (button == okButton)
+			if (GWT.isProdMode() ? (button == okButton) : button.toString().equals(okButton.toString()))
 			{
 				color = slPicker.getColor();
 			}
 
-			close(button == cancelButton);
+			close(GWT.isProdMode() ? (button == cancelButton) : (button.toString().equals(cancelButton.toString())));
 		}
 	};
 
