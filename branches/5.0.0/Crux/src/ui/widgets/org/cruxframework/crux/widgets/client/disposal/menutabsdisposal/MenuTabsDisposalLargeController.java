@@ -168,7 +168,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	private void openSection(FlowPanel items) 
 	{
 		items.removeStyleDependentName("closed");
-		items.getElement().getStyle().setProperty("maxHeight", calculateOpenSectionHeight(items) + "px");
+		items.getElement().getStyle().setProperty("height", calculateOpenSectionHeight(items) + "px");
 	}
 	
 	private int calculateOpenSectionHeight(FlowPanel items) 
@@ -181,7 +181,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	private void closeSection(FlowPanel items) 
 	{
 		items.addStyleDependentName("closed");
-		items.getElement().getStyle().setProperty("maxHeight", "0px");
+		items.getElement().getStyle().setProperty("height", "0px");
 	}
 
 	private boolean isSectionOpen(FlowPanel items) 

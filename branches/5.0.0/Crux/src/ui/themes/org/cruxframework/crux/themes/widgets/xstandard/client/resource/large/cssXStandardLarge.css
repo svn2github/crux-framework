@@ -15,6 +15,7 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	font-size: 13px;
 	font-family:OpenSans,Verdana,Helvetica,Arial,sans-serif;
 	-webkit-font-smoothing: antialiased;
+	outline: 0;
 }
 INPUT, BUTTON
 {
@@ -22,8 +23,8 @@ INPUT, BUTTON
 }
 INPUT:focus, BUTTON:focus
 {
-	border-color: #66AFE9;
 	outline: 0;
+	border-color: #66AFE9;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
@@ -42,7 +43,7 @@ DIV, INPUT, BUTTON
 {
 	display: block;
 	border: solid #EAEAEA 1px;
-	border-radius: 3px;
+	border-radius: 2px;
 	box-shadow: 0px 0px 10px rgba(90,90,90,0.1);
 	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
 	padding: 15px;
@@ -59,7 +60,6 @@ DIV, INPUT, BUTTON
 	min-width: 110px;
 	-webkit-user-select: none;
 	padding: 8px 13px;
-	outline: 0;
 	background-color: #81AA32;
 	box-shadow: 0px -20px 20px rgba(0, 0, 0, 0.1) inset;	
 	transition: box-shadow ease-in-out 0.15s;
@@ -113,7 +113,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	-webkit-font-smoothing: antialiased;
 	text-shadow: none;
 	-webkit-user-select: none;
-	outline: 0;
 	position: relative;
 	border-radius: 0px;
 	cursor: pointer;
@@ -151,14 +150,13 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	padding-left: 50px;
 	-webkit-font-smoothing: antialiased;
 	-webkit-user-select: none;
-	outline: 0;
 	cursor: pointer;
 	border: solid 0px;
 	width: 100%;
 }
 .crux-MenuTabsDisposal .menuSectionEntries
 {
-	-webkit-transition: max-height 0.5s ease-in-out;
+	-webkit-transition: height 0.2s ease-in-out;
 	overflow: hidden;
 }
 .crux-MenuTabsDisposal .menuSectionEntries-closed
@@ -196,7 +194,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-color: #636969;
 	opacity: 0.75;
 	margin-left: 0px;
-	outline: 0px;
 	cursor: default;
 	-webkit-user-select: none;
 	box-shadow: -20px 0 20px -10px rgba(0, 0, 0, 0.2) inset, 0px -20px 10px -10px rgba(0, 0, 0, 0.2) inset;
@@ -234,7 +231,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 {
 	background-color: transparent;
 	-webkit-user-select: none;
-	outline: 0;
 	transition: font-size ease-in-out 0.15s;	
 	height: 14px;
 	width: 14px;
@@ -281,7 +277,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	border: none;
 	position: relative;
 	cursor: pointer;
-	outline: 0;
 }
 .crux-RollingPanelPrevious:after, .crux-RollingPanelNext:after
 {
@@ -352,7 +347,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-image: url(upload-icon.png);
 	background-position: center;
 	background-repeat: no-repeat;
-	outline: none;
 }
 .crux-FileUploader .filesArea
 {
@@ -361,7 +355,7 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 .crux-FileUploader .filePanel
 {
 	border: solid #eaeaea 1px;
-	border-radius: 3px;
+	border-radius: 2px;
 	box-shadow: 0 0 10px rgba(90,90,90,0.1);
 	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
 	padding: 10px;
@@ -385,7 +379,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 {
 	border: 0px solid;
 	-webkit-user-select: none;
-	outline: 0;
 	transition: box-shadow ease-in-out 0.15s;
 	height: 20px;
 	width: 20px;
