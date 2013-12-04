@@ -69,13 +69,13 @@ public class ColorPickerDialog extends DialogBox implements HasCloseHandlers<Pop
 	{
 		public void onSelect(SelectEvent event)
 		{
-			Object button = (Button) event.getSource();
-			if (button.equals(okButton))
+			Object button = event.getSource();
+			if (button != null && okButton != null && okButton.toString().equals(button.toString()))
 			{
 				color = slPicker.getColor();
 			}
 
-			close(button.equals(cancelButton));
+			close(button != null && cancelButton != null && cancelButton.toString().equals(button.toString()));
 		}
 	};
 
