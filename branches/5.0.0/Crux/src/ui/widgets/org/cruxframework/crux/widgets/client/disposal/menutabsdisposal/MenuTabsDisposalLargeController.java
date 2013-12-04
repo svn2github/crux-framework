@@ -32,6 +32,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Gesse Dafe
@@ -67,7 +68,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		}
 		else
 		{
-			lastSectionAdded.add(menuItem);
+			((FlowPanel) lastSectionAdded.getWidget(0)).add(menuItem);
 		}
 	}
 	
@@ -137,31 +138,54 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 				FlowPanel items = sections.get(label);
 				if(items != null)
 				{
-					if(itemsVisible(items))
+					if(isSectionOpen(items))
 					{
-						items.addStyleDependentName("closed");
+						closeSection(items);
 					}
 					else
 					{
-						items.removeStyleDependentName("closed");
+						openSection(items);
 					}
 				}
-			}
-
-			private boolean itemsVisible(FlowPanel items) 
-			{
-				return !items.getStyleName().contains("-closed");
 			}
 		});
 		
 		FlowPanel sectionItems = new FlowPanel();
 		sectionItems.setStyleName("menuSectionEntries");
-		sectionItems.addStyleDependentName("closed");
+		closeSection(sectionItems);
+		
+		FlowPanel sectionItemsContent = new FlowPanel();
+		sectionItemsContent.setStyleName("menuSectionEntriesContent");
+		sectionItems.add(sectionItemsContent);
 		
 		sections.put(label, sectionItems);
 		lastSectionAdded = sectionItems;
 		
 		menuPanel.add(separator);
 		menuPanel.add(sectionItems);
+	}
+	
+	private void openSection(FlowPanel items) 
+	{
+		items.removeStyleDependentName("closed");
+		items.getElement().getStyle().setProperty("maxHeight", calculateOpenSectionHeight(items) + "px");
+	}
+	
+	private int calculateOpenSectionHeight(FlowPanel items) 
+	{
+		Widget content = items.getWidget(0);
+		int height = content.getOffsetHeight();
+		return height;
+	}
+
+	private void closeSection(FlowPanel items) 
+	{
+		items.addStyleDependentName("closed");
+		items.getElement().getStyle().setProperty("maxHeight", "0px");
+	}
+
+	private boolean isSectionOpen(FlowPanel items) 
+	{
+		return !items.getStyleName().contains("-closed");
 	}
 }

@@ -158,13 +158,11 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 }
 .crux-MenuTabsDisposal .menuSectionEntries
 {
-	max-height: 500px;
 	-webkit-transition: max-height 0.5s ease-in-out;
 	overflow: hidden;
 }
 .crux-MenuTabsDisposal .menuSectionEntries-closed
-{
-	max-height: 0px;    
+{ 
 }
 
 @external crux-TabContainer, crux-TabPanelBottom; 
@@ -225,7 +223,7 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 }
 .crux-TabBarItem .flapLabel
 {
-	font-size: 18px;
+	font-size: 16px;
 	color: #FFFFFF;
 	padding-top: 10px;
 	padding-left: 10px;
