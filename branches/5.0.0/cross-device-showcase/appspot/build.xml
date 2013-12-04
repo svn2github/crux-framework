@@ -25,20 +25,25 @@
 	</target>
 	
 	<!-- COPIA OS ARQUIVOS DO APPENGINE DA PASTA DE BUILD PARA A PASTA TARGET -->
-	<target name="copy-appengine-files">
+	<target name="prepare-appengine-files">
 		<copy todir="${target.dir}/${final.name}">
 			<fileset dir="${build.dir}">
 				<include name="defaultError.html"/>
-				<include name="index.crux.xml"/>			
+				<include name="overQuota.html"/>			
 			</fileset>
 		</copy>
+		<delete>
+			<fileset dir="${target.dir}/${final.name}/WEB-INF/lib">
+				<include name="gwt-dev-*.jar"/>
+				<include name="gwt-user-*.jar"/>
+			</fileset>
+		</delete>
 	</target>
 	
 	<!-- ENVIA PARA O GOOGLE APPENGINE -->
-	<target name="publish" depends="set-version, copy-appengine-files">
+	<target name="publish" depends="set-version, prepare-appengine-files">
 		<input addproperty="appengine.email" message="Informe o seu email associado à conta do AppEngine:" />
 		<input addproperty="appengine.password" message="Informe a senha da sua conta no AppEngine:" />
-		<echo message="### ${sdk.dir} ###"></echo>
 		<java classname="com.google.appengine.tools.admin.AppCfg" inputstring="${appengine.password}">
 		     <sysproperty key="appengine.sdk.root" value="${sdk.dir}" />
 		     <classpath>
