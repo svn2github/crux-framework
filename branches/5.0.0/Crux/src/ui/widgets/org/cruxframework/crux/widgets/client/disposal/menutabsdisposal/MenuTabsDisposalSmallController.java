@@ -31,6 +31,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 
 /**
@@ -118,5 +119,11 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 			viewContainer.showView(targetView);
 			swapPanel.transitTo(viewContainer, direction);
 		}
+	}
+
+	@Override
+	public void setHeaderContent(IsWidget widget) 
+	{
+		// TODO Auto-generated method stub
 	}
 }

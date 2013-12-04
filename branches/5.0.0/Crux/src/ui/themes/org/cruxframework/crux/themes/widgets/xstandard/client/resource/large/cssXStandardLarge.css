@@ -12,7 +12,7 @@ BODY
 }
 DIV, TD, LABEL, SPAN, INPUT, BUTTON
 {
-	font-size: 13px;
+	font-size: 16px;
 	font-family:OpenSans,Verdana,Helvetica,Arial,sans-serif;
 	-webkit-font-smoothing: antialiased;
 	outline: 0;
@@ -76,15 +76,27 @@ DIV, INPUT, BUTTON
 	padding-bottom: 10px;
 }
 
-@external crux-MenuTabsDisposal, menuTabsSplitPanel, menuEntriesContainer, menuPanel, menuEntry, menuSection, menuSectionEntries, menuSectionEntries-closed;
-.crux-MenuTabsDisposal
+@external crux-MenuTabsDisposal, menuTabsSplitPanel, menuEntriesContainer, menuPanel, menuEntry;
+@external  menuSection, menuSectionEntries, menuSectionEntries-closed, menuTabsHeaderSplitPanel, menuTabsHeader;
+.crux-MenuTabsDisposal, .crux-MenuTabsDisposal .menuTabsSplitPanel, .crux-MenuTabsDisposal .menuTabsHeaderSplitPanel
 {
 	height: 100%;
 	padding: 0px;
-}
-.crux-MenuTabsDisposal .menuTabsSplitPanel
-{
 	background-color: #FFFFFF;	
+}
+/* Styling the TD that wraps the top bar  */
+TABLE.menuTabsHeaderSplitPanel>TBODY>TR:first-child>TD
+{
+	height: 25px;
+}
+.crux-MenuTabsDisposal .menuTabsHeader
+{
+	background-color: #444949;
+	height: 25px;
+	text-align: right;
+	width: 100%;
+	border: solid 0px;
+	border-bottom: solid 1px #FFFFFF;
 }
 .crux-MenuTabsDisposal .menuEntriesContainer
 {
@@ -184,8 +196,9 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-color: #FFFFFF;
 	height: 100%;
 	box-shadow: 10px 0px 20px -10px rgba(0,0,0,0.3) inset;
-	padding-bottom: 10px;
+	padding-bottom: 0px;
 	padding-top: 20px;
+	box-sizing: content-box;
 }
 .crux-TabBarItem
 {

@@ -7,6 +7,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
@@ -29,10 +30,32 @@ public class MenuTabsDisposalFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded")
 	@TagChildren({
+		@TagChild(HeaderProcessor.class),
 		@TagChild(MenuItemProcessor.class),
 		@TagChild(MenuSectionProcessor.class)
 	})		
-	public static class MenuChildTagProcessor extends ChoiceChildProcessor<WidgetCreatorContext>{}
+	public static class MenuChildTagProcessor extends ChoiceChildProcessor<WidgetCreatorContext>
+	{
+	}
+	
+	@TagConstraints(minOccurs="0", maxOccurs="1", tagName="header")
+	@TagChildren({
+		@TagChild(HeaderContentProcessor.class),
+	})
+	public static class HeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext>
+	{
+	}
+	
+	@TagConstraints(minOccurs="0", maxOccurs="1", type=AnyWidget.class)
+	public static class HeaderContentProcessor extends WidgetChildProcessor<WidgetCreatorContext>
+	{
+		@Override
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
+		{
+			String headerContentWidgetId = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
+			out.println(context.getWidget() + ".setHeaderContent(" + headerContentWidgetId + ");");
+		}
+	}
 	
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="menuEntry")
 	@TagAttributesDeclaration({

@@ -32,6 +32,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -43,6 +44,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	private static final String HISTORY_PREFIX = "menuTabsDisposal:";
 
 	private FlowPanel menuPanel;
+	private FlowPanel headerPanel;
 	private TabContainer viewContainer;
 	private Map<String, FlowPanel> sections = new HashMap<String, FlowPanel>();
 	private FlowPanel lastSectionAdded = null;
@@ -77,6 +79,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	{
 		menuPanel = getChildWidget("menuPanel");
 		viewContainer = getChildWidget("viewContainer");
+		headerPanel = getChildWidget("menuTabsHeader");
 		setStyleName("crux-MenuTabsDisposal");
 		
 		Screen.addHistoryChangedHandler(new ValueChangeHandler<String>() 
@@ -163,6 +166,11 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		
 		menuPanel.add(separator);
 		menuPanel.add(sectionItems);
+	}
+	
+	public void setHeaderContent(IsWidget widget)
+	{
+		headerPanel.add(widget);
 	}
 	
 	private void openSection(FlowPanel items) 

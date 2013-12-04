@@ -48,12 +48,14 @@ class FileButton extends Composite implements HasChangeHandlers
 		fileInput = new FileInput();
 		
 		Style style = fileInput.getElement().getStyle();
-		style.setPosition(Position.RELATIVE);
+		style.setPosition(Position.ABSOLUTE);
 		style.setTextAlign(TextAlign.RIGHT);
 		style.setOpacity(0);
 		style.setZIndex(2);
 		style.setWidth(100, Unit.PCT);
 		style.setHeight(100, Unit.PCT);
+		style.setTop(0, Unit.PX);
+		style.setLeft(0, Unit.PX);
 		mainPanel.add(fileInput);
 		
 		visibleButton = new Label();

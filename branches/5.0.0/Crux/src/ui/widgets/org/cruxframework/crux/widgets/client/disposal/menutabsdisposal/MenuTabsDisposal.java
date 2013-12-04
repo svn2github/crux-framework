@@ -20,6 +20,8 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
@@ -34,4 +36,5 @@ public interface MenuTabsDisposal extends DeviceAdaptive
 	void showMenu();
 	void addMenuEntry(String label, String targetView);
 	void addMenuSection(String label, String additionalStyleName);
+	void setHeaderContent(IsWidget widget);
 }
