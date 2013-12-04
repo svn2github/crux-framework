@@ -37,7 +37,7 @@ BODY
 	border: 0px solid #fff;
 	background-color: #4496c6;
 	display: block;
-	-webkit-transform: scale(1,1.8) rotate(45deg);
+	-webkit-transform: rotate(45deg);
 	height: 15px;
 	width: 15px;
 	border-bottom: solid 1px transparent;
