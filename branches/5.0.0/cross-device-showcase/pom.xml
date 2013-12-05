@@ -41,6 +41,13 @@
 			<artifactId>crux-themes</artifactId>
 			<version>${cruxVersion}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>3.0.20100224</version>
+			<scope>provided</scope>
+		</dependency>
+            
 	</dependencies>
 	
 	<build>

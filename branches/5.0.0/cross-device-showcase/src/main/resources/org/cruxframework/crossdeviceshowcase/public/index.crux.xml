@@ -26,7 +26,7 @@
 			<crux:menuSection label="Elementos de Layout" additionalStyleName="layoutSectionIcon"/>
 			<crux:menuEntry label="Styled Panel" targetView="styledPanel"/>
 			<crux:menuEntry label="Form Display" targetView="formDisplay"/>
-			<crux:menuSection label="Elementos de Dados"/>
+			<crux:menuSection label="Elementos de Formulário"/>
 			<crux:menuEntry label="File Uploader" targetView="fileUploader"/>
 			<crux:menuSection label="Elementos de Imagem"/>
 			<crux:menuEntry label="Slide Show" targetView="slideshow"/>
