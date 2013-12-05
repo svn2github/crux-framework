@@ -65,7 +65,6 @@ public class ListShuttle<T> extends Composite implements IListShuttle<T>
 	public ListShuttle(List<T> availableItems, List<T> selectedItems)
 	{
 		listShuttle = new FlowPanel();
-		listShuttle.setStyleName("crux-ListShuttle");
 		
 		//First Column
 		FlowPanel toSelectColumn = new FlowPanel();
@@ -121,6 +120,7 @@ public class ListShuttle<T> extends Composite implements IListShuttle<T>
 		setSelectedItems(selectedItems);
 		bindHandlers();
 		initWidget(listShuttle);
+		setStyleName("crux-ListShuttle");
 	}
 
 	private void updateAvailableList() 

@@ -89,5 +89,6 @@ public abstract class AutoResizableComposite extends Composite
 			}
 		});
 		super.initWidget(widget);
+		setStyleName("crux-AutoResizableComposite");
 	}	
 }

@@ -62,6 +62,7 @@ public class RollingPanel extends Composite implements InsertPanel
 	public RollingPanel()
     {
 	    initWidget(impl.asWidget());
+	    setStyleName("crux-RollingPanel");
     }
 	
 	@Override

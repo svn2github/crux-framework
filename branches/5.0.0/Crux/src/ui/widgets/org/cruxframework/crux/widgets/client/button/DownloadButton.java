@@ -99,7 +99,6 @@ public class DownloadButton extends Composite implements HasSelectHandlers, HasH
 	public DownloadButton()
 	{
 		FlowPanel wrapper = new FlowPanel();
-		wrapper.setStyleName("crux-DownloadButton");
 		
 		downloadAnchor = new Anchor();
 		downloadAnchor.setVisible(false);
@@ -109,6 +108,7 @@ public class DownloadButton extends Composite implements HasSelectHandlers, HasH
 		wrapper.add(downloadAnchor);
 		
 		initWidget(wrapper);
+		setStyleName("crux-DownloadButton");
 	}
 
 	@Override

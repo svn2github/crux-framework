@@ -19,6 +19,7 @@ public class RowDetailsPanel extends Composite
 		this.row = row;
 		this.rowDetailWidgetCreator = rowDetailWidgetCreator;
 		initWidget(base);
+		setStyleName("crux-RowDetailsPanel");
 	}
 
 	Row getRow() 

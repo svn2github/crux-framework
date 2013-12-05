@@ -77,6 +77,7 @@ abstract class BannerImpl extends Composite
 		});
 		
 		initWidget(promoBanner);
+		setStyleName("crux-Banner");
 	}
 	
 	public void addDefaultBanner(String imageURL, String title, String text, String styleName, String buttonLabel, SelectHandler onclick)

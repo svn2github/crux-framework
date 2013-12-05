@@ -113,6 +113,7 @@ abstract class AbstractFileUploader extends Composite implements HasEnabled, Has
 	{
 		initializeWidgets();
 		initWidget(mainPanel);
+		setStyleName("crux-FileUploader");
 	}
 
 	protected abstract void initializeWidgets();

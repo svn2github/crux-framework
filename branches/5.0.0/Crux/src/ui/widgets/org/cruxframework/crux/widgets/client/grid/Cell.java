@@ -42,6 +42,7 @@ public class Cell extends Composite
 
 		basePanel = new SimplePanel();
 		initWidget(basePanel);
+		setStyleName("crux-Cell");
 		
 		if(!wrapLine)
 		{

@@ -36,8 +36,8 @@ public class ScreenBlocker extends Composite
 		public ScreenBlockerImpl() 
 		{
 			wrapper = new SimplePanel();
-			wrapper.addStyleName("crux-ScreenBlocker");
 			initWidget(wrapper);
+			wrapper.setStyleName("crux-ScreenBlocker");
 		}
 		
 		@Override
@@ -50,8 +50,8 @@ public class ScreenBlocker extends Composite
 	public ScreenBlocker(String blockingDivStyleName)
 	{
 		screenBlockerImpl = GWT.create(ScreenBlockerImpl.class);
-		screenBlockerImpl.setStyleName(blockingDivStyleName);
 		initWidget(screenBlockerImpl);
+		setStyleName(blockingDivStyleName);
 	}
 	
 	private static void expandElementToScreen(Widget widget)

@@ -53,6 +53,7 @@ public class SaturationLightnessPicker extends Composite implements HasValueChan
 		canvas.setCoordinateSpaceWidth(180);
 
 		initWidget(canvas);
+		setStyleName("crux-SaturationLightnessPicker");
 
 		canvas.addMouseDownHandler(new MouseDownHandler()
 		{

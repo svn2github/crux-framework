@@ -48,7 +48,8 @@ public class HuePicker extends Composite implements HasValueChangeHandlers<Integ
 		canvas.setCoordinateSpaceWidth(26);
 
 		initWidget(canvas);
-
+		setStyleName("crux-HuePicker");
+		
 		canvas.addMouseDownHandler(new MouseDownHandler()
 		{
 			public void onMouseDown(MouseDownEvent event)

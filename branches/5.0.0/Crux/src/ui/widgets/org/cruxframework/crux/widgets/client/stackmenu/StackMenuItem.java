@@ -58,8 +58,8 @@ public class StackMenuItem extends Composite
 		this.wrappingCanvas.setCellVerticalAlignment(subItemsCanvas, HasVerticalAlignment.ALIGN_TOP);
 		
 		showSubItens(false);
-		
 		initWidget(this.wrappingCanvas);
+		setStyleName("crux-StackMenuItem");
 		
 		Accessibility.setRole(getElement(), Accessibility.ROLE_MENUITEM);
 	}

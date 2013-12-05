@@ -189,6 +189,7 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 	{
 		impl = GWT.create(ImageImpl.class);
 		initWidget(impl.asWidget());
+		setStyleName("crux-Image");
 	}
 
 	public Image(ImageResource resource)

@@ -30,6 +30,7 @@ public abstract class SlideshowComponent extends Composite
 	protected SlideshowComponent()
 	{
 		initWidget(createMainWidget());
+		setStyleName("crux-SlideshowComponent");
 	}
 
 	/**

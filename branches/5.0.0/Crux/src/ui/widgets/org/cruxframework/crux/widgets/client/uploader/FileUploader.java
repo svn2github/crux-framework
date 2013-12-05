@@ -56,6 +56,7 @@ public class FileUploader extends Composite implements HasEnabled, HasAddFileHan
 	{
 		impl = GWT.create(AbstractFileUploader.class);
 		initWidget(impl);
+		setStyleName("crux-FileUploader");
 	}
 
 	public String getUrl()

@@ -38,6 +38,7 @@ abstract class AbstractTablelessGridStructure extends AutoResizableComposite imp
 	{
 		this.grid = grid;
 		initWidget(lines);
+		setStyleName("crux-AbstractTablelessGridStructure");
 		if(grid.hasFrozenCells())
 		{
 			this.grid.getScrollingArea().addScrollHandler(new FrozenCellsScrollHandler(this));
