@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * 
  * @author Gesse Dafe
  */
+@SuppressWarnings("deprecation")
 public class StackMenuItem extends Composite
 {
 	private final String key;
@@ -262,5 +263,130 @@ public class StackMenuItem extends Composite
 	public void setLast(boolean last)
 	{
 		itemCaption.setLast(last);		
+	}
+	
+	/**
+	 * @param style
+	 */
+	public void setMenuTitleStyleName(String style) 
+	{
+		super.setStyleName(style);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.setStyleDependentName(String, boolean)
+	 * Applied to MenuTitle.
+	 */
+	public void setMenuTitleStyleDependentName(String styleSuffix, boolean add) 
+	{
+		super.setStyleDependentName(styleSuffix, add);
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.stackmenu.StackMenuItem.setMenuTitleStylePrimaryName(String)
+	 * Applied to MenuTitle.
+	 */
+	public void setMenuTitleStylePrimaryName(String style) 
+	{
+		super.setStylePrimaryName(style);
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.stackmenu.StackMenuItem.removeMenuTitleStyleDependentName(String)
+	 * Applied to MenuTitle.
+	 */
+	public void removeMenuTitleStyleDependentName(String styleSuffix) 
+	{
+		super.removeStyleDependentName(styleSuffix);
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.stackmenu.StackMenuItem.removeMenuTitleStyleName(String)
+	 * Applied to MenuTitle.
+	 */
+	public void removeMenuTitleStyleName(String style) 
+	{
+		super.removeStyleName(style);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.addStyleName(String)
+	 * Applied to MenuTitle.
+	 */
+	public void addMenuTitleStyleName(String style) 
+	{
+		super.addStyleName(style);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.addStyleDependentName(String)
+	 * Applied to MenuTitle.
+	 */
+	public void addMenuTitleStyleDependentName(String styleSuffix) 
+	{
+		super.addStyleDependentName(styleSuffix);
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.stackmenu.StackMenuItem.setMenuItemStyleName(String)
+	 * Applied to MenuItem.
+	 */
+	public void setMenuItemStyleName(String style) 
+	{
+		subItemsCanvas.setStyleName(style);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.setStyleDependentName(String, boolean)
+	 * Applied to MenuItem.
+	 */
+	public void setMenuItemStyleDependentName(String styleSuffix, boolean add) 
+	{
+		subItemsCanvas.setStyleDependentName(styleSuffix, add);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.setStylePrimaryName(String)
+	 * Applied to MenuItem.
+	 */
+	public void setMenuItemStylePrimaryName(String style) 
+	{
+		subItemsCanvas.setStylePrimaryName(style);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.removeStyleDependentName(String)
+	 * Applied to MenuItem.
+	 */
+	public void removeMenuItemStyleDependentName(String styleSuffix) 
+	{
+		subItemsCanvas.removeStyleDependentName(styleSuffix);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.removeStyleName(String)
+	 * Applied to MenuItem.
+	 */
+	public void removeMenuItemStyleName(String style) 
+	{
+		subItemsCanvas.removeStyleName(style);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.addStyleDependentName(String)
+	 * Applied to MenuItem.
+	 */
+	public void addMenuItemStyleDependentName(String styleSuffix) 
+	{
+		subItemsCanvas.addStyleDependentName(styleSuffix);
+	}
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject.addStyleName(String)
+	 * Applied to MenuItem.
+	 */
+	public void addMenuItemStyleName(String style) 
+	{
+		subItemsCanvas.addStyleName(style);
 	}
 }
