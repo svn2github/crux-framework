@@ -123,17 +123,17 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	@Override
 	public void addMenuSection(final String label, String additionalStyleName)
 	{
-		Button separator = new Button();
-		separator.setStyleName("menuSection");
-		separator.getElement().getStyle().setDisplay(Display.BLOCK);
-		separator.setText(label);
+		final Button section = new Button();
+		section.setStyleName("menuSection");
+		section.getElement().getStyle().setDisplay(Display.BLOCK);
+		section.setText(label);
 		
 		if(!StringUtils.isEmpty(additionalStyleName))
 		{
-			separator.addStyleName(additionalStyleName);
+			section.addStyleName(additionalStyleName);
 		}
 		
-		separator.addSelectHandler(new SelectHandler() 
+		section.addSelectHandler(new SelectHandler() 
 		{
 			@Override
 			public void onSelect(SelectEvent event) 
@@ -143,11 +143,11 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 				{
 					if(isSectionOpen(items))
 					{
-						closeSection(items);
+						closeSection(section, items);
 					}
 					else
 					{
-						openSection(items);
+						openSection(section, items);
 					}
 				}
 			}
@@ -155,7 +155,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		
 		FlowPanel sectionItems = new FlowPanel();
 		sectionItems.setStyleName("menuSectionEntries");
-		closeSection(sectionItems);
+		closeSection(section, sectionItems);
 		
 		FlowPanel sectionItemsContent = new FlowPanel();
 		sectionItemsContent.setStyleName("menuSectionEntriesContent");
@@ -164,7 +164,7 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		sections.put(label, sectionItems);
 		lastSectionAdded = sectionItems;
 		
-		menuPanel.add(separator);
+		menuPanel.add(section);
 		menuPanel.add(sectionItems);
 	}
 	
@@ -173,8 +173,9 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		headerPanel.add(widget);
 	}
 	
-	private void openSection(FlowPanel items) 
+	private void openSection(Button section, FlowPanel items) 
 	{
+		section.removeStyleDependentName("closed");
 		items.removeStyleDependentName("closed");
 		items.getElement().getStyle().setProperty("height", calculateOpenSectionHeight(items) + "px");
 	}
@@ -186,8 +187,9 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 		return height;
 	}
 
-	private void closeSection(FlowPanel items) 
+	private void closeSection(Button section, FlowPanel items) 
 	{
+		section.addStyleDependentName("closed");
 		items.addStyleDependentName("closed");
 		items.getElement().getStyle().setProperty("height", "0px");
 	}
@@ -195,5 +197,18 @@ public class MenuTabsDisposalLargeController extends DeviceAdaptiveController im
 	private boolean isSectionOpen(FlowPanel items) 
 	{
 		return !items.getStyleName().contains("-closed");
+	}
+
+	@Override
+	public String getCurrentView() 
+	{
+		int focusedViewIndex = viewContainer.getFocusedViewIndex();
+		
+		if(focusedViewIndex >= 0)
+		{
+			return viewContainer.getViewId(focusedViewIndex);
+		}
+		
+		return null;
 	}
 }

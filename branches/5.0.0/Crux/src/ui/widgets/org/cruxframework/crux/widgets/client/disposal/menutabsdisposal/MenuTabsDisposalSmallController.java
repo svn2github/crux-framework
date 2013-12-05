@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.disposal.menutabsdisposal;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.button.Button;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
@@ -125,5 +126,18 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 	public void setHeaderContent(IsWidget widget) 
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public String getCurrentView() 
+	{
+		View activeView = viewContainer.getActiveView();
+		
+		if(activeView != null)
+		{
+			return activeView.getId();
+		}
+		
+		return null;
 	}
 }

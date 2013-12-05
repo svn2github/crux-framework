@@ -77,7 +77,7 @@ DIV, INPUT, BUTTON
 }
 
 @external crux-MenuTabsDisposal, menuTabsSplitPanel, menuEntriesContainer, menuPanel, menuEntry;
-@external  menuSection, menuSectionEntries, menuSectionEntries-closed, menuTabsHeaderSplitPanel, menuTabsHeader;
+@external  menuSection, menuSection-closed, menuSectionEntries, menuSectionEntries-closed, menuTabsHeaderSplitPanel, menuTabsHeader;
 .crux-MenuTabsDisposal, .crux-MenuTabsDisposal .menuTabsSplitPanel, .crux-MenuTabsDisposal .menuTabsHeaderSplitPanel
 {
 	height: 100%;
@@ -148,7 +148,6 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
-
 .crux-MenuTabsDisposal .menuSection
 {
 	height: 50px;
@@ -165,6 +164,15 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	cursor: pointer;
 	border: solid 0px;
 	width: 100%;
+	position: relative;
+}
+.crux-MenuTabsDisposal .menuSection-closed:after
+{
+	content: "...";
+	position: absolute;
+	right: 10px;
+	opacity: 0.4;
+	-webkit-user-select: none;
 }
 .crux-MenuTabsDisposal .menuSectionEntries
 {
