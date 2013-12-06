@@ -16,7 +16,9 @@
 package org.cruxframework.crux.widgets.client.dialog;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
@@ -25,6 +27,8 @@ import org.cruxframework.crux.widgets.client.event.OkHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
@@ -42,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
+public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-MessageDialog";
 	private DialogBox dialogBox;
@@ -50,6 +54,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	private Label messageLabel;
 	private Button okButton;
 	protected WidgetMessages messages = WidgetMsgFactory.getMessages();
+	private FastList<DialogBox> openedDialogBoxes = new FastList<DialogBox>();
 
 	/**
 	 * Constructor 
@@ -74,8 +79,36 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 		messagePanel.getElement().getParentElement().setAttribute("align", "center");
 
 		setStyleName(DEFAULT_STYLE_NAME);
+		handleOrientationChangeHandlers();
     }
 
+	private void handleOrientationChangeHandlers() {
+		dialogBox.addAttachHandler(new Handler()
+		{
+			private HandlerRegistration orientationHandlerRegistration;
+
+			@Override
+			public void onAttachOrDetach(AttachEvent event)
+			{
+				if (event.isAttached())
+				{
+					try
+					{
+						orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(MessageDialog.this);	
+					} catch (Exception e)
+					{
+						orientationHandlerRegistration = null;
+					}
+				}
+				else if (orientationHandlerRegistration != null)
+				{
+					orientationHandlerRegistration.removeHandler();
+					orientationHandlerRegistration = null;
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Get the dialog box title
 	 * @return
@@ -196,6 +229,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 		try
 		{
 			Screen.blockToUser("crux-MessageDialogScreenBlocker");
+			openedDialogBoxes.add(dialogBox);
 			dialogBox.center();
 			dialogBox.show();
 			okButton.setFocus(true);
@@ -213,6 +247,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	public void hide()
 	{
 		dialogBox.hide();
+		openedDialogBoxes.remove(openedDialogBoxes.indexOf(dialogBox));
 		Screen.unblockToUser();
 	}
 	
@@ -297,4 +332,18 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
     {
 		dialogBox.fireEvent(event);
     }
+	
+	@Override
+	public void onOrientationChangeOrResize() 
+	{
+		if(openedDialogBoxes == null)
+		{
+			return;
+		}
+		
+		for(int i=0; i<openedDialogBoxes.size(); i++)
+		{
+			openedDialogBoxes.get(i).center();
+		}
+	}
 }
