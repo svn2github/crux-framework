@@ -172,6 +172,11 @@ public class ImageProcessor
 		resize(width, height);
 	}
 
+	/**
+	 * Resize the internal image
+	 * @param width
+	 * @param height
+	 */
 	public void resize(int width, int height)
     {
 		assert (image != null || this.canvas != null) : "You must load an image first";

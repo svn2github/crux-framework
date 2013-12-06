@@ -25,6 +25,12 @@ import org.cruxframework.crux.widgets.client.slideshow.data.AlbumService.Callbac
 import org.cruxframework.crux.widgets.client.slideshow.data.Photo;
 import org.cruxframework.crux.widgets.client.slideshow.data.PhotoAlbum;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
@@ -59,6 +65,7 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	protected int transitionDelay = 5000;
 	private boolean useLayout = false;
 	private AlbumService albumService;
+	private DivElement dataURILoader;
 	
 	/**
 	 * 
@@ -311,16 +318,62 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 		int photoCount = getPhotoCount();
 		if (index != activeImage && index < photoCount && index > -1)
 		{
+		    String key = Integer.toString(index);
+			boolean alreadyLoaded = imagesCache.containsKey(key);
 			Image image = loadImage(index, preloadNextImages);
 			if (image != null)
 			{
 				previousImage = activeImage;
 				activeImage = index;
-				notifyComponents(SlideshowEvent.PhotoLoaded);
+				preloadAnNotifyComponents(image, alreadyLoaded);
 			}
 		}
     }
 	
+	/**
+	 * It is needed to attach data uri images to DOM to ensure that it is fully initialized by the 
+	 * browser before it is passed to swapcontainer animate it. Other urls are preloaded when we create the 
+	 * image object.
+	 * @param image
+	 * @param alreadyLoaded
+	 */
+	private void preloadAnNotifyComponents(final Image image, boolean alreadyLoaded)
+	{
+		String url = image.getUrl();
+		if (!alreadyLoaded && url != null && url.startsWith("data:"))
+		{
+			Element dataURIImageLoader = getDataURIImageLoader();
+			dataURIImageLoader.appendChild(image.getElement());
+			Scheduler.get().scheduleDeferred(new ScheduledCommand()
+			{
+				@Override
+				public void execute()
+				{
+					image.getElement().removeFromParent();
+					notifyComponents(SlideshowEvent.PhotoLoaded);
+				}
+			});
+		}
+		else
+		{
+			notifyComponents(SlideshowEvent.PhotoLoaded);
+		}
+	}
+	
+	private Element getDataURIImageLoader()
+    {
+		if (dataURILoader == null)
+		{
+			dataURILoader = Document.get().createDivElement();
+			dataURILoader.getStyle().setPosition(com.google.gwt.dom.client.Style.Position.ABSOLUTE);
+			dataURILoader.getStyle().setLeft(-10000, Unit.PX);
+			dataURILoader.getStyle().setTop(0, Unit.PX);
+			dataURILoader.getStyle().setOpacity(0);
+			Document.get().getBody().appendChild(dataURILoader);
+		}
+		return dataURILoader;
+    }
+
 	/**
 	 * 
 	 * @param index
