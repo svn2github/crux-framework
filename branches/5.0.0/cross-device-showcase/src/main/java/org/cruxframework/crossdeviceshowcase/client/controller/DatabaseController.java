@@ -92,7 +92,7 @@ public class DatabaseController
 	@Expose
 	public void add()
 	{
-		DialogViewContainer dialog = DialogViewContainer.openDialog("person");
+		DialogViewContainer dialog = DialogViewContainer.createDialog("person");
 		dialog.center();
 	}
 	

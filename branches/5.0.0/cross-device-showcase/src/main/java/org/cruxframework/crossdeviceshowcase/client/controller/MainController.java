@@ -6,9 +6,12 @@ import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
 import org.cruxframework.crux.widgets.client.disposal.menutabsdisposal.MenuTabsDisposal;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 
 @Controller("mainController")
 public class MainController 
@@ -28,13 +31,26 @@ public class MainController
 	{
 		MenuTabsDisposal menuDisposal = (MenuTabsDisposal) Screen.get("menuDisposal");
 		String viewId = menuDisposal.getCurrentView();
-		service.getXmlFile(viewId + ".view.xml", true, new AsyncCallbackAdapter<String>() 
+		
+		service.getXmlFile(viewId + ".view.xml", false, new AsyncCallbackAdapter<String>() 
 		{
 			@Override
 			public void onComplete(String result) 
 			{
-				Window.alert(result);
+				DialogViewContainer dialog = DialogViewContainer.createDialog("sourceCode");
+				dialog.setWidth("700px");
+				dialog.setHeight("500px");
+				dialog.openDialog();
+				Element editor = DOM.getElementById("sourceEditor");
+				String brush = "class=\"brush:xml\"";
+				result = new SafeHtmlBuilder().appendEscaped(result).toSafeHtml().asString();
+				editor.setInnerHTML("<pre " + brush + ">" + result + "</pre>");
+				syntaxHighlight();				
 			}
 		});
 	}
+	
+	public native void syntaxHighlight()/*-{
+		$wnd.doHighlight();
+	}-*/;
 }
