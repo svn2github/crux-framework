@@ -18,7 +18,7 @@
 		<c:screen useController="mainController" useView="*" 
 			smallViewport="user-scalable=no, width=320" 
 			largeViewport="user-scalable=no, width=device-width, height=device-height"
-			useResource="xStandardResources,siteDeviceResources,siteCommonResources"
+			useResource="siteDeviceResources,siteCommonResources"
 			 />
 		
 		<gwt:simplePanel id="siteHeader" styleName="siteHeader">
@@ -40,6 +40,7 @@
 					<div class="showcaseTip"><b>5.0</b></div>
 					
 				</div>
+				<!--  old menu
 				<div class="viewContent">
 					<crux:topMenuDisposal id="menuDisposal" defaultView="home">
 						<crux:menuEntry targetView="home" label="Home"/>
@@ -47,6 +48,16 @@
 						<crux:menuEntry targetView="quickstart" label="Quick Start"/>
 						<crux:menuEntry targetView="exemplos" label="Exemplos"/>
 						<crux:menuEntry targetView="downloads" label="Downloads"/>
+					</crux:topMenuDisposal>
+				</div>
+				 -->
+				 <div class="viewContent">
+					<crux:topMenuDisposal id="menuDisposal" defaultView="home">
+						<crux:menuEntry targetView="home" label="O Crux"/>
+						<crux:menuEntry targetView="info" label="Saiba Mais v"/>
+						<crux:menuEntry targetView="quickstart" label="Quick Start"/>
+						<crux:menuEntry targetView="exemplos" label="Downloads"/>
+						<crux:menuEntry targetView="downloads" label="Comunidade v"/>
 					</crux:topMenuDisposal>
 				</div>
 				<div class="footer">

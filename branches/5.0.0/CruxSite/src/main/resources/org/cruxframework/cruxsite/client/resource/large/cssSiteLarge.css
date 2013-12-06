@@ -7,12 +7,15 @@ HTML
 @url urlNoiseBg noiseBg;
 BODY
 {
+	margin:0;
 	background-image: urlNoiseBg;
 	background-color: #E5E5E5;
 	min-height: 100%;
 	overflow-y:scroll;
 	font-size:13px;
+	font-family:Arial, Helvetica Neue, Helvetica, sans-serif;
 }
+
 ul{
 	list-style:none;
 }
@@ -311,7 +314,7 @@ h2{
 	font-weight:normal;
 	color:#4a4a4a;
 	font-size:22px;
-	margin-bottom:8px;
+	margin-bottom:12px;
 }
 @external siteHeader;
 .siteHeader{
@@ -430,10 +433,12 @@ h2{
 .showcaseTip{
 	width:25px;
 	height:24px;
-	background:urlShowcaseTip;
+	background:urlShowcaseTip no-repeat right top;
 	float:right;
 	margin-top:-41px;
 	margin-right:-1px;
+	font-weight:bold;
+	padding-right:1px;
 }
 .showcaseTip b{
 	color:#684f12;
@@ -508,6 +513,7 @@ h2{
 .footer .footerLogo .footerLogoEtc span{
 	color:#858585;
 	display:block;
+	font-size:13px;
 }
 .footer .footerUl{
 	margin:18px 20px 0 20px;
@@ -593,10 +599,20 @@ h2{
 
 
 @external crux-RssPanel, rssPanelBody, crux-entryDate, rssPanelTitle;
+.crux-RssPanel{
+	width:100%;
+}
+.crux-RssPanel table{
+	width:100%;
+}
 .crux-RssPanel .rssPanelBody td{
 	border-bottom:none !important;
 	cursor:pointer;
 	box-shadow:0 -1px 0 rgba(0,0,0,0.06) inset !important;
+	padding:11px 0;
+}
+.crux-RssPanel .rssPanelBody tr:last-child td{
+	border-bottom:none;
 }
 .crux-RssPanel .rssPanelBody tr:hover td{
 	background:rgba(0,0,0,0.06);	
@@ -604,11 +620,9 @@ h2{
 .rssPanelBody{
 	padding:0 !important;
 }
-/*.crux-RssPanel .rssPanelBody td:nth-child(odd){
-	background:rgba(0,0,0,0.2);
-}*/
 .box {
 	padding-left:12px;
+	font-size:13px;
 }
 .rssPanelTitle{
 	display:none !important;
@@ -623,4 +637,35 @@ h2{
 	text-shadow:none !important;
 }
 
+@external stackTitle, gwt-StackPanel, stackContent, gwt-StackPanelContent;
+.gwt-StackPanel{
+	width:100%;
+}
+.stackTitle{
+	background:rgba(243,243,243,0.4);
+	border-radius:3px;
+	box-shadow:0 0 0 1px rgba(0,0,0,0.17) inset, 0 0 0 2px rgba(255,255,255,0.52) inset;
+	color:#455359;
+	font-size:12px;
+	font-weight:bold;
+	padding:6px 10px;
+	margin:0 0 1px;
+	cursor:pointer;
+}
+.stackTitle:hover{
+	background:rgba(243,243,243,0.6);
+}
+.stackContent{
+	background:linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0)) rgba(71,85,92,0.3);
+	margin:-2px 5px 0;
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.2);
+	overflow:auto;
+}
+.gwt-StackPanelContent{
+	padding:0;
+}
+.gwt-StackPanelContent p{
+	padding:0 10px;	
+}
 
