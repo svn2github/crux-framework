@@ -46,4 +46,12 @@
     <servlet-name>testViewServlet</servlet-name>
     <url-pattern>/viewTester/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>fileUploadServlet</servlet-name>
+    <servlet-class>org.cruxframework.crossdeviceshowcase.server.FileUploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fileUploadServlet</servlet-name>
+    <url-pattern>/upload-endpoint</url-pattern>
+  </servlet-mapping>
 </web-app>
