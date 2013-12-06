@@ -40,16 +40,23 @@ public class DialogViewContainer extends SingleViewContainer
 	private View innerView;
 	private boolean unloadViewOnClose;
 	
-	public static DialogViewContainer openDialog(String viewName)
+	public static void openDialog(String viewName)
+	{
+		DialogViewContainer container = createDialog(viewName, viewName, true);
+		container.openDialog();
+	}
+	
+	public static void openDialog(String viewName, String viewId, boolean closeable)
+	{
+		DialogViewContainer container = createDialog(viewName, viewId, closeable);
+		container.openDialog();
+	}
+
+	public static DialogViewContainer createDialog(String viewName)
 	{
 		return createDialog(viewName, viewName, true);
 	}
 	
-	public static DialogViewContainer openDialog(String viewName, String viewId, boolean closeable)
-	{
-		return createDialog(viewName, viewId, closeable);
-	}
-
 	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable)
 	{
 		return createDialog(viewName, viewName, true, true, null, null, -1, -1);
@@ -59,6 +66,7 @@ public class DialogViewContainer extends SingleViewContainer
 	{
 		return createDialog(viewName, viewId, closeable, modal, width, height, left, top, null);
 	}
+	
 	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable, boolean modal, String width, String height, int left, int top, Object parameter)
 	{
 		DialogViewContainer container = new DialogViewContainer(closeable, modal);
