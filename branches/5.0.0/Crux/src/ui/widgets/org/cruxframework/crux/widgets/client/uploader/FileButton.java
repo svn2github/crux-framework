@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.uploader;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
@@ -51,6 +52,7 @@ class FileButton extends Composite implements HasChangeHandlers
 		style.setPosition(Position.ABSOLUTE);
 		style.setTextAlign(TextAlign.RIGHT);
 		style.setOpacity(0);
+		style.setProperty("cursor", "inherit");
 		style.setZIndex(2);
 		style.setWidth(100, Unit.PCT);
 		style.setHeight(100, Unit.PCT);

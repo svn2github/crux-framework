@@ -166,13 +166,18 @@ TABLE.menuTabsSplitPanel>TBODY>TR>TD:first-child
 	width: 100%;
 	position: relative;
 }
-.crux-MenuTabsDisposal .menuSection-closed:after
+.crux-MenuTabsDisposal .menuSection:after, .crux-MenuTabsDisposal .menuSection-closed:after 
 {
 	content: "...";
 	position: absolute;
 	right: 10px;
-	opacity: 0.4;
+	opacity: 0.0;
 	-webkit-user-select: none;
+	transition: opacity ease-in-out 0.5s;
+}
+.crux-MenuTabsDisposal .menuSection-closed:after 
+{
+	opacity: 0.4 !important;
 }
 .crux-MenuTabsDisposal .menuSectionEntries
 {
