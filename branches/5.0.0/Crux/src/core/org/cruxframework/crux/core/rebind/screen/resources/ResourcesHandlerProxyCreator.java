@@ -101,7 +101,7 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
     {
 		JClassType resourceType = context.getTypeOracle().findType(resourceClass);
 		
-    	if (resourceClass == null)
+    	if (resourceType == null)
     	{
     		throw new CruxGeneratorException("Resource ["+resourceKey+"], declared on View ["+view.getId()+"] could not be found.");
     	}
