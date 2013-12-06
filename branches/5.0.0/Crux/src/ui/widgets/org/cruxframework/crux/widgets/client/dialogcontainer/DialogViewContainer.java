@@ -18,12 +18,9 @@ package org.cruxframework.crux.widgets.client.dialogcontainer;
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.widgets.client.button.Button;
-import org.cruxframework.crux.widgets.client.event.SelectEvent;
-import org.cruxframework.crux.widgets.client.event.SelectHandler;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
 
-import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -35,7 +32,7 @@ import com.google.gwt.user.client.ui.Panel;
 public class DialogViewContainer extends SingleViewContainer 
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-DialogViewContainer";
-	private DialogBox dialog;
+	private FlatDialogBox dialog;
 	private FlowPanel contentPanel; 
 	private View innerView;
 	private boolean unloadViewOnClose;
@@ -146,38 +143,26 @@ public class DialogViewContainer extends SingleViewContainer
 	public DialogViewContainer(boolean closeable, boolean modal)
 	{
 		super(null, true);
-		dialog = new DialogBox(false, modal);
-		dialog.setStyleName(DEFAULT_STYLE_NAME);
 		
+		dialog = new FlatDialogBox();
+		dialog.setCloseble(closeable);
+		dialog.setModal(modal);
+	
 		contentPanel = new FlowPanel();
 		contentPanel.setWidth("100%");
 		
 		unloadViewOnClose = true;
 		
-		FlowPanel bodyPanel = new FlowPanel();
-		bodyPanel.setWidth("100%");
-		bodyPanel.setHeight("100%");
-		
-		if (closeable)
+		dialog.addBeforeCloseHandler(new BeforeCloseHandler() 
 		{
-			final Button closeBtn = new Button(" ", new SelectHandler()
+			@Override
+			public void onBeforeClose(BeforeCloseEvent event) 
 			{
-				public void onSelect(SelectEvent event)
-				{
-					closeDialog();
-				}
-			});
-			closeBtn.setStyleName("closeButton");
-			closeBtn.getElement().getStyle().setFloat(Float.RIGHT);
-			
-			FlowPanel headerPanel = new FlowPanel();
-			headerPanel.setWidth("100%");
-			headerPanel.add(closeBtn);
-						
-			bodyPanel.add(headerPanel);
-		}
-		bodyPanel.add(contentPanel);
-		dialog.add(bodyPanel);
+				closeDialog(unloadViewOnClose, false);				
+			}
+		});		
+		
+		dialog.setContent(contentPanel);
 
 		initWidget(new Label());
 	}
@@ -261,7 +246,6 @@ public class DialogViewContainer extends SingleViewContainer
 		dialog.setPopupPosition(left, top);
 	}
 	
-	
 	@Override
 	public void setStyleName(String style)
 	{
@@ -312,7 +296,7 @@ public class DialogViewContainer extends SingleViewContainer
 	{
 		assert(innerView != null):"There is no View loaded into this container.";
 		bindToDOM();
-		dialog.show();
+		dialog.open();
 	}
 	
 	/**
@@ -322,6 +306,7 @@ public class DialogViewContainer extends SingleViewContainer
 	{
 		closeDialog(unloadViewOnClose);
 	}
+	
 
 	/**
 	 * Close the container dialog. If unloadView parameter is true, try to unload the current view first.
@@ -333,6 +318,20 @@ public class DialogViewContainer extends SingleViewContainer
 	 */
 	public boolean closeDialog(boolean unloadView)
 	{
+		return closeDialog(unloadView, true);
+	}
+
+	/**
+	 * Close the container dialog. If unloadView parameter is true, try to unload the current view first.
+	 * <p> If this view can not be unloaded (its unload event handler cancel the event), 
+	 * this method does not close the container and returns false.</p>
+	 * 
+	 * @param unloadView if true, unload the current view before close the container.
+	 * @param closeDialog if true, closes the dialog box itself. Useful passing false when command comes directly from user interface
+	 * @return if the dialog was closed.
+	 */
+	private boolean closeDialog(boolean unloadView, boolean closeDialog)
+	{
 		if (unloadView)
 		{
 			if (!remove(innerView))
@@ -340,8 +339,14 @@ public class DialogViewContainer extends SingleViewContainer
 				return false;
 			}
 		}
-		dialog.hide();
+		
+		if(closeDialog)
+		{
+			dialog.close();
+		}
+		
 		unbindToDOM();
+		
 		return true;
 	}
 	
@@ -384,6 +389,6 @@ public class DialogViewContainer extends SingleViewContainer
 	@Override
 	protected void handleViewTitle(String title, Panel containerPanel, String viewId)
 	{
-		this.dialog.setText(title);
+		this.dialog.setTitle(title);
 	}
 }
