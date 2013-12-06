@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 cruxframework.org.
+ * Copyright 2013 cruxframework.org
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,18 +15,25 @@
  */
 package org.cruxframework.crux.core.server.rest.annotation;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RestService
-{
-	String value();
+@Documented
+public @interface HeaderParam {
+    /**
+     * Defines the name of the HTTP header whose value will be used
+     * to initialize the value of the annotated method argument, class field or
+     * bean property. Case insensitive.
+     */
+    String value();
 }

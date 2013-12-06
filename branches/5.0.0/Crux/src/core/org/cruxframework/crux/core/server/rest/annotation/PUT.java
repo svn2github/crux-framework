@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 cruxframework.org.
+ * Copyright 2013 cruxframework.org
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,12 +21,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Thiago da Rosa de Bustamante
- *
+ * Indicates that the annotated method responds to HTTP PUT requests. 
+ * PUT operations are used to write data (insert or updates). PUT operations are idempotent, 
+ * which means it can be performed repeatedly without side-effects.
+ * 
+ * @see HttpMethod
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RestService
-{
-	String value();
+@HttpMethod(HttpMethod.PUT)
+public @interface PUT 
+{ 
+	/**
+	 * If this state validation is enabled, Crux will add an If-Match HTTP header to ensure that the PUT operation will only be 
+	 * executed if the client retains the current state of the resource being updated. 
+	 * @return
+	 */
+	StateValidationModel validatePreviousState() default StateValidationModel.NO_VALIDATE;
 }

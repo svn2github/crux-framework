@@ -15,18 +15,28 @@
  */
 package org.cruxframework.crux.core.server.rest.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface RestService
+/**
+ * Indicates if Crux must validate previous state of resources being updated. 
+ * @author Thiago da Rosa de Bustamante
+ */
+public enum StateValidationModel
 {
-	String value();
+	/**
+	 * Disable the state validation for the PUT operation.
+	 */
+	NO_VALIDATE,
+	/**
+	 * If the target resource was previously loaded and the client retain some state for this resource, Crux will 
+	 * ensure that the PUT operation will be executed only if this state matches the current state of the resource
+	 */
+	VALIDATE_IF_PRESENT,
+	/**
+	 * PUT operation will be executed only if the client retains the current state for the resource. If the resource 
+	 * was not previously loaded by a GET operation, the method will fail.
+	 */
+	ENSURE_STATE_MATCHES
 }
