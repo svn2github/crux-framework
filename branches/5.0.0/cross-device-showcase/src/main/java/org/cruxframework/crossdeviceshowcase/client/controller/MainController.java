@@ -41,6 +41,7 @@ public class MainController
 				dialog.setWidth("700px");
 				dialog.setHeight("500px");
 				dialog.openDialog();
+				dialog.center();
 				Element editor = DOM.getElementById("sourceEditor");
 				String brush = "class=\"brush:xml\"";
 				result = new SafeHtmlBuilder().appendEscaped(result).toSafeHtml().asString();

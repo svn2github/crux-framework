@@ -4,11 +4,11 @@
     <welcome-file>crossdeviceshowcase/index.html</welcome-file>
   </welcome-file-list>
   <context-param>
-    <javaee:param-name>outputCharset</javaee:param-name>
-    <javaee:param-value>UTF-8</javaee:param-value>
+    <param-name>outputCharset</param-name>
+    <param-value>UTF-8</param-value>
   </context-param>
   <listener>
-    <javaee:listener-class>org.cruxframework.crux.core.server.InitializerListener</javaee:listener-class>
+    <listener-class>org.cruxframework.crux.core.server.InitializerListener</listener-class>
   </listener>
   <servlet>
     <servlet-name>remoteServiceServlet</servlet-name>
@@ -27,10 +27,10 @@
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
   <listener>
-    <javaee:listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</javaee:listener-class>
+    <listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</listener-class>
   </listener>
   <filter>
-    <javaee:display-name>ModulesDeclarativeUIFilter</javaee:display-name>
+    <display-name>ModulesDeclarativeUIFilter</display-name>
     <filter-name>ModulesDeclarativeUIFilter</filter-name>
     <filter-class>org.cruxframework.crux.module.filter.ModulesDeclarativeUIFilter</filter-class>
   </filter>
