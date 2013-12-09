@@ -26,11 +26,33 @@ public class FlatDialogBox extends PopupPanel
 		setStyleName("crux-FlatDialog");
 		setGlassEnabled(true);
 		setGlassStyleName("dialogGlass");
+		
+		body.setStyleName("dialogBody");
 
+		FlowPanel topBar = prepareTopBar();
+		Label resizer = prepareResizer();
+		
+		FlowPanel split = new FlowPanel();
+		split.setStyleName("dialogTitleBodySplit");
+		split.add(topBar);
+		split.add(body);
+		split.add(resizer);
+		
+		super.setWidget(split);
+	}
+
+	private Label prepareResizer() 
+	{
+		Label resizer = new Label();
+		resizer.setStyleName("dialogResizer");
+		return resizer;
+	}
+
+	private FlowPanel prepareTopBar() 
+	{
 		FlowPanel topBar = new FlowPanel();
 		topBar.setStyleName("dialogTopBar");
 		
-		body.setStyleName("dialogBody");
 		title.setStyleName("dialogTitle");
 		
 		closeBtn.setStyleName("dialogCloseButton");
@@ -46,12 +68,7 @@ public class FlatDialogBox extends PopupPanel
 		topBar.add(title);
 		topBar.add(closeBtn);
 		
-		FlowPanel split = new FlowPanel();
-		split.setStyleName("dialogTitleBodySplit");
-		split.add(topBar);
-		split.add(body);
-		
-		super.setWidget(split);
+		return topBar;
 	}
 	
 	public void setTitle(String text)
