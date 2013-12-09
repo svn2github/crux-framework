@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Lightweight List implementation.
+ * Lightweight List implementation. This implementation has a superior performance compared
+ * to ArrayList. It uses native javascript implementation to increase performance.
  * 
  * @param <V>
  *            value type
@@ -141,10 +142,7 @@ public class FastList<V>
 		if (GWT.isScript())
 		{
 			V ret = jsArray.get(index);
-			if (ret != null)
-			{
-				jsArray.remove(index);
-			}
+			jsArray.remove(index);
 			return ret;
 		}
 		else
