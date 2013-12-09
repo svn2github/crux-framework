@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -266,18 +267,10 @@ public class StackMenuItem extends Composite
 	}
 	
 	/**
-	 * @return the menu title widget. 
-	 */
-	public VerticalPanel getMenuTitle() 
-	{
-		return wrappingCanvas;
-	}
-	
-	/**
 	 * @return the menu item widget.
 	 */
-	public FlowPanel getMenuItem() 
+	public Grid getMenuItemCanvas() 
 	{
-		return subItemsCanvas;
+		return itemCaption.getCanvas();
 	}
 }
