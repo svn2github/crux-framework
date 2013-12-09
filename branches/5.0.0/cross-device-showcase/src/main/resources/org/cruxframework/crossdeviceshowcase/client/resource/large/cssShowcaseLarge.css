@@ -15,7 +15,7 @@ BODY
 	border-radius: 2px;
 	padding: 10px;
 	text-align: left;
-	max-width: 700px;
+	max-width: 85%;
 	background-color: #EEEEEE;
 }
 .speechBubble:after
@@ -37,15 +37,15 @@ BODY
 .speechBubble P
 {
 	text-align: justify;
-	text-shadow: 0 -1px rgba(255,255,255,0.6);
+	text-shadow: 0 1px rgba(255,255,255,0.6);
 	color: #4c6879;
-	font-size: 16px;
+	font-size: 14px;
 	-webkit-font-smoothing: antialiased;
 }
 .speechBubble H1
 {
 	color: #4c6879;
-	text-shadow: 0 -1px rgba(255,255,255,0.6);
+	text-shadow: 0 1px rgba(255,255,255,0.6);
 	font-size: 20px;
 	margin-bottom: 10px;
 	padding-bottom: 10px;

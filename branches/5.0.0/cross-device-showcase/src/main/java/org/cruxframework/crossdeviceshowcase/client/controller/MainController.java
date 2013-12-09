@@ -38,8 +38,8 @@ public class MainController
 			public void onComplete(String result) 
 			{
 				DialogViewContainer dialog = DialogViewContainer.createDialog("sourceCode");
-				dialog.setWidth("700px");
-				dialog.setHeight("500px");
+				dialog.setWidth("80%");
+				dialog.setHeight("90%");
 				dialog.openDialog();
 				dialog.center();
 				Element editor = DOM.getElementById("sourceEditor");
