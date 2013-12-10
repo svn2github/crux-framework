@@ -33,7 +33,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="HTMLPanel", library="gwt", targetWidget=HTMLPanel.class, htmlContainer=true)
+@DeclarativeFactory(id="HTMLPanel", library="gwt", targetWidget=HTMLPanel.class, htmlContainer=true, 
+					description="A panel that contains HTML, and which can attach child widgets to identified elements within that HTML.")
 @TagChildren({
 	@TagChild(value=HTMLPanelFactory.ContentProcessor.class, autoProcess=false)
 })

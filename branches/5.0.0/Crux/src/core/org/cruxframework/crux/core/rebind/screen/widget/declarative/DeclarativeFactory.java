@@ -20,9 +20,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.views.View;
+
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
+ * 
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -30,15 +34,26 @@ import com.google.gwt.user.client.ui.IsWidget;
 @Target(ElementType.TYPE)
 public @interface DeclarativeFactory
 {
+	/**
+	 * Widget Identifier under the library being defined. Crux will generate an element with this ID
+	 * on the library associated XSD file.
+	 */
 	String id();
+	/**
+	 * The name of the library that will contain this widget. Crux will generate one XSD file per library 
+	 */
 	String library();
+	/**
+	 * A description to be used to compose the documentation of the generated library 
+	 */
+	String description() default "";
 	/**
 	 * The widget class associated with the annotated factory. 
 	 */
 	Class<? extends IsWidget> targetWidget();
 	
 	/**
-	 * if false, the annotated widgetFactory will not be attached to DOM. It will only be logically attached to the {@code Screen} object
+	 * if false, the annotated widgetFactory will not be attached to DOM. It will only be logically attached to the {@link View} object
 	 */
 	boolean attachToDOM() default true;
 	/**
