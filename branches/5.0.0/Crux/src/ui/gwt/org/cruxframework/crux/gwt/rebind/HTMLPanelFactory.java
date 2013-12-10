@@ -29,7 +29,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
- * 
+ * Declarative factory to create HTMLPanel widgets from Crux declarative view files.
  * @author Thiago da Rosa de Bustamante
  *
  */
