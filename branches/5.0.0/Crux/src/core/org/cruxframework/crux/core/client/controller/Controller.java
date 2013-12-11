@@ -60,7 +60,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
  * is associated with click events of the widget {@code myButton}.
  * 
  * @see Expose  
- * @see Create  
+ * @see Inject  
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -88,7 +88,6 @@ public @interface Controller
 	 * You can choose to use the annotated class only for a restricted list of devices. This allow
 	 * you to create two different classes using the same controller name, but one target a collection 
 	 * of devices and the other targets a different collection.
-	 * @return
 	 */
 	Device[] supportedDevices() default {Device.all};
 }
