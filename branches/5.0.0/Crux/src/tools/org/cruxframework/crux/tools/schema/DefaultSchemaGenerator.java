@@ -369,8 +369,17 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 						if (defaultValue.length() > 0)
 							out.print("default=\""+defaultValue+"\" ");
 					}
-
-					out.println("/>");
+					out.println(">");
+					
+					String attrDescription = attr.description();
+					if (attrDescription != null && attrDescription.length() > 0)
+					{
+						out.println("<xs:annotation>");
+						out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(attrDescription)+"</xs:documentation>");
+						out.println("</xs:annotation>");
+					}
+					out.println("</xs:attribute>");
+					
 					added.add(attr.value());
 				}
 			}
@@ -394,7 +403,15 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 							out.print("default=\""+defaultValue+"\" ");
 					}
 
-					out.println("/>");
+					out.println(">");
+					String attrDescription = attr.description();
+					if (attrDescription != null && attrDescription.length() > 0)
+					{
+						out.println("<xs:annotation>");
+						out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(attrDescription)+"</xs:documentation>");
+						out.println("</xs:annotation>");
+					}
+					out.println("</xs:attribute>");
 					added.add(attr.value());
 				}
 			}
@@ -975,7 +992,15 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 					String eventName = evtBinder.getConstructor(WidgetCreator.class).newInstance((WidgetCreator<?>)null).getEventName();
 					if (!added.contains(eventName))
 					{
-						out.println("<xs:attribute name=\""+eventName+"\" />");
+						out.println("<xs:attribute name=\""+eventName+"\" >");
+						String attrDescription = evt.description();
+						if (attrDescription != null && attrDescription.length() > 0)
+						{
+							out.println("<xs:annotation>");
+							out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(attrDescription)+"</xs:documentation>");
+							out.println("</xs:annotation>");
+						}
+						out.println("</xs:attribute>");
 						added.add(eventName);
 					}
 				}
@@ -990,7 +1015,15 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		{
 			for (TagEventDeclaration evt : evtsDecl.value())
 			{
-				out.println("<xs:attribute name=\""+evt.value()+"\" />");
+				out.println("<xs:attribute name=\""+evt.value()+"\" >");
+				String attrDescription = evt.description();
+				if (attrDescription != null && attrDescription.length() > 0)
+				{
+					out.println("<xs:annotation>");
+					out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(attrDescription)+"</xs:documentation>");
+					out.println("</xs:annotation>");
+				}
+				out.println("</xs:attribute>");
 			}
 		}
 	}
