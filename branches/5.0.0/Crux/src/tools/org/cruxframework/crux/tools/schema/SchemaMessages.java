@@ -71,4 +71,10 @@ public interface SchemaMessages
 	@DefaultServerMessage("Widgets on this library")
 	String globalDeclarationsWidgetsTitle();
 
+	@DefaultServerMessage("See more")
+	String moreInfoDescription();
+
+	@DefaultServerMessage("Image")
+	String illustrationDescription();
+
 }

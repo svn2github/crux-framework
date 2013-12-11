@@ -48,6 +48,14 @@ public @interface DeclarativeFactory
 	 */
 	String description() default "";
 	/**
+	 * An info URL to be used to compose the documentation of the generated library
+	 */
+	String infoURL() default "";
+	/**
+	 * An image to illustrate the widget referenced by this factory. It will be used to compose the documentation of the generated library
+	 */
+	String illustration() default "";
+	/**
 	 * The widget class associated with the annotated factory. 
 	 */
 	Class<? extends IsWidget> targetWidget();

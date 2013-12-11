@@ -1497,16 +1497,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		DeclarativeFactory annot = widgetFactory.getAnnotation(DeclarativeFactory.class);
 		String elementName = annot.id();
-		String elementDescription = annot.description();
 
 		out.println("<xs:element name=\""+elementName+"\" type=\"T"+elementName+"\">");
 
-		if (elementDescription != null && elementDescription.length() > 0)
-		{
-			out.println("<xs:annotation>");
-			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(elementDescription)+"</xs:documentation>");
-			out.println("</xs:annotation>");
-		}
+		generateDocumentationForTypeFactory(out, annot);
+		
 		out.println("</xs:element>");
 		out.println("<xs:complexType name=\"T"+elementName+"\">");
 		boolean hasTextChild = factorySupportsInnerText(widgetFactory);
@@ -1528,6 +1523,39 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		}
 		out.println("</xs:complexType>");
 	}
+
+	/**
+	 * 
+	 * @param out
+	 * @param annot
+	 */
+	private void generateDocumentationForTypeFactory(PrintStream out, DeclarativeFactory annot)
+    {
+	    String elementDescription = annot.description();
+		String demoURL = annot.infoURL();
+		String illustration = annot.illustration();
+		if ((elementDescription != null && elementDescription.length() > 0) ||
+			(demoURL != null && demoURL.length() > 0) || 
+			(illustration != null && illustration.length() > 0))
+		{
+			out.println("<xs:annotation>");
+			if (elementDescription != null && elementDescription.length() > 0)
+			{
+				out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(elementDescription)+"</xs:documentation>");
+			}
+			if (demoURL != null && demoURL.length() > 0)
+			{
+				out.println("<xs:appinfo source=\""+StringEscapeUtils.escapeXml(demoURL)+"\">"+
+						StringEscapeUtils.escapeXml(schemaMessages.moreInfoDescription())+"</xs:appinfo>");
+			}
+			if (illustration != null && illustration.length() > 0)
+			{
+				out.println("<xs:appinfo source=\""+StringEscapeUtils.escapeXml(illustration)+"\">"+
+						StringEscapeUtils.escapeXml(schemaMessages.illustrationDescription())+"</xs:appinfo>");
+			}
+			out.println("</xs:annotation>");
+		}
+    }
 
 	/**
 	 * 
