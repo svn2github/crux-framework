@@ -116,6 +116,10 @@
    <!-- Title of XHTML document. -->
    <xsl:param name="title"></xsl:param>
 
+   <!-- Title of Global Delcarations section. -->
+   <xsl:param name="globalDeclarationsTitle"></xsl:param>
+
+
    <!-- If 'true', sorts the top-level schema components by type, 
         then name. Otherwise, displays the components by the order that 
         they appear in the schema. -->
@@ -188,6 +192,21 @@
 
    <!-- Title to use if none provided -->
    <xsl:variable name="DEFAULT_TITLE">XML Schema Documentation</xsl:variable>
+
+   <!-- Global Declarations title to use if none provided -->
+   <xsl:variable name="DEFAULT_GLOBAL_DECLARATIONS_TITLE">Global Declarations</xsl:variable>
+
+   <!-- Get title of document -->
+   <xsl:variable name="actualGlobalDeclarationsTitle">
+      <xsl:choose>
+         <xsl:when test="$globalDeclarationsTitle != ''">
+            <xsl:value-of select="$globalDeclarationsTitle"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$DEFAULT_GLOBAL_DECLARATIONS_TITLE"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:variable>
 
    <!-- Prefixes used for anchor names -->
       <!-- Type definitions -->
@@ -303,12 +322,9 @@
             <xsl:call-template name="SectionFooter"/>
 
             <!-- Section: Schema Document Properties -->
-            <h2><a name="SchemaProperties">Schema Document Properties</a></h2>
+            <h2><a name="SchemaProperties">Document Properties</a></h2>
             <!-- Sub-section: Properties table -->
             <xsl:apply-templates select="." mode="properties"/>
-            <!-- Sub-section: Namespace Legend -->
-            <h3>Declared Namespaces</h3>
-            <xsl:apply-templates select="." mode="namespaces"/>
             <!-- Sub-section: Schema Component Representation table -->
             <xsl:call-template name="SchemaComponentTable">
                <xsl:with-param name="component" select="."/>
@@ -327,7 +343,7 @@
                <xsl:when test="normalize-space(translate($sortByComponent,'TRUE','true'))='true'">
                   <!-- Declarations -->
                   <xsl:if test="xsd:attribute or xsd:element">
-                     <h2><a name="SchemaDeclarations">Global Declarations</a></h2>
+                     <h2><a name="SchemaDeclarations"><xsl:value-of select="$actualGlobalDeclarationsTitle"/></a></h2>
                      <xsl:apply-templates select="xsd:attribute | xsd:element" mode="topSection">
                         <xsl:sort select="local-name(.)" order="ascending"/>
                         <xsl:sort select="@name" order="ascending"/>
@@ -384,71 +400,13 @@
    </xsl:template>
 
    <!--
-     Prints out the table of Declared Namespaces for the
-     current schema.
-     -->
-   <xsl:template match="xsd:schema" mode="namespaces">
-      <table class="namespaces">
-         <tr>
-            <th>Prefix</th>
-            <th>Namespace</th>
-         </tr>
-         <!-- Default namespace (no prefix) -->
-         <xsl:if test="namespace::*[local-name(.)='']">
-            <xsl:variable name="ns" select="namespace::*[local-name(.)='']"/>
-            <tr>
-               <td>
-                  <a name="{$NS_PREFIX}">Default namespace</a>
-               </td>
-               <td>
-                  <xsl:choose>
-                     <xsl:when test="/xsd:schema/@targetNamespace and $ns=normalize-space(/xsd:schema/@targetNamespace)">
-                        <span class="targetNS">
-                           <xsl:value-of select="$ns"/>
-                        </span>
-                     </xsl:when>
-                     <xsl:otherwise>
-                        <xsl:value-of select="$ns"/>
-                     </xsl:otherwise>
-                  </xsl:choose>
-               </td>
-            </tr>
-         </xsl:if>
-         <!-- Namespaces with prefixes -->
-         <xsl:for-each select="namespace::*[local-name(.)!='']">
-            <xsl:variable name="prefix" select="local-name(.)"/>
-            <xsl:variable name="ns" select="."/>
-            <tr>
-               <td>
-                  <a name="{concat($NS_PREFIX, $prefix)}">
-                     <xsl:value-of select="$prefix"/>
-                  </a>
-               </td>
-               <td>
-                  <xsl:choose>
-                     <xsl:when test="/xsd:schema/@targetNamespace and $ns=normalize-space(/xsd:schema/@targetNamespace)">
-                        <span class="targetNS">
-                           <xsl:value-of select="$ns"/>
-                        </span>
-                     </xsl:when>
-                     <xsl:otherwise>
-                        <xsl:value-of select="$ns"/>
-                     </xsl:otherwise>
-                  </xsl:choose>
-               </td>
-            </tr>
-         </xsl:for-each>
-      </table>
-   </xsl:template>
-
-   <!--
      Prints out the Table of Contents.
      -->
    <xsl:template match="xsd:schema" mode="toc">
       <ul>
          <!-- Section: Schema Document Properties -->
          <li>
-            <a href="#SchemaProperties">Schema Document Properties</a>
+            <a href="#SchemaProperties">Document Properties</a>
          </li>
 
          <!-- Section: Redefined Schema Components -->
@@ -464,20 +422,9 @@
             <xsl:when test="normalize-space(translate($sortByComponent,'TRUE','true'))='true'">
                <!-- Declarations -->
                <xsl:if test="xsd:attribute or xsd:element">
-                  <li><a href="#SchemaDeclarations">Global Declarations</a>
+                  <li><a href="#SchemaDeclarations"><xsl:value-of select="$actualGlobalDeclarationsTitle"/></a>
                      <ul>
                         <xsl:apply-templates select="xsd:attribute | xsd:element" mode="toc">
-                           <xsl:sort select="local-name(.)" order="ascending"/>
-                           <xsl:sort select="@name" order="ascending"/>
-                        </xsl:apply-templates>
-                     </ul>
-                  </li>
-               </xsl:if>
-               <!-- Definitions -->
-               <xsl:if test="xsd:attributeGroup or xsd:complexType or xsd:group or xsd:notation or xsd:simpleType">
-                  <li><a href="#SchemaDefinitions">Global Definitions</a>
-                     <ul>
-                        <xsl:apply-templates select="xsd:attributeGroup | xsd:complexType | xsd:group | xsd:notation | xsd:simpleType" mode="toc">
                            <xsl:sort select="local-name(.)" order="ascending"/>
                            <xsl:sort select="@name" order="ascending"/>
                         </xsl:apply-templates>
@@ -1070,13 +1017,6 @@ div#globalControls {
 
 /******** Schema Document Properties Section ********/
 
-/* Table displaying the namespaces declared in the schema */
-table.namespaces th {
-   background-color: #ccc;
-}
-table.namespaces td {
-   background-color: #eee;
-}
 /* Target namespace of the schema */
 span.targetNS {
    color: #06C;
@@ -1220,11 +1160,6 @@ div#globalControls {
 
 /******** Schema Document Properties Section ********/
 
-/* Table displaying the namespaces declared in the schema */
-table.namespaces th {
-}
-table.namespaces td {
-}
 /* Target namespace of the schema */
 span.targetNS {
 }
@@ -2748,96 +2683,7 @@ div#legend div.hint {
                <td><xsl:value-of select="@xml:lang"/></td>
             </tr>
          </xsl:if>
-         <!-- Element/Attribute Form Defaults -->
-         <tr>
-            <th>Element and Attribute Namespaces</th>
-            <td>
-               <ul>
-                  <li>Global element and attribute declarations belong to this schema's target namespace.</li>
-                  <li>
-                     <xsl:choose>
-                        <xsl:when test="normalize-space(@elementFormDefault)='qualified'">
-                           <xsl:text>By default, local element declarations belong to this schema's target namespace.</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                           <xsl:text>By default, local element declarations have no namespace.</xsl:text>
-                        </xsl:otherwise>
-                     </xsl:choose>
-                  </li>
-                  <li>
-                     <xsl:choose>
-                        <xsl:when test="normalize-space(@attributeFormDefault)='qualified'">
-                           <xsl:text>By default, local attribute declarations belong to this schema's target namespace.</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                           <xsl:text>By default, local attribute declarations have no namespace.</xsl:text>
-                        </xsl:otherwise>
-                     </xsl:choose>
-                  </li>
-               </ul>
-            </td>
-         </tr>
-         <!-- Schema Composition, e.g. include, import, redefine -->
-         <xsl:if test="xsd:include or xsd:import or xsd:redefine">
-            <tr>
-               <th>Schema Composition</th>
-               <td>
-                  <ul>
-                     <!-- Import -->
-                     <xsl:if test="xsd:import">
-                        <li>
-                           <xsl:text>This schema imports schema(s) from the following namespace(s):</xsl:text>
-                           <ul>
-                           <xsl:for-each select="xsd:import">
-                              <li>
-                                 <em><xsl:value-of select="@namespace"/></em>
-                                 <xsl:if test="@schemaLocation">
-                                    <xsl:text> (at </xsl:text>
-                                    <xsl:call-template name="PrintSchemaLink">
-                                       <xsl:with-param name="uri" select="@schemaLocation"/>
-                                    </xsl:call-template>
-                                    <xsl:text>)</xsl:text>
-                                 </xsl:if>
-                              </li>
-                           </xsl:for-each>
-                           </ul>
-                        </li>
-                     </xsl:if>
-                     <!-- Include -->
-                     <xsl:if test="xsd:include">
-                        <li>
-                           <xsl:text>This schema includes components from the following schema document(s):</xsl:text>
-                           <ul>
-                           <xsl:for-each select="xsd:include">
-                              <li>
-                                 <xsl:call-template name="PrintSchemaLink">
-                                    <xsl:with-param name="uri" select="@schemaLocation"/>
-                                 </xsl:call-template>
-                              </li>
-                           </xsl:for-each>
-                           </ul>
-                        </li>
-                     </xsl:if>
-                     <!-- Redefine -->
-                     <xsl:if test="xsd:redefine">
-                        <li>
-                           <xsl:text>This schema includes components from the following schema document(s), where some of the components have been redefined:</xsl:text>
-                           <ul>
-                              <xsl:for-each select="xsd:redefine">
-                                 <li>
-                                 <xsl:call-template name="PrintSchemaLink">
-                                    <xsl:with-param name="uri" select="@schemaLocation"/>
-                                 </xsl:call-template>
-                                 </li>
-                              </xsl:for-each>
-                           </ul>
-                        <xsl:text>See </xsl:text><a href="#Redefinitions">Redefined Schema Components</a><xsl:text> section.</xsl:text>
-                        </li>
-                     </xsl:if>
-                  </ul>
-               </td>
-            </tr>
-         </xsl:if>
+
          <!-- Annotation -->
          <xsl:call-template name="PrintAnnotation">
             <xsl:with-param name="component" select="."/>

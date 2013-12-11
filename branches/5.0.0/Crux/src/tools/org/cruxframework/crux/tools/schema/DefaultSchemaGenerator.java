@@ -40,6 +40,7 @@ import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.template.TemplateParser;
 import org.cruxframework.crux.core.declarativeui.template.Templates;
 import org.cruxframework.crux.core.declarativeui.template.TemplatesScanner;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -91,6 +92,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	protected Stack<Class<? extends WidgetChildProcessor<?>>> subTagTypes;
 	protected TemplateParser templateParser;
 
+	protected SchemaMessages schemaMessages;
+
 	/**
 	 * 
 	 * @param destDir
@@ -104,6 +107,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		this.namespacesForCatalog = new HashMap<String, File>();
 		this.subTagTypes = new Stack<Class<? extends WidgetChildProcessor<?>>>();
 		this.templateParser = new TemplateParser();
+		this.schemaMessages = MessagesFactory.getMessages(SchemaMessages.class);
 
 		initializeSchemaGenerator(projectBaseDir, webDir);
 	}
@@ -203,12 +207,28 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			TransformerFactory factory = TransformerFactory.newInstance();
 			StreamSource xslStream = new StreamSource(getClass().getResourceAsStream("/META-INF/xs3p.xsl"));
 			Transformer transformer = factory.newTransformer(xslStream);
+			
 
 			for (File file: destDir.listFiles())
 			{
 				String fileName = file.getName();
 				if (fileName.endsWith("xsd"))
 				{
+					transformer.setParameter("title", schemaMessages.documentationTitle(fileName.substring(0, fileName.length() - 4).toUpperCase()));
+					
+					if (fileName.endsWith("core.xsd") || fileName.endsWith("module.xsd") || 
+						fileName.endsWith("offline.xsd")  || fileName.endsWith("template.xsd")  || 
+						fileName.endsWith("view.xsd")  || fileName.endsWith("xdevice.xsd")  || 
+						fileName.endsWith("xhtml.xsd"))
+					{
+						transformer.setParameter("globalDeclarationsTitle", schemaMessages.globalDeclarationsTitle());
+					}
+					else
+					{
+						transformer.setParameter("globalDeclarationsTitle", schemaMessages.globalDeclarationsWidgetsTitle());
+					}
+					transformer.setParameter("printLegend", false);
+					transformer.setParameter("printGlossary", false);
 					StreamSource in = new StreamSource(new FileInputStream(file));
 					StreamResult out = new StreamResult(new File(destDir, file.getName()+".html"));
 					transformer.transform(in, out);
@@ -476,7 +496,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			}	
 			else if (AnyWidgetChildProcessor.class.isAssignableFrom(processorClass))
 			{
-				out.println("<xs:group ref=\"c:widgets\" />");
+				out.println("<xs:group ref=\"c:widgets\" >");
+				out.println("<xs:annotation>");
+				out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.anyWidgetsDescription())+"</xs:documentation>");
+				out.println("</xs:annotation>");
+				out.println("</xs:group>");
 			}
 		}
 	}
@@ -708,7 +732,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateCoreScreenElement(PrintStream out)
 	{
-		out.println("<xs:element name=\"screen\" type=\"Screen\"/>");
+		out.println("<xs:element name=\"screen\" type=\"Screen\">");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.screenDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 
 		out.println("<xs:group name=\"ScreenContent\">");
 		out.println("<xs:choice>");
@@ -731,12 +759,21 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateOfflineScreenElement(PrintStream out)
 	{
-		out.println("<xs:element name=\"offlineContent\" type=\"OfflineContent\"/>");
+		out.println("<xs:element name=\"offlineContent\" type=\"OfflineContent\">");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.offlineContentDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
+		
 		out.println("<xs:complexType name=\"OfflineContent\" mixed=\"true\">");
 		out.println("<xs:attribute name=\"resourceName\" type=\"xs:string\" use=\"required\"/>");
 		out.println("</xs:complexType>");
 
-		out.println("<xs:element name=\"offlineScreen\" type=\"OfflineScreen\"/>");
+		out.println("<xs:element name=\"offlineScreen\" type=\"OfflineScreen\">");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.offlineScreenDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("<xs:complexType name=\"OfflineScreen\" mixed=\"true\">");
 		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
 		out.println("<xs:element ref=\"offlineContent\" />");
@@ -777,7 +814,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateCoreSplashScreenElement(PrintStream out)
 	{
-		out.println("<xs:element name=\"splashScreen\" type=\"SplashScreen\"/>");
+		out.println("<xs:element name=\"splashScreen\" type=\"SplashScreen\">");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.splashScreenDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 
 		out.println("<xs:complexType name=\"SplashScreen\">");
 		out.println("<xs:attribute name=\"style\" type=\"xs:string\"/>");
@@ -791,23 +832,39 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateCoreCrossDeviceElement(PrintStream out)
 	{
-		out.println("<xs:element name=\"crossDevice\" type=\"CrossDevice\"/>");
+		out.println("<xs:element name=\"crossDevice\" type=\"CrossDevice\">");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.crossDeviceDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("<xs:complexType name=\"CrossDevice\">");
 		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
 		out.println("<xs:group ref=\"widgetsCrossDev\" />");
-		out.println("<xs:element name=\"conditions\" type=\"CrossDeviceConditions\" />");
+		out.println("<xs:element name=\"conditions\" type=\"CrossDeviceConditions\" >");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.crossDeviceConditionsDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("</xs:choice>");
 		out.println("</xs:complexType>");
 
 		out.println("<xs:complexType name=\"CrossDeviceConditions\">");
 		out.println("<xs:sequence minOccurs=\"1\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"condition\" type=\"CrossDeviceCondition\" />");
+		out.println("<xs:element name=\"condition\" type=\"CrossDeviceCondition\" >");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.crossDeviceConditionDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("</xs:sequence>");
 		out.println("</xs:complexType>");
 
 		out.println("<xs:complexType name=\"CrossDeviceCondition\">");
 		out.println("<xs:choice minOccurs=\"1\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"parameter\" type=\"CrossDeviceParameterCondition\" />");
+		out.println("<xs:element name=\"parameter\" type=\"CrossDeviceParameterCondition\" >");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.crossDeviceConditionParameterDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("</xs:choice>");
 		out.println("<xs:attribute name=\"when\" type=\"DeviceType\" use=\"required\"/>");
 		out.println("</xs:complexType>");
@@ -991,10 +1048,16 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		Class<?> type = attributes.type();
 		String tagName = attributes.tagName();
+		String tagDescription = attributes.description();
+		
 		if (AnyWidgetChildProcessor.class.isAssignableFrom(processorClass))
 		{
-			out.println("<xs:group ref=\"c:widgets\" minOccurs=\""+attributes.minOccurs()+
-					"\" maxOccurs=\""+attributes.maxOccurs()+"\"/>");
+			out.println("<xs:group ref=\"c:widgets\"  minOccurs=\""+attributes.minOccurs()+
+					"\" maxOccurs=\""+attributes.maxOccurs()+"\">");
+			out.println("<xs:annotation>");
+			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.anyWidgetsDescription())+"</xs:documentation>");
+			out.println("</xs:annotation>");
+			out.println("</xs:group>");
 		}
 		else if (type.equals(Void.class))
 		{
@@ -1006,12 +1069,23 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			{
 				out.println("<xs:element name=\""+tagName+"\" minOccurs=\""+attributes.minOccurs()+
 						"\" maxOccurs=\""+attributes.maxOccurs()+
-						"\" type=\""+getSchemaType(processorClass, library)+"\"/>");
+						"\" type=\""+getSchemaType(processorClass, library)+"\">");
+				if (tagDescription != null && tagDescription.length() > 0)
+				{
+					out.println("<xs:annotation>");
+					out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(tagDescription)+"</xs:documentation>");
+					out.println("</xs:annotation>");
+				}
+				out.println("</xs:element>");
 			}
 		}
 		else if (AnyWidget.class.isAssignableFrom(type))
 		{
-			out.println("<xs:group ref=\"c:widgets\" />");
+			out.println("<xs:group ref=\"c:widgets\" >");
+			out.println("<xs:annotation>");
+			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.anyWidgetsDescription())+"</xs:documentation>");
+			out.println("</xs:annotation>");
+			out.println("</xs:group>");
 		}
 		else if (AnyTag.class.isAssignableFrom(type) && tagName.length() == 0)
 		{
@@ -1033,7 +1107,14 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			}
 			out.println("<xs:element name=\""+tagName+"\" minOccurs=\""+attributes.minOccurs()+
 					"\" maxOccurs=\""+attributes.maxOccurs()+
-					"\" type=\""+getSchemaType(type, library)+"\"/>");
+					"\" type=\""+getSchemaType(type, library)+"\">");
+			if (tagDescription != null && tagDescription.length() > 0)
+			{
+				out.println("<xs:annotation>");
+				out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(tagDescription)+"</xs:documentation>");
+				out.println("</xs:annotation>");
+			}
+			out.println("</xs:element>");
 		}
 	}
 
@@ -1197,7 +1278,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateTemplateElement(PrintStream out)
 	{
-		out.println("<xs:element name=\"template\" type=\"Template\" />");
+		out.println("<xs:element name=\"template\" type=\"Template\" >");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.templateDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("<xs:complexType name=\"Template\">");
 		out.println("<xs:choice>");
 		out.println("<xs:any minOccurs=\"0\" maxOccurs=\"unbounded\"/>");
@@ -1241,10 +1326,18 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 
 			generateViewSchemasImport(libraries, out);
 
-			out.println("<xs:element name=\"xdevice\" type=\"XDevice\" />");
+			out.println("<xs:element name=\"xdevice\" type=\"XDevice\" >");
+			out.println("<xs:annotation>");
+			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.xdeviceDescription())+"</xs:documentation>");
+			out.println("</xs:annotation>");
+			out.println("</xs:element>");
 			out.println("<xs:complexType name=\"XDevice\">");
 			out.println("<xs:choice maxOccurs=\"unbounded\">");
-			out.println("<xs:group ref=\"c:widgetsCrossDev\" />");
+			out.println("<xs:group ref=\"c:widgetsCrossDev\" >");
+			out.println("<xs:annotation>");
+			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.anyWidgetsDescription())+"</xs:documentation>");
+			out.println("</xs:annotation>");
+			out.println("</xs:group>");
 			out.println("<xs:any namespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:choice>");
 			out.println("<xs:attribute name=\"useController\" type=\"xs:string\" use=\"required\"/>");
@@ -1292,10 +1385,18 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 
 			generateViewSchemasImport(libraries, out);
 
-			out.println("<xs:element name=\"view\" type=\"View\" />");
+			out.println("<xs:element name=\"view\" type=\"View\" >");
+			out.println("<xs:annotation>");
+			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.viewDescription())+"</xs:documentation>");
+			out.println("</xs:annotation>");
+			out.println("</xs:element>");
 			out.println("<xs:complexType name=\"View\">");
 			out.println("<xs:choice maxOccurs=\"unbounded\">");
-			out.println("<xs:group ref=\"c:widgets\" />");
+			out.println("<xs:group ref=\"c:widgets\" >");
+			out.println("<xs:annotation>");
+			out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.anyWidgetsDescription())+"</xs:documentation>");
+			out.println("</xs:annotation>");
+			out.println("</xs:group>");
 			out.println("<xs:any namespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:choice>");
 			generateElementAttributesForAllViewElements(out);
@@ -1374,7 +1475,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateTemplateSectionElement(PrintStream out)
 	{
-		out.println("<xs:element name=\"section\" type=\"Section\" />");
+		out.println("<xs:element name=\"section\" type=\"Section\" >");
+		out.println("<xs:annotation>");
+		out.println("<xs:documentation>"+StringEscapeUtils.escapeXml(schemaMessages.templateSectionDescription())+"</xs:documentation>");
+		out.println("</xs:annotation>");
+		out.println("</xs:element>");
 		out.println("<xs:complexType name=\"Section\">");
 		out.println("<xs:choice>");
 		out.println("<xs:any minOccurs=\"0\" maxOccurs=\"unbounded\"/>");
