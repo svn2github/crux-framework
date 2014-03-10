@@ -93,19 +93,13 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 * Invoke showProgressDialogOnTop on top window. It is required to handle multi-frame pages.
 	 * @param data
 	 */
-	public void showProgressDialog(final ProgressDialogData data)
+	public void showProgressDialog(ProgressDialogData data)
 	{
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			@Override
-			public void execute() 
-			{ 
-				pushProgressDialogOnStack();
-				((TargetDocument)crossDoc).setTarget(Target.TOP);
-				crossDoc.showProgressDialogBox(data);
-				((TargetDocument)crossDoc).setTargetWindow(getOpener());
-				crossDoc.disableEventsOnOpener();
-			}
-		});
+		pushProgressDialogOnStack();
+		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		crossDoc.showProgressDialogBox(data);
+		((TargetDocument)crossDoc).setTargetWindow(getOpener());
+		crossDoc.disableEventsOnOpener();
 	}
 
 	/**
@@ -120,10 +114,17 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 			((TargetDocument)crossDoc).setTargetWindow(opener);
 			crossDoc.enableEventsOnOpener();
 		}
-
-		((TargetDocument)crossDoc).setTarget(Target.TOP);
-		crossDoc.hideProgressDialogBox();
 		popProgressDialogFromStack();
+		
+		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+		{
+			@Override
+			public void execute() 
+			{
+				crossDoc.hideProgressDialogBox();
+			}
+		});
 	}
 
 	/**
@@ -224,7 +225,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 * Closes the popup, removing its window from the stack
 	 */
 	private static native boolean popProgressDialogFromStack()/*-{
-		if($wnd.top._progressDialog_origin && $wnd.top._progressDialog_origin != null && $wnd.top._progressDialog_origin.length > 0)
+		if($wnd.top._progressDialog_origin != null && $wnd.top._progressDialog_origin.length > 0)
 		{
 			$wnd.top._progressDialog_origin.pop();
 
@@ -240,15 +241,12 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	}-*/;
 
 	private native void pushProgressDialogOnStack()/*-{
-		if(!$wnd.top._progressDialog_origin || $wnd.top._progressDialog_origin == null || $wnd.top._progressDialog_origin.length == 0)
+		if($wnd.top._progressDialog_origin == null || $wnd.top._progressDialog_origin.length == 0)
 		{
 			$wnd.top._progressDialog_origin = new Array();
 		}
 
-		if($wnd)
-		{
-			$wnd.top._progressDialog_origin.push($wnd);
-		}
+		$wnd.top._progressDialog_origin.push($wnd);
 	}-*/;
 
 	public static native JSWindow getOpener()/*-{

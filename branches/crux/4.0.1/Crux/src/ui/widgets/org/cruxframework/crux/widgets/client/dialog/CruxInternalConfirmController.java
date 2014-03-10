@@ -25,6 +25,8 @@ import org.cruxframework.crux.widgets.client.event.CancelEvent;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -138,8 +140,17 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 			public void onClick(ClickEvent event)
 			{
 				Screen.unblockToUser();
-
-				dialogBox.hide();
+				
+				popConfirmFromStack();
+				
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+				{
+					@Override
+					public void execute() 
+					{
+						dialogBox.hide();
+					}
+				});
 
 				try
 				{
@@ -153,8 +164,6 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 				{
 					// IE 7 BUG: When the reference window no longer exists.
 				}
-
-				popConfirmFromStack();
 			}
 		});
 
@@ -195,8 +204,17 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 			public void onClick(ClickEvent event)
 			{
 				Screen.unblockToUser();
+				
+				popConfirmFromStack();
 
-				dialogBox.hide();
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+				{
+					@Override
+					public void execute() 
+					{
+						dialogBox.hide();
+					}
+				});
 
 				try
 				{
@@ -210,8 +228,6 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 				{
 					// IE 7 BUG: When the reference window no longer exists.
 				}
-
-				popConfirmFromStack();
 			}
 		});
 
@@ -246,7 +262,7 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 	 * Closes the confirm, removing its window from the stack
 	 */
 	private static native boolean popConfirmFromStack()/*-{
-		if($wnd.top._confirm_origin && $wnd.top._confirm_origin != null && $wnd.top._confirm_origin.length > 0)
+		if($wnd.top._confirm_origin != null && $wnd.top._confirm_origin.length > 0)
 		{
 			$wnd.top._confirm_origin.pop();
 

@@ -51,18 +51,11 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 * Invoke showMessageBox on top. It is required to handle multi-frame pages.
 	 * @param data
 	 */
-	public void showMessageBox(final MessageBoxData data)
+	public void showMessageBox(MessageBoxData data)
 	{
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
-		{
-			@Override
-			public void execute() 
-			{
-				pushMessageBoxOnStack();
-				((TargetDocument)crossDoc).setTarget(Target.TOP);
-				crossDoc.showMessageBoxDialog(data);
-			}
-		});
+		pushMessageBoxOnStack();
+		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		crossDoc.showMessageBoxDialog(data);
 	}
 
 	/**
@@ -153,7 +146,23 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 			{
 				Screen.unblockToUser();
 
-				dialogBox.hide();
+				try
+				{
+					popMessageBoxFromStack();
+				}
+				catch (Throwable e)
+				{
+					// IE 7 BUG: When the reference window no longer exists.
+				}
+				
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+				{
+					@Override
+					public void execute() 
+					{
+						dialogBox.hide();						
+					}
+				});
 
 				try
 				{
@@ -162,15 +171,6 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 					{
 						okClick(origin);
 					}
-				}
-				catch (Throwable e)
-				{
-					// IE 7 BUG: When the reference window no longer exists.
-				}
-
-				try
-				{
-					popMessageBoxFromStack();
 				}
 				catch (Throwable e)
 				{
@@ -199,7 +199,7 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 * Closes the message box, removing its window from the stack
 	 */
 	private static native boolean popMessageBoxFromStack()/*-{
-		if($wnd.top._messageBox_origin && $wnd.top._messageBox_origin != null && $wnd.top._messageBox_origin.length > 0)
+		if($wnd.top._messageBox_origin != null && $wnd.top._messageBox_origin.length > 0)
 		{
 			$wnd.top._messageBox_origin.pop();
 
@@ -218,14 +218,13 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 * Push the window that has invoked the message box
 	 */
 	private native void pushMessageBoxOnStack()/*-{
-		if(!$wnd.top._messageBox_origin || $wnd.top._messageBox_origin == null || $wnd.top._messageBox_origin.length == 0)
+
+		if($wnd.top._messageBox_origin == null || $wnd.top._messageBox_origin.length == 0)
 		{
 			$wnd.top._messageBox_origin = new Array();
 		}
-		if($wnd)
-		{
-			$wnd.top._messageBox_origin.push($wnd);
-		}
+
+		$wnd.top._messageBox_origin.push($wnd);
 	}-*/;
 
 	/**

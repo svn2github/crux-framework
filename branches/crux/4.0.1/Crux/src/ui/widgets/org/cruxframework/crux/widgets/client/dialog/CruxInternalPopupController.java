@@ -22,7 +22,6 @@ import org.cruxframework.crux.core.client.controller.Global;
 import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
 import org.cruxframework.crux.core.client.screen.JSWindow;
-import org.cruxframework.crux.core.client.screen.ModuleComunicationException;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.OpenEvent;
@@ -167,7 +166,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * Closes the popup, removing its window from the stack
 	 */
 	private static native boolean popPopupFromStack()/*-{
-		if($wnd.top._popup_origin && $wnd.top._popup_origin != null && $wnd.top._popup_origin.length > 0)
+		if($wnd.top._popup_origin != null && $wnd.top._popup_origin.length > 0)
 		{
 			$wnd.top._popup_origin.pop();
 
@@ -229,7 +228,14 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		if (popPopupFromStack())
 		{
 			((TargetDocument)crossDoc).setTarget(Target.TOP);
-			crossDoc.hidePopup();
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+			{
+				@Override
+				public void execute() 
+				{
+					crossDoc.hidePopup();
+				}
+			});
 		}
 	}
 
@@ -329,14 +335,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 
 			dialogBox.show();
 
-			Scheduler.get().scheduleDeferred(new ScheduledCommand() 
-			{
-				@Override
-				public void execute() 
-				{
-					pushPopupWindowOnStack(FrameUtils.getFrameWindow((IFrameElement) frameElement));					
-				}
-			});
+			pushPopupWindowOnStack(FrameUtils.getFrameWindow((IFrameElement) frameElement));
 		}
 		catch (Exception e)
 		{
@@ -431,18 +430,11 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * Open popup dialog.
 	 * @param data
 	 */
-	public void showPopup(final PopupData data)
+	public void showPopup(PopupData data)
 	{
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
-		{
-			@Override
-			public void execute() 
-			{
-				pushPopupOnStack();
-				((TargetDocument)crossDoc).setTarget(Target.TOP);
-				crossDoc.openPopup(data);
-			}
-		});
+		pushPopupOnStack();
+		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		crossDoc.openPopup(data);
 	}
 
 	/**
@@ -461,10 +453,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * @param frameWindow
 	 */
 	private native void pushPopupWindowOnStack(JSWindow frameWindow)/*-{
-		if(frameWindow)
-		{
-			$wnd.top._popup_wndws.push(frameWindow);
-		}
+		$wnd.top._popup_wndws.push(frameWindow);
 	}-*/;
 
 	/**
@@ -472,19 +461,16 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * @param serializedData
 	 */
 	private native void pushPopupOnStack()/*-{
-		if(!$wnd.top._popup_origin || $wnd.top._popup_origin == null)
+		if($wnd.top._popup_origin == null || $wnd.top._popup_origin.length == 0)
 		{
 			$wnd.top._popup_origin = new Array();
 		}
 
-		if(!$wnd.top._popup_wndws || $wnd.top._popup_wndws == null)
+		if($wnd.top._popup_wndws == null || $wnd.top._popup_wndws.length == 0)
 		{
 			$wnd.top._popup_wndws = new Array();
 		}
 
-		if($wnd)
-		{
-			$wnd.top._popup_origin.push($wnd);
-		}
+		$wnd.top._popup_origin.push($wnd);
 	}-*/;
 }

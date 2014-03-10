@@ -25,8 +25,6 @@ import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasAnimation;
@@ -123,16 +121,8 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 			((TargetDocument)confirmController).setTarget(Target.TOP);
 		}
 		confirm = this;
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
-		{
-			@Override
-			public void execute() 
-			{
-				pushConfirmOnStack();
-				confirmController.showConfirm(new ConfirmData(title, message, okButtonText, cancelButtonText, styleName!=null?styleName:DEFAULT_STYLE_NAME, animationEnabled));		
-			}
-		});
-		
+		pushConfirmOnStack();
+		confirmController.showConfirm(new ConfirmData(title, message, okButtonText, cancelButtonText, styleName!=null?styleName:DEFAULT_STYLE_NAME, animationEnabled));
 	}
 
 	/**
@@ -143,10 +133,7 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 		{
 			$wnd.top._confirm_origin = new Array();
 		}
-		if($wnd)
-		{
-			$wnd.top._confirm_origin.push($wnd);
-		}
+		$wnd.top._confirm_origin.push($wnd);
 	}-*/;
 
 	/**
