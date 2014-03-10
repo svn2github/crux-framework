@@ -26,6 +26,8 @@ import org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButton;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -49,11 +51,18 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 * Invoke showMessageBox on top. It is required to handle multi-frame pages.
 	 * @param data
 	 */
-	public void showMessageBox(MessageBoxData data)
+	public void showMessageBox(final MessageBoxData data)
 	{
-		pushMessageBoxOnStack();
-		((TargetDocument)crossDoc).setTarget(Target.TOP);
-		crossDoc.showMessageBoxDialog(data);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+		{
+			@Override
+			public void execute() 
+			{
+				pushMessageBoxOnStack();
+				((TargetDocument)crossDoc).setTarget(Target.TOP);
+				crossDoc.showMessageBoxDialog(data);
+			}
+		});
 	}
 
 	/**

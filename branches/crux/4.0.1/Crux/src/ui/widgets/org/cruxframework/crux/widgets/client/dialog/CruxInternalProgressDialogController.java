@@ -25,6 +25,8 @@ import org.cruxframework.crux.core.client.screen.JSWindow;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -91,13 +93,19 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 * Invoke showProgressDialogOnTop on top window. It is required to handle multi-frame pages.
 	 * @param data
 	 */
-	public void showProgressDialog(ProgressDialogData data)
+	public void showProgressDialog(final ProgressDialogData data)
 	{
-		pushProgressDialogOnStack();
-		((TargetDocument)crossDoc).setTarget(Target.TOP);
-		crossDoc.showProgressDialogBox(data);
-		((TargetDocument)crossDoc).setTargetWindow(getOpener());
-		crossDoc.disableEventsOnOpener();
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() 
+			{ 
+				pushProgressDialogOnStack();
+				((TargetDocument)crossDoc).setTarget(Target.TOP);
+				crossDoc.showProgressDialogBox(data);
+				((TargetDocument)crossDoc).setTargetWindow(getOpener());
+				crossDoc.disableEventsOnOpener();
+			}
+		});
 	}
 
 	/**

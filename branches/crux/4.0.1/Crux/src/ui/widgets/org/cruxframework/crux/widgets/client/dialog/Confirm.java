@@ -25,6 +25,8 @@ import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasAnimation;
@@ -121,15 +123,23 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 			((TargetDocument)confirmController).setTarget(Target.TOP);
 		}
 		confirm = this;
-		pushConfirmOnStack();
-		confirmController.showConfirm(new ConfirmData(title, message, okButtonText, cancelButtonText, styleName!=null?styleName:DEFAULT_STYLE_NAME, animationEnabled));
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+		{
+			@Override
+			public void execute() 
+			{
+				pushConfirmOnStack();
+				confirmController.showConfirm(new ConfirmData(title, message, okButtonText, cancelButtonText, styleName!=null?styleName:DEFAULT_STYLE_NAME, animationEnabled));		
+			}
+		});
+		
 	}
 
 	/**
 	 * Push the window that has invoked the confirm
 	 */
 	private native void pushConfirmOnStack()/*-{
-		if(!$wnd.top._confirm_origin || $wnd.top._confirm_origin == null || $wnd.top._confirm_origin.length > 0)
+		if(!$wnd.top._confirm_origin || $wnd.top._confirm_origin == null || $wnd.top._confirm_origin.length == 0)
 		{
 			$wnd.top._confirm_origin = new Array();
 		}
