@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,9 +55,9 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
 		crossDoc.showMessageBoxDialog(data);
 	}
-	
+
 	/**
-	 * Fires the OK button click event 
+	 * Fires the OK button click event
 	 */
 	public void onOk()
 	{
@@ -70,7 +70,7 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 			Crux.getErrorHandler().handleError(e);
 		}
 	}
-	
+
 	/**
 	 * Handler method to be invoked on top. This method does show the message box.
 	 * @param controllerEvent
@@ -78,32 +78,32 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	public void showMessageBoxDialog(MessageBoxData data)
 	{
 		Screen.blockToUser("crux-MessageBoxScreenBlocker");
-		
+
 		try
 		{
 			final DialogBox dialogBox = new DialogBox(false, true);
 			dialogBox.setStyleName(data.getStyleName());
 			dialogBox.setText(data.getTitle());
 			dialogBox.setAnimationEnabled(data.isAnimationEnabled());
-			
+
 			DockPanel dockPanel = new DockPanel();
 			dockPanel.add(createMessageLabel(data), DockPanel.CENTER);
-			
+
 			HorizontalPanel horizontalPanel = new HorizontalPanel();
 			horizontalPanel.setSpacing(10);
 			DecoratedButton okButton = createOkButton(dialogBox, data);
 			horizontalPanel.add(okButton);
-			
+
 			dockPanel.add(horizontalPanel, DockPanel.SOUTH);
 			dockPanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_CENTER);
-			
+
 			dialogBox.add(dockPanel);
-			
+
 			dockPanel.getElement().getParentElement().setAttribute("align", "center");
-			
+
 			dialogBox.center();
 			dialogBox.show();
-			
+
 			okButton.setFocus(true);
 		}
 		catch (Exception e)
@@ -128,13 +128,13 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	/**
 	 * Creates the OK button
 	 * @param dialogBox
-	 * @param data 
+	 * @param data
 	 * @return
 	 */
 	private DecoratedButton createOkButton(final DialogBox dialogBox, MessageBoxData data)
 	{
 		DecoratedButton okButton = new DecoratedButton();
-		
+
 		okButton.setText(messages.messageBoxOkLabel());
 		okButton.addStyleName("button");
 		okButton.addStyleName("okButton");
@@ -143,14 +143,14 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 			public void onClick(ClickEvent event)
 			{
 				Screen.unblockToUser();
-				
+
 				dialogBox.hide();
-				
+
 				try
 				{
 					JSWindow origin = getOpener();
 					if (origin != null)
-					{	
+					{
 						okClick(origin);
 					}
 				}
@@ -158,7 +158,7 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 				{
 					// IE 7 BUG: When the reference window no longer exists.
 				}
-				
+
 				try
 				{
 					popMessageBoxFromStack();
@@ -169,12 +169,12 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 				}
 			}
 		});
-		
+
 		Screen.ensureDebugId(okButton, "_crux_msgBox_ok_" + data.getMessage());
-		
+
 		return okButton;
 	}
-	
+
 	/**
 	 * Execute a ok click event on a origin window
 	 * @param origin
@@ -183,36 +183,41 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 		if (origin && origin._cruxCrossDocumentAccessor)
 		{
 			origin._cruxCrossDocumentAccessor("__messageBox|onOk()|");
-		}	
+		}
 	}-*/;
 
 	/**
-	 * Closes the message box, removing its window from the stack 
+	 * Closes the message box, removing its window from the stack
 	 */
 	private static native boolean popMessageBoxFromStack()/*-{
-		if($wnd.top._messageBox_origin != null)
+		if($wnd.top._messageBox_origin != null && $wnd.top._messageBox_origin.length > 0)
 		{
 			$wnd.top._messageBox_origin.pop();
+
 			if ($wnd.top._messageBox_origin.length == 0)
 			{
 				$wnd.top._messageBox_origin = null;
 			}
+
 			return true;
 		}
+
 		return false;
 	}-*/;
-	
+
 	/**
 	 * Push the window that has invoked the message box
 	 */
 	private native void pushMessageBoxOnStack()/*-{
-		if($wnd.top._messageBox_origin == null)
+
+		if($wnd.top._messageBox_origin == null || $wnd.top._messageBox_origin.length == 0)
 		{
 			$wnd.top._messageBox_origin = new Array();
-		}		
+		}
+
 		$wnd.top._messageBox_origin.push($wnd);
 	}-*/;
-	
+
 	/**
 	 * Gets the window that has invoked the message box
 	 * @return
@@ -221,15 +226,15 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 		try
 		{
 			var o = $wnd.top._messageBox_origin[$wnd.top._messageBox_origin.length - 1];
-			
+
 			if (o && o._cruxCrossDocumentAccessor)
 			{
 				return o;
-			}	
-			else 
+			}
+			else
 			{
 				return null;
-			}	
+			}
 		}
 		catch(e)
 		{

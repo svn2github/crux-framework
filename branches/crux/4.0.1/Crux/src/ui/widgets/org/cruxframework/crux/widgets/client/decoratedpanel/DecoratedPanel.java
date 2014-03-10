@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,24 +23,24 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Panel based on a 3x3 table, useful to build rounded corners boxes. 
+ * Panel based on a 3x3 table, useful to build rounded corners boxes.
  * @author Gesse S. F. Dafe
  */
 public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment, HasVerticalAlignment
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-DecoratedPanel" ;
-	
+
 	private Element topLine;
 	private Element topLeftCell;
 	private Element topCenterCell;
 	private Element topRightCell;
-	
+
 	private Element middleLine;
-	
+
 	private Element middleLeftCell;
 	private Element middleCenterCell;
 	private Element middleRightCell;
-	
+
 	private Element bottomLine;
 	private Element bottomLeftCell;
 	private Element bottomCenterCell;
@@ -49,7 +49,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 
 	private VerticalAlignmentConstant verticalAlign;
 	private HorizontalAlignmentConstant horizontalAlign;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -57,7 +57,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	{
 		this(null, null, null);
 	}
-	
+
 	/**
 	 * Constructor
 	 * @param width
@@ -68,43 +68,44 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	{
 		Element table = getTable();
 		table.setClassName(styleName != null && styleName.length() > 0 ? styleName : DEFAULT_STYLE_NAME);
-		table.setPropertyString("width", (width==null?"":width));
+		table.getStyle().setProperty("width", (width==null?"":width));
 		table.getStyle().setProperty("height", (height==null?"":height));
 		getTable().getStyle().setTableLayout(com.google.gwt.dom.client.Style.TableLayout.FIXED);
-	 	
+
 		Element templateTR = DOM.createTR();
 		topLine = templateTR;
 		middleLine = templateTR.cloneNode(false).cast();
 		Element wrapperLine = templateTR.cloneNode(false).cast();
 		bottomLine = templateTR.cloneNode(false).cast();
-		
+
 		Element templateTd = createTemplateTd(true);
 		Element templateSpaceTd = createTemplateTd(false);
 
 		topLeftCell = templateTd;
 		topCenterCell = createTd(templateTd, "topCenterCell");
 		topRightCell = createTd(templateTd, "topRightCell");
-		
+
 		Element wrapper = DOM.createTable().cast();
 		wrapper.setPropertyInt("cellSpacing", 0);
 		wrapper.setPropertyInt("cellPadding", 0);
 		wrapper.setPropertyString("width", "100%");
 		wrapper.getStyle().setProperty("height", "100%");
 	    Element wrapperBody = DOM.createTBody();
-	    
+
 	    Element middleLineTD = templateSpaceTd;
-	    middleLineTD.setPropertyInt("colSpan", 3);	
+	    middleLineTD.setPropertyInt("colSpan", 3);
 	    middleLineTD.getStyle().setProperty("padding", "0px");
+	    middleLineTD.getStyle().setProperty("height", "100%");
 	    middleLineTD.appendChild(wrapper);
-		
+
 		middleLeftCell = createTd(templateTd, "middleLeftCell");
 		middleCenterCell = createTd(templateSpaceTd, "middleCenterCell");
 		middleRightCell = createTd(templateTd, "middleRightCell");
-		
+
 		bottomLeftCell = createTd(templateTd, "bottomLeftCell");
 		bottomCenterCell = createTd(templateTd, "bottomCenterCell");
 		bottomRightCell = createTd(templateTd, "bottomRightCell");
-		
+
 		topLeftCell.setClassName("topLeftCell");
 
 		topLine.appendChild(topLeftCell);
@@ -112,7 +113,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 		topLine.appendChild(topRightCell);
 		Element body = getBody();
 		body.appendChild(topLine);
-	   	    
+
 	    wrapperLine.appendChild(middleLeftCell);
 	    wrapperLine.appendChild(middleCenterCell);
 	    wrapperLine.appendChild(middleRightCell);
@@ -121,15 +122,15 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	    middleLineTD.appendChild(wrapper);
 	    middleLine.appendChild(middleLineTD);
 	    body.appendChild(middleLine);
-	    	    
+
 	    bottomLine.appendChild(bottomLeftCell);
 	    bottomLine.appendChild(bottomCenterCell);
 	    bottomLine.appendChild(bottomRightCell);
 	    body.appendChild(bottomLine);
-	    
+
 	    setSpacing(0);
 	}
-	
+
 	/**
 	 * Sets the widget which will be displayed at the northeastern cell
 	 * @param widget
@@ -141,7 +142,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 		setCellVerticalAlignment(widget, HasVerticalAlignment.ALIGN_MIDDLE);
 		setCellHorizontalAlignment(widget, HasHorizontalAlignment.ALIGN_RIGHT);
 	}
-	
+
 	/**
 	 * Sets the widget which will be displayed in the body of the panel
 	 * @param widget
@@ -152,7 +153,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 		add(widget, middleCenterCell);
 		contentWidget = widget;
 	}
-	
+
 	/**
 	 * @return the widget displayed in the body of the panel
 	 */
@@ -170,7 +171,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 		cleanEmptySpaces(middleCenterCell);
 		middleCenterCell.setInnerText(text);
 	}
-	
+
 	/**
 	 * Sets an HTML text to be displayed in the body of the panel
 	 * @param html
@@ -182,13 +183,13 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	}
 
 	/**
-	 * Removes the empty spaces from the element's inner text 
+	 * Removes the empty spaces from the element's inner text
 	 * @param cell
 	 */
 	private void cleanEmptySpaces(Element cell)
 	{
 		String text = cell.getInnerText();
-		
+
 		if(text != null && text.trim().length() == 0)
 		{
 			cell.setInnerText("");
@@ -222,10 +223,10 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 			td.setInnerHTML("&nbsp;");
 		}
 		td.setPropertyString("align", "center");
-		td.setPropertyString("valign", "middle");		
+		td.setPropertyString("valign", "middle");
 		return td;
 	}
-	
+
 	/**
 	 * @return the top TR
 	 */
@@ -321,7 +322,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	{
 		return bottomRightCell;
 	}
-	
+
 	/**
 	 * Sets the horizontal alignment of the body
 	 * @param align
@@ -329,9 +330,9 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	public void setHorizontalAlignment(HorizontalAlignmentConstant align)
 	{
 		this.horizontalAlign = align;
-		DOM.setElementProperty(getMiddleCenterCell(), "align", align.getTextAlignString());		
+		DOM.setElementProperty(getMiddleCenterCell(), "align", align.getTextAlignString());
 	}
-	
+
 	/**
 	 * Sets the vertical alignment of the body
 	 * @param align
@@ -339,7 +340,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	public void setVerticalAlignment(VerticalAlignmentConstant align)
 	{
 		this.verticalAlign = align;
-		DOM.setElementProperty(getMiddleCenterCell(), "align", align.getVerticalAlignString());		
+		DOM.setElementProperty(getMiddleCenterCell(), "align", align.getVerticalAlignString());
 	}
 
 	public VerticalAlignmentConstant getVerticalAlignment()
@@ -351,4 +352,38 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
     {
 	    return this.horizontalAlign;
     }
+
+	/**
+	 * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
+	 */
+	@Override
+	public void setHeight(String height)
+	{
+		if (height != null && height.trim().length() != 0)
+		{
+			if (!height.toLowerCase().endsWith("px") && !height.endsWith("%"))
+			{
+				height += "px";
+			}
+			super.setHeight(height);
+		}
+	}
+
+	/*
+	 * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
+	 */
+	@Override
+	public void setWidth(String width)
+	{
+		if (width != null && width.trim().length() != 0)
+		{
+			if (!width.toLowerCase().endsWith("px") &&  !width.endsWith("%"))
+			{
+				width += "px";
+			}
+
+			super.setWidth(width);
+		}
+	}
+
 }

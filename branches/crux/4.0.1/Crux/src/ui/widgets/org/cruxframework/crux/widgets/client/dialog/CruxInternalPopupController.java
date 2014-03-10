@@ -1,12 +1,12 @@
 /*
- * Copyright 2011 cruxframework.org. 
- * 
+ * Copyright 2011 cruxframework.org.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -46,12 +46,12 @@ import com.google.gwt.user.client.ui.Widget;
 public class CruxInternalPopupController implements CruxInternalPopupControllerCrossDoc
 {
 	protected CruxInternalPopupControllerCrossDoc crossDoc = GWT.create(CruxInternalPopupControllerCrossDoc.class);
-	protected DialogMessages messages = GWT.create(DialogMessages.class);	
+	protected DialogMessages messages = GWT.create(DialogMessages.class);
 	private FastList<CustomDialogBox> dialogBoxes = new FastList<CustomDialogBox>();
 	private boolean waitingForOpenEvent = false;
-	
+
 	/**
-	 * If there is an shown popup at this moment, it must be the one whose opening must be notified. 
+	 * If there is an shown popup at this moment, it must be the one whose opening must be notified.
 	 */
 	public CruxInternalPopupController()
 	{
@@ -64,14 +64,14 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 				if(opener != null)
 				{
 					((TargetDocument) crossDoc).setTargetWindow(opener);
-					crossDoc.onOpen();				
+					crossDoc.onOpen();
 				}
 			}
 		};
-		
+
 		timer.schedule(10);
 	}
-	
+
 	/**
 	 * @return the window object of the popup opener
 	 */
@@ -83,7 +83,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			return null;
 		}
 	}-*/;
-	
+
 
 	/**
 	 * Return the window of the last shown popup
@@ -94,7 +94,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		{
 			return $wnd.top._popup_wndws[$wnd.top._popup_wndws.length - 1];
 		}
-		return null; 
+		return null;
 	}-*/;
 
 	/**
@@ -107,7 +107,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 
 	/**
 	 * Invoke hide on top. It is required to handle multi-frame pages.
-	 * 
+	 *
 	 * @param fireCloseEvent
 	 *            Inform if BeforeCloseEvent must be fired
 	 */
@@ -124,7 +124,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			crossDoc.close();
 		}
 	}
-	
+
 	/**
 	 * @param call
 	 * @param param
@@ -159,20 +159,36 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		var o = $wnd.top._popup_origin[$wnd.top._popup_origin.length - 1];
 		return o._cruxScreenControllerAccessor(call, serializedData);
 	}-*/;
-	
+
 	/**
-	 * Closes the popup, removing its window from the stack 
+	 * Closes the popup, removing its window from the stack
 	 */
 	private static native boolean popPopupFromStack()/*-{
-		if($wnd.top._popup_origin != null && $wnd.top._popup_wndws != null)
+		if($wnd.top._popup_origin != null && $wnd.top._popup_origin.length > 0)
 		{
 			$wnd.top._popup_origin.pop();
-			$wnd.top._popup_wndws.pop();
-			return true;
+
+			if ($wnd.top._popup_origin.length == 0)
+			{
+				$wnd.top._popup_origin = null;
+			}
+
+			if($wnd.top._popup_wndws != null && $wnd.top._popup_wndws.length > 0)
+			{
+				$wnd.top._popup_wndws.pop();
+
+				if ($wnd.top._popup_wndws.length == 0)
+				{
+					$wnd.top._popup_wndws = null;
+				}
+
+				return true;
+			}
 		}
+
 		return false;
 	}-*/;
-	
+
 	/**
 	 * Handler method to be invoked on top. That method hides the popup dialog.
 	 */
@@ -186,7 +202,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			dialogBox = null;
 		}
 	}
-	
+
 	/**
 	 * Called by top window
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#onClose()
@@ -199,7 +215,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			close();
 		}
 	}
-	
+
 	/**
 	 * Called from popup window and executed on popup opener
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#close()
@@ -213,8 +229,8 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			crossDoc.hidePopup();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Called by top window
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#prepareToOpen()
@@ -223,7 +239,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	{
 		this.waitingForOpenEvent = true;
 	}
-	
+
 	/**
 	 * Called by top window
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#isWaitingForOpen()
@@ -245,7 +261,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			OpenEvent.fire(Popup.getLastShownPopup());
 		}
 	}
-	
+
 	/**
 	 * Handler method to be invoked on top. That method shows the popup dialog.
 	 * @param controllerEvent
@@ -253,7 +269,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	public void openPopup(PopupData data)
 	{
 		Screen.blockToUser("crux-PopupScreenBlocker");
-		
+
 		try
 		{
 			CustomDialogBox dialogBox = new CustomDialogBox(false, true, true);
@@ -261,12 +277,12 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			dialogBox.setAnimationEnabled(data.isAnimationEnabled());
 			dialogBox.setWidth(data.getWidth());
 			dialogBox.setHeight(data.getHeight());
-			
+
 			Frame frame = new Frame(Screen.appendDebugParameters(data.getUrl()));
 			frame.setStyleName("frame");
 			frame.setHeight("100%");
 			frame.setWidth("100%");
-						
+
 			final Element frameElement = frame.getElement();
 			frameElement.setPropertyString("frameBorder", "no");
 			frameElement.setPropertyInt("border", 0);
@@ -274,12 +290,12 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			frameElement.setPropertyInt("marginHeight", 0);
 			frameElement.setPropertyInt("vspace", 0);
 			frameElement.setPropertyInt("hspace", 0);
-			
+
 			if (data.isCloseable())
 			{
 				final Button focusPanel = new Button(" ");
 				focusPanel.setStyleName("closeButton");
-				
+
 				focusPanel.addClickHandler(new ClickHandler()
 				{
 					public void onClick(ClickEvent event)
@@ -291,14 +307,14 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 						}
 					}
 				});
-				
+
 				PopupLoadListener listener = GWT.create(PopupLoadListener.class);
 				listener.setup(frameElement, focusPanel);
 				FrameUtils.registerStateCallback(frameElement, listener);
-				
+
 				dialogBox.setTopRightWidget(focusPanel);
-			}			
-			
+			}
+
 			 ((TargetDocument) crossDoc).setTargetWindow(getOpener());
 			 crossDoc.prepareToOpen();
 
@@ -307,20 +323,20 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			dialogBox.center();
 
 			dialogBoxes.add(dialogBox);
-			
+
 			dialogBox.show();
-			
+
 			pushPopupWindowOnStack(FrameUtils.getFrameWindow((IFrameElement) frameElement));
 		}
 		catch (Exception e)
 		{
 			Crux.getErrorHandler().handleError(e);
 			Screen.unblockToUser();
-		}		
+		}
 	}
-	
+
 	/**
-	 * CallBack for Popup frame loading 
+	 * CallBack for Popup frame loading
 	 * @author Gesse Dafe
 	 */
 	public static abstract class PopupLoadListener implements FrameStateCallback
@@ -336,17 +352,17 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		{
 			this.popupFrame = popupFrame;
 			this.closeBtn = closeBtn;
-			blockPopupClosing(popupFrame, closeBtn);		
+			blockPopupClosing(popupFrame, closeBtn);
 		}
 
 		/**
-		 * @param popupFrame 
+		 * @param popupFrame
 		 */
 		protected abstract void blockPopupClosing(Element popupFrame, Widget closeBtn);
-		
+
 		/**
-		 * @param popupFrame 
-		 * @param closeBtn 
+		 * @param popupFrame
+		 * @param closeBtn
 		 */
 		protected abstract void unblockPopupClosing(Element popupFrame, Widget closeBtn);
 
@@ -361,9 +377,9 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			}
 		}
 	}
-	
+
 	/**
-	 * CallBack for Popup frame loading 
+	 * CallBack for Popup frame loading
 	 * @author Gesse Dafe
 	 */
 	public static class PopupLoadListenerImpl extends PopupLoadListener
@@ -379,12 +395,12 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		protected void unblockPopupClosing(Element popupFrame, Widget closeBtn)
 		{
 			closeBtn.removeStyleDependentName("disabled");
-			popupFrame.setAttribute("canClose", "true");			
-		}		
+			popupFrame.setAttribute("canClose", "true");
+		}
 	}
-	
+
 	/**
-	 * CallBack for Popup frame loading 
+	 * CallBack for Popup frame loading
 	 * @author Gesse Dafe
 	 */
 	public static class PopupLoadListenerSafariImpl extends PopupLoadListener
@@ -398,9 +414,9 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		@Override
 		protected void unblockPopupClosing(Element popupFrame, Widget closeBtn)
 		{
-		}		
+		}
 	}
-	
+
 	/**
 	 * Open popup dialog.
 	 * @param data
@@ -411,9 +427,9 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
 		crossDoc.openPopup(data);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param frameElement
 	 * @return
 	 */
@@ -430,17 +446,22 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	private native void pushPopupWindowOnStack(JSWindow frameWindow)/*-{
 		$wnd.top._popup_wndws.push(frameWindow);
 	}-*/;
-	
+
 	/**
 	 * @param call
 	 * @param serializedData
 	 */
 	private native void pushPopupOnStack()/*-{
-		if($wnd.top._popup_origin == null && $wnd.top._popup_wndws == null)
+		if($wnd.top._popup_origin == null || $wnd.top._popup_origin.length == 0)
 		{
 			$wnd.top._popup_origin = new Array();
+		}
+
+		if($wnd.top._popup_wndws == null || $wnd.top._popup_wndws.length == 0)
+		{
 			$wnd.top._popup_wndws = new Array();
-		}		
+		}
+
 		$wnd.top._popup_origin.push($wnd);
 	}-*/;
 }

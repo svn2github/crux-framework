@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,38 +52,38 @@ import org.cruxframework.crux.tools.parameters.ConsoleParametersProcessor;
 
 
 /**
- * 
+ *
  * @author Thiago da Rosa de Bustamante
  *
  */
 public class CruxModuleCompiler extends AbstractCruxCompiler
 {
 	private static final Log logger = LogFactory.getLog(CruxModuleCompiler.class);
-	
+
 	private  Map<String, Boolean> alreadyChecked = new HashMap<String, Boolean>();
 	private boolean forceModulesCompilation = false;
 	private String moduleName;
 	private Map<String, Boolean> mustCompileCache = new HashMap<String, Boolean>();
-	
+
 	public CruxModuleCompiler()
     {
 		ConfigurationFactory.getConfigurations().setEnableWebRootScannerCache(false);
 		CruxModuleConfigurationFactory.getConfigurations().setDevelopmentModules("");
     }
-	
-	
+
+
 	@Override
 	protected ConsoleParametersProcessor createParametersProcessor()
 	{
 		ConsoleParametersProcessor parametersProcessor = super.createParametersProcessor();
 		ConsoleParameter parameter = new ConsoleParameter("-forceModulesCompilation", "Force all modules compilation.", false, false);
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parameter = new ConsoleParameter("moduleName", "The folder where the compiled files will be created.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("name", "The name of the module you want to compile. If absent, compiles all modules."));
 		parametersProcessor.addSupportedParameter(parameter);
-		
-		return parametersProcessor;	
+
+		return parametersProcessor;
 	}
 
 	@Override
@@ -104,10 +104,10 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 			}
 		}
 	}
-	
+
 	@Override
 	protected List<URL> getURLs() throws Exception
-	{		
+	{
 		List<URL> urls = new ArrayList<URL>();
 		if(this.moduleName != null)
 		{
@@ -129,9 +129,9 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 	/**
 	 * Gets all URLs for the current registered module.
 	 * @return
-	 * @throws ScreenConfigException 
+	 * @throws ScreenConfigException
 	 */
-	protected List<URL> getURLsForRegisteredModule() throws ScreenConfigException 
+	protected List<URL> getURLsForRegisteredModule() throws ScreenConfigException
 	{
 		List<URL> urls = new ArrayList<URL>();
 		CruxModule cruxModule = CruxModuleHandler.getCurrentModule();
@@ -145,7 +145,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 				urls.add(resourceHandler.getChildResource(location, page));
 			}
 		}
-		return urls;		
+		return urls;
 	}
 
 
@@ -168,26 +168,26 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 		}
 		addPreProcessor(preProcessor);
     }
-	
+
 	@Override
 	protected void processParameters(Collection<ConsoleParameter> parameters)
 	{
 	    super.processParameters(parameters);
-	    
+
 	    for (ConsoleParameter parameter : parameters)
         {
 	        if (parameter.getName().equals("-forceModulesCompilation"))
 	        {
 	        	this.forceModulesCompilation = true;
 	        }
-	        
+
 	        if (parameter.getName().equals("moduleName"))
 	        {
 	        	this.setModuleName(parameter.getValue());
 	        }
         }
-	}	
-	
+	}
+
 	/**
 	 * Checks if all dependencies of the informed module are satisfied.
 	 * @param moduleName Name of the module
@@ -212,9 +212,10 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 	    		{
 	    			String foundTimestamp = ModuleExporter.getModuleBuildTimestamp(moduleRef.getName());
 	    			String expectedTimestamp = moduleManifest.getMainAttributes().getValue(ModuleExporter.MODULE_DEP_PREFIX+moduleRef.getName());
-	    			if (StringUtils.isEmpty(expectedTimestamp) || StringUtils.isEmpty(foundTimestamp) || 
+	    			if (StringUtils.isEmpty(expectedTimestamp) || StringUtils.isEmpty(foundTimestamp) ||
 	    					!foundTimestamp.equals(expectedTimestamp))
 	    			{
+	    				logger.info("Module " + moduleName + " needs to be recompiled. Newer dependency [" + moduleRef.getName() + "] found." );
 	    				result = false;
 	    				break;
 	    			}
@@ -233,13 +234,14 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 	    alreadyChecked.put(moduleName, result);
 	    return result;
     }
-	
+
 	/**
 	 * @param moduleName
 	 */
 	private void extractModuleCompilation(String moduleName)
     {
-		logger.info("Extracting module compiled output from jar file...");
+		logger.info("Extracting module compiled output [" + moduleName + "] from module jar.");
+
 		try
 		{
 			URL rootPath = ModuleExporter.getModuleJarRootPath(moduleName);
@@ -247,12 +249,12 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 			if (handler instanceof PackageFileURLResourceHandler)
 			{
 				URL jarURL = ((PackageFileURLResourceHandler)handler).getPackageFile(rootPath);
-				
+
 				// Extract gwt compilation
 				Map<String, String> replacements = new HashMap<String, String>();
 				replacements.put(ModuleExporter.CRUX_MODULE_EXPORT+"/", "");
-				
-				JarExtractor extractor = new JarExtractor(new File[]{new File(jarURL.toURI())}, this.outputDir, 
+
+				JarExtractor extractor = new JarExtractor(new File[]{new File(jarURL.toURI())}, this.outputDir,
 						ModuleExporter.CRUX_MODULE_EXPORT+"/**", null, replacements, false);
 
 				extractor.extractJar();
@@ -261,7 +263,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 				{
 					replacements = new HashMap<String, String>();
 					replacements.put(ModuleExporter.CRUX_MODULE_EXPORT_PAGES+"/", "");
-					extractor = new JarExtractor(new File[]{new File(jarURL.toURI())}, this.pagesOutputDir, 
+					extractor = new JarExtractor(new File[]{new File(jarURL.toURI())}, this.pagesOutputDir,
 													ModuleExporter.CRUX_MODULE_EXPORT_PAGES+"/**", null, replacements, false);
 					extractor.extractJar();
 				}
@@ -275,13 +277,13 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 		{
 			throw new CruxModuleException("Error extracting module compiled output from jar.", e);
 		}
-	    
-    }		
+
+    }
 
 	/**
-	 * 
+	 *
 	 * @param cruxModule
-	 * @throws ScreenConfigException 
+	 * @throws ScreenConfigException
 	 */
 	protected String[] getPagesForModule(CruxModule cruxModule) throws ScreenConfigException
 	{
@@ -308,9 +310,9 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 		}
 		return new String[0];
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param cruxModule
 	 * @param screenID
 	 * @return
@@ -319,12 +321,12 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 	{
 		URL location = cruxModule.getLocation();
 		URLResourceHandler resourceHandler = URLResourceHandlersRegistry.getURLResourceHandler(location.getProtocol());
-	
+
 		for (String publicPath : cruxModule.getGwtModule().getPublicPaths())
 		{
-			if (URLUtils.existsResource(resourceHandler.getChildResource(location, publicPath+"/"+screenID))) 
+			if (URLUtils.existsResource(resourceHandler.getChildResource(location, publicPath+"/"+screenID)))
 			{
-				return publicPath+"/"+screenID;	
+				return publicPath+"/"+screenID;
 			}
 			else if (screenID.startsWith(publicPath))
 			{
@@ -342,7 +344,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 	private boolean hasCompilationFolder(String moduleName)
     {
 		URL rootPath = ModuleExporter.getModuleJarRootPath(moduleName);
-		
+
 		URLResourceHandler handler = URLResourceHandlersRegistry.getURLResourceHandler(rootPath.getProtocol());
 		URL moduleManifest = handler.getChildResource(rootPath, "cruxModuleExport");
 		return URLUtils.existsResource(moduleManifest);
@@ -350,7 +352,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 
 
 	/**
-	 * Checks if the informed module must be compiled 
+	 * Checks if the informed module must be compiled
 	 * @param moduleName
 	 * @return
 	 */
@@ -360,7 +362,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 		{
 			return mustCompileCache.get(moduleName);
 		}
-		
+
 		boolean result = true;
 		try
 		{
@@ -371,7 +373,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 				result = !checkDependenciesForModifications(moduleName);
 			}
 		}
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			logger.warn("Error validating module pre-compiled output. Forcing a new module compilation...", e);
 		}

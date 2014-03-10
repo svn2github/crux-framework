@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -46,12 +46,12 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	private DialogBox dialog = null;
 	private Label messageLabel = null;
 	private CruxInternalProgressDialogControllerCrossDoc crossDoc = GWT.create(CruxInternalProgressDialogControllerCrossDoc.class);
-	
-	
-	private FastList<String> stack = new FastList<String>(); 
-	private HandlerRegistration previewHandler = null; 
+
+
+	private FastList<String> stack = new FastList<String>();
+	private HandlerRegistration previewHandler = null;
 	private int numProgressDialogOnDocument = 0;
-	
+
 	/**
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
 	 */
@@ -70,7 +70,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 			});
 		}
 	}
-	
+
 	/**
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#enableEventsOnOpener()
 	 */
@@ -99,7 +99,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		((TargetDocument)crossDoc).setTargetWindow(getOpener());
 		crossDoc.disableEventsOnOpener();
 	}
-	
+
 	/**
 	 * Invoke hideProgressDialogOnTop on top window. It is required to handle multi-frame pages.
 	 * @param data
@@ -112,12 +112,12 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 			((TargetDocument)crossDoc).setTargetWindow(opener);
 			crossDoc.enableEventsOnOpener();
 		}
-		
+
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
 		crossDoc.hideProgressDialogBox();
 		popProgressDialogFromStack();
 	}
-	
+
 	/**
 	 * Handler method to be invoked on top. This method shows the progress dialog.
 	 * @param controllerEvent
@@ -128,34 +128,34 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		{
 			String message = data.getMessage();
 			this.stack.add(message);
-			
+
 			if(this.stack.size() == 1)
 			{
 				Screen.blockToUser("crux-ProgressDialogScreenBlocker");
-				
+
 				final DialogBox dialogBox = new DialogBox(false, true);
 				dialogBox.setStyleName(data.getStyleName());
 				dialogBox.setAnimationEnabled(data.isAnimationEnabled());
-				
+
 				HorizontalPanel horizontalPanel = new HorizontalPanel();
 				horizontalPanel.setSpacing(0);
-	
+
 				FocusPanel iconPanel = createIconPanel();
 				horizontalPanel.add(iconPanel);
 				this.messageLabel = createMessageLabel(message);
 				horizontalPanel.add(this.messageLabel);
-							
+
 				dialogBox.add(horizontalPanel);
-				
+
 				dialog = dialogBox;
-				
+
 				dialogBox.center();
-				dialogBox.show();				
+				dialogBox.show();
 			}
 			else
 			{
 				this.messageLabel.setText(message);
-			}				
+			}
 		}
 		catch (Exception e)
 		{
@@ -170,14 +170,14 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	public void hideProgressDialogBox()
 	{
 		if(this.stack.size() <= 1)
-		{			
+		{
 			if(dialog != null)
 			{
 				Screen.unblockToUser();
 				dialog.hide();
 				dialog = null;
 			}
-			
+
 			this.stack.clear();
 		}
 		else
@@ -187,9 +187,9 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 			this.messageLabel.setText(msg);
 		}
 	}
-	
+
 	/**
-	 * Creates a panel to display a icon for the message 
+	 * Creates a panel to display a icon for the message
 	 * @return a panel
 	 */
 	private FocusPanel createIconPanel()
@@ -200,7 +200,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	}
 
 	/**
-	 * Creates a label to display the message 
+	 * Creates a label to display the message
 	 * @param data
 	 * @return a label
 	 */
@@ -210,45 +210,53 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		label.setStyleName("message");
 		return label;
 	}
-	
-	
+
+
 	/**
-	 * Closes the popup, removing its window from the stack 
+	 * Closes the popup, removing its window from the stack
 	 */
 	private static native boolean popProgressDialogFromStack()/*-{
-		if($wnd.top._progressDialog_origin != null)
+		if($wnd.top._progressDialog_origin != null && $wnd.top._progressDialog_origin.length > 0)
 		{
 			$wnd.top._progressDialog_origin.pop();
+
+
+			if ($wnd.top._progressDialog_origin.length == 0)
+			{
+				$wnd.top._progressDialog_origin = null;
+			}
+
 			return true;
 		}
 		return false;
 	}-*/;
-	
+
 	private native void pushProgressDialogOnStack()/*-{
-		if($wnd.top._progressDialog_origin == null)
+		if($wnd.top._progressDialog_origin == null || $wnd.top._progressDialog_origin.length == 0)
 		{
 			$wnd.top._progressDialog_origin = new Array();
-		}		
+		}
+
 		$wnd.top._progressDialog_origin.push($wnd);
 	}-*/;
-	
+
 	public static native JSWindow getOpener()/*-{
 	try{
 		var o = $wnd.top._progressDialog_origin[$wnd.top._progressDialog_origin.length - 1];
-		
-		if (o && o._cruxCrossDocumentAccessor) 
+
+		if (o && o._cruxCrossDocumentAccessor)
 		{
 			return o;
-		}	
-		else 
+		}
+		else
 		{
 			return null;
-		}	
-		
+		}
+
 	}catch(e)
 	{
 		return null;
 	}
 }-*/;
-	
+
 }

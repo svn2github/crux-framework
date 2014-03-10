@@ -33,7 +33,6 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -52,6 +51,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import com.google.gwt.user.client.ui.HTMLPanel;
+
 
 /**
  * Create the html page to be sent to browser. This page is created based on the 
@@ -288,15 +290,9 @@ class HTMLBuilder
     {
 	    Document htmlDocument;
 		DocumentType doctype = cruxPageDocument.getDoctype();
-		
-		
-		if (doctype != null || Boolean.parseBoolean(ConfigurationFactory.getConfigurations().enableGenerateHTMLDoctype()))
+		if (doctype != null)
 		{
-			String name     = doctype != null ? doctype.getName() : "HTML";
-			String publicId = doctype != null ? doctype.getPublicId() : null;
-			String systemId = doctype != null ? doctype.getSystemId() : null;
-			
-			DocumentType newDoctype =  documentBuilder.getDOMImplementation().createDocumentType(name, publicId, systemId);
+			DocumentType newDoctype =  documentBuilder.getDOMImplementation().createDocumentType(doctype.getName(), doctype.getPublicId(), doctype.getSystemId());
 			htmlDocument = documentBuilder.getDOMImplementation().createDocument(XHTML_NAMESPACE, "html", newDoctype);
 		}
 		else

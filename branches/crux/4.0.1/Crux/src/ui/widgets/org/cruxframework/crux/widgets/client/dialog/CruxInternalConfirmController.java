@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * 
+ *
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -82,32 +82,32 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 	public void showConfirm(ConfirmData data)
 	{
 		Screen.blockToUser("crux-ConfirmScreenBlocker");
-		
+
 		try
 		{
 			final DialogBox dialogBox = new DialogBox(false, true);
-			
+
 			DecoratedButton okBtn = createOkButton(dialogBox, data);
-			
+
 			dialogBox.setStyleName(data.getStyleName());
 			dialogBox.setAnimationEnabled(data.isAnimationEnabled());
 			dialogBox.setText(data.getTitle());
-			
+
 			DockPanel dockPanel = new DockPanel();
 			dockPanel.add(createMessageLabel(data), DockPanel.CENTER);
-			
+
 			HorizontalPanel horizontalPanel = new HorizontalPanel();
 			horizontalPanel.setSpacing(10);
 			horizontalPanel.add(okBtn);
 			horizontalPanel.add(createCancelButton(dialogBox, data));
-			
+
 			dockPanel.add(horizontalPanel, DockPanel.SOUTH);
 			dockPanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_CENTER);
-			
+
 			dialogBox.add(dockPanel);
 			dialogBox.center();
 			dialogBox.show();
-			
+
 			okBtn.setFocus(true);
 		}
 		catch (Exception e)
@@ -119,7 +119,7 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 
 	/**
 	 * @param dialogBox
-	 * @param data 
+	 * @param data
 	 * @return
 	 */
 	private DecoratedButton createCancelButton(final DialogBox dialogBox, ConfirmData data)
@@ -138,14 +138,14 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 			public void onClick(ClickEvent event)
 			{
 				Screen.unblockToUser();
-				
+
 				dialogBox.hide();
-								
+
 				try
 				{
 					JSWindow origin = getOpener();
 					if (origin != null)
-					{	
+					{
 						cancelClick(origin);
 					}
 				}
@@ -157,9 +157,9 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 				popConfirmFromStack();
 			}
 		});
-		
+
 		Screen.ensureDebugId(cancelButton, "_crux_confirm_cancel_" + data.getMessage());
-		
+
 		return cancelButton;
 	}
 
@@ -176,7 +176,7 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 
 	/**
 	 * @param dialogBox
-	 * @param data 
+	 * @param data
 	 * @return
 	 */
 	private DecoratedButton createOkButton(final DialogBox dialogBox, ConfirmData data)
@@ -195,14 +195,14 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 			public void onClick(ClickEvent event)
 			{
 				Screen.unblockToUser();
-				
+
 				dialogBox.hide();
-				
+
 				try
 				{
 					JSWindow origin = getOpener();
 					if (origin != null)
-					{	
+					{
 						okClick(origin);
 					}
 				}
@@ -210,13 +210,13 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 				{
 					// IE 7 BUG: When the reference window no longer exists.
 				}
-				
+
 				popConfirmFromStack();
 			}
 		});
-		
+
 		Screen.ensureDebugId(okButton, "_crux_confirm_ok_" + data.getMessage());
-		
+
 		return okButton;
 	}
 
@@ -228,9 +228,9 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 		if (origin && origin._cruxCrossDocumentAccessor)
 		{
 			origin._cruxCrossDocumentAccessor("__confirm|onOk()|");
-		}	
+		}
 	}-*/;
-	
+
 	/**
 	 * Execute a cancel click event on a origin window
 	 * @param origin
@@ -239,25 +239,27 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 		if (origin && origin._cruxCrossDocumentAccessor)
 		{
 			origin._cruxCrossDocumentAccessor("__confirm|onCancel()|");
-		}	
+		}
 	}-*/;
-	
+
 	/**
-	 * Closes the confirm, removing its window from the stack 
+	 * Closes the confirm, removing its window from the stack
 	 */
 	private static native boolean popConfirmFromStack()/*-{
-		if($wnd.top._confirm_origin != null)
+		if($wnd.top._confirm_origin != null && $wnd.top._confirm_origin.length > 0)
 		{
 			$wnd.top._confirm_origin.pop();
+
 			if ($wnd.top._confirm_origin.length == 0)
 			{
-				$wnd.top._messageBox_origin = null;
+				$wnd.top._confirm_origin = null;
 			}
+
 			return true;
 		}
 		return false;
 	}-*/;
-	
+
 	/**
 	 * Gets the window that has invoked the confirm
 	 * @return
@@ -266,15 +268,15 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 		try
 		{
 			var o = $wnd.top._confirm_origin[$wnd.top._confirm_origin.length - 1];
-			
+
 			if (o && o._cruxCrossDocumentAccessor)
 			{
 				return o;
-			}	
-			else 
+			}
+			else
 			{
 				return null;
-			}	
+			}
 		}
 		catch(e)
 		{

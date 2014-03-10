@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,18 +50,18 @@ import com.google.gwt.dev.Compiler;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractCruxCompiler 
+public abstract class AbstractCruxCompiler
 {
 	private static final Log logger = LogFactory.getLog(AbstractCruxCompiler.class);
-	
+
 	protected File compilerWorkDir;
 	protected boolean indentPages;
 	protected boolean initialized = false;
 	protected boolean keepPagesGeneratedFiles;
-	
+
 	protected String outputCharset;
 	protected File outputDir;
-	
+
 	protected String pageFileExtension;
 	protected File pagesOutputDir;
 	protected File webDir;
@@ -75,8 +75,8 @@ public abstract class AbstractCruxCompiler
 	private List<CruxPreProcessor> preProcessors = new ArrayList<CruxPreProcessor>();
 
 	private File sourceDir;
-	
-	
+
+
 	/**
 	 * @param parameters
 	 */
@@ -87,8 +87,8 @@ public abstract class AbstractCruxCompiler
 	}
 
 	/**
-	 * Runs the crux compilation loop. 
-	 * 
+	 * Runs the crux compilation loop.
+	 *
 	 * <p>First, if a sourceFolder is provided, it is compiled.</p>
 	 * <p>Then, a scanner searches for modules, based on all crux pages found (returned by <code>getUrls()</code> method.).</p>
 	 * <p>Each of those modules is compiled and all pages found is pre processed and post processed.</p>
@@ -96,13 +96,18 @@ public abstract class AbstractCruxCompiler
 	 */
 	public void execute() throws CompilerException
 	{
-		try 
+		try
 		{
 			compileJavaSource();
 			initializeCompiler();
 			List<URL> urls = getURLs();
+
+			int urlIndex = 1;
+
 			for (URL url : urls)
 			{
+				logger.info("Compiling Crux Page: " + urlIndex + "/" + urls.size());
+
 				Module module = ModuleUtils.findModuleFromPageUrl(url);
 				if (module != null)
 				{
@@ -115,12 +120,14 @@ public abstract class AbstractCruxCompiler
 				}
 				else
 				{
-					logger.info("File [" + url.toString() + "] has no module declaration. Skipping compilation.");
+					logger.debug("File [" + url.toString() + "] has no module declaration. Skipping compilation.");
 				}
+
+				urlIndex++;
 			}
 			releaseCompilerResources();
-		} 
-		catch (Throwable e) 
+		}
+		catch (Throwable e)
 		{
 			logger.error(e.getMessage(), e);
 			throw new CompilerException(e.getMessage(), e);
@@ -153,7 +160,7 @@ public abstract class AbstractCruxCompiler
     }
 
 	/**
-	 * 
+	 *
 	 */
 	public void initializeCompiler()
 	{
@@ -243,7 +250,7 @@ public abstract class AbstractCruxCompiler
     	this.preCompileJavaSource = preCompileJavaSource;
     }
 
-	
+
 	/**
 	 * @param parameter
 	 */
@@ -280,7 +287,7 @@ public abstract class AbstractCruxCompiler
 	    	setOutputDir(file);
 	    }
     }
-	
+
 	/**
 	 * @param postProcessor
 	 */
@@ -296,9 +303,9 @@ public abstract class AbstractCruxCompiler
 	{
 		this.preProcessors.add(preProcessor);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected void clearCruxBridgeProperties()
     {
@@ -315,7 +322,7 @@ public abstract class AbstractCruxCompiler
 	protected boolean compileFile(URL url, Module module) throws Exception
 	{
 		boolean compiled = false;
-		
+
 		if(module != null)
 		{
 			if(!isModuleCompiled(module))
@@ -325,7 +332,7 @@ public abstract class AbstractCruxCompiler
 				compiled = true;
 			}
 		}
-		
+
 		return compiled;
 	}
 
@@ -339,7 +346,7 @@ public abstract class AbstractCruxCompiler
 		    try
 		    {
 		    	initializeCompilerDir();
-		        
+
 		        JCompiler compiler = new JCompiler();
 		        compiler.setOutputDirectory(compilerWorkDir);
 		        compiler.setSourcepath(sourceDir);
@@ -367,11 +374,11 @@ public abstract class AbstractCruxCompiler
 		parameter = new ConsoleParameter("outputDir", "The folder where the compiled files will be created.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("dirName", "Folder name"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parameter = new ConsoleParameter("sourceDir", "The project source folder.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("dirName", "Folder name"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parameter = new ConsoleParameter("webDir", "The application web root folder.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("dirName", "Folder name"));
 		parametersProcessor.addSupportedParameter(parameter);
@@ -379,13 +386,13 @@ public abstract class AbstractCruxCompiler
 		parameter = new ConsoleParameter("pagesOutputDir", "The folder where the generated page files will be created.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("output", "Folder name"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
-		parameter = new ConsoleParameter("scanAllowedPackages", 
+
+		parameter = new ConsoleParameter("scanAllowedPackages",
 				"A list of packages (separated by commas) that will be scanned to find Controllers, Modules and CrossDevices", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("allowed", "Allowed packages"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
-		parameter =new ConsoleParameter("scanIgnoredPackages", 
+
+		parameter =new ConsoleParameter("scanIgnoredPackages",
 				"A list of packages (separated by commas) that will not be scanned to find Controllers, Modules and CrossDevices", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("ignored", "Ignored packages"));
 		parametersProcessor.addSupportedParameter(parameter);
@@ -393,13 +400,13 @@ public abstract class AbstractCruxCompiler
 		parameter = new ConsoleParameter("outputCharset", "Charset used on output files", true, true);
 		parameter.addParameterOption(new ConsoleParameterOption("charset", "Output charset"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parameter = new ConsoleParameter("pageFileExtension", "Extension of the pages generated", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("fileExtension", "File Extension"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-indentPages", "If true, the output pages will be indented.", false, true));
-		parametersProcessor.addSupportedParameter(new ConsoleParameter("-keepPagesGeneratedFiles", 
+		parametersProcessor.addSupportedParameter(new ConsoleParameter("-keepPagesGeneratedFiles",
 				"If false, the output pages will be removed after compilation.", false, true));
 
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-doNotPreCompileJavaSource", "Makes compiler ignore java pre compilation.", false, true));
@@ -407,11 +414,11 @@ public abstract class AbstractCruxCompiler
 		parameter = new ConsoleParameter("-gen", "Specify the folder where the GWT generators will output generated classes.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("genFolder", "Folder Name"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parameter = new ConsoleParameter("-style", "Specify the output style for GWT generated code.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("style", "GWT output Style"));
 		parametersProcessor.addSupportedParameter(parameter);
-		
+
 		parameter = new ConsoleParameter("-extra", "The directory into which extra files, not intended for deployment, will be written.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("extraFolder", "Folder Name"));
 		parametersProcessor.addSupportedParameter(parameter);
@@ -429,7 +436,7 @@ public abstract class AbstractCruxCompiler
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-draftCompile", "Disable compiler optimizations and run faster.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-help", "Display the usage screen.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-h", "Display the usage screen.", false, true));
-		return parametersProcessor;	
+		return parametersProcessor;
 	}
 
 	/**
@@ -448,7 +455,7 @@ public abstract class AbstractCruxCompiler
 	    	FileUtils.recursiveDelete(backupFile);
 	    }
     }
-	
+
 	/**
 	 * @param url
 	 * @param moduleName
@@ -457,17 +464,17 @@ public abstract class AbstractCruxCompiler
     {
 	    logger.info("Compiling:"+url.toString());
 
-	    // Because of an AWT BUG, GWT needs to execute a System.exit command to 
+	    // Because of an AWT BUG, GWT needs to execute a System.exit command to
 	    // finish its compilation. This class calls the Compiler from an ant command,
-	    // so, this bug is not a problem here. We need to compile all the modules on the same 
-	    // JVM. Call prerocessCruxPages on a separated JVM would cost a lot to our performance. 
+	    // so, this bug is not a problem here. We need to compile all the modules on the same
+	    // JVM. Call prerocessCruxPages on a separated JVM would cost a lot to our performance.
 	    setSecurityManagerToAvoidSystemExit();
-	    
+
 	    try
 	    {
 	    	Compiler.main(getGwtArgs(moduleName));
 	    }
-	    catch (DoNotExitException e) 
+	    catch (DoNotExitException e)
 	    {
 	    	//Do nothing...continue compile looping
 	    }
@@ -497,20 +504,20 @@ public abstract class AbstractCruxCompiler
 	    			maybeRestoreBackup(module);
 	    		}
 	    	}
-	    	catch (InterfaceConfigException e) 
+	    	catch (InterfaceConfigException e)
 	    	{
 	    		logger.error(e.getMessage());
 	    	}
 	    }
 	    else
 	    {
-	    	logger.info("Module '"+ module.getFullName()+"' was already compiled. Skipping compilation.");
+	    	logger.debug("Module '"+ module.getFullName()+"' was already compiled. Skipping compilation.");
 	    }
 	    postProcessCruxPage(preprocessedFile, module);
     }
 
 	/**
-	 * 
+	 *
 	 * @param args
 	 */
 	public void addGwtCompilerArgs(String[] args)
@@ -523,7 +530,7 @@ public abstract class AbstractCruxCompiler
             }
 		}
 	}
-	
+
 	/**
 	 * @param moduleName
 	 * @return
@@ -538,18 +545,18 @@ public abstract class AbstractCruxCompiler
 	    gwtArgs[gwtCompilerArgs.size()] = moduleName;
 	    return gwtArgs;
     }
-	
+
 	protected String getProgramName()
     {
 	    return "CruxCompiler";
     }
-	
+
 	/**
 	 * Gets the list of URLs that will be compiled
 	 * @return
 	 */
 	protected abstract List<URL> getURLs() throws Exception;
-	
+
 	/**
 	 * @throws IOException
 	 * @throws MalformedURLException
@@ -572,10 +579,10 @@ public abstract class AbstractCruxCompiler
 	{
 		return module!= null && alreadyCompiledModules.contains(module.getFullName());
 	}
-	
+
 	/**
-	 * @throws IOException 
-	 * 
+	 * @throws IOException
+	 *
 	 */
 	protected void maybeBackupPreProcessorsOutput(Module module) throws IOException
     {
@@ -586,10 +593,10 @@ public abstract class AbstractCruxCompiler
 	    	FileUtils.copyDirectory(output, backupFile);
 	    }
     }
-	
+
 	/**
 	 * @param module
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	protected void maybeRestoreBackup(Module module) throws IOException
     {
@@ -607,7 +614,7 @@ public abstract class AbstractCruxCompiler
 	 * @param url
 	 * @param module
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	protected void postProcessCruxPage(URL url, Module module) throws Exception
 	{
@@ -623,7 +630,7 @@ public abstract class AbstractCruxCompiler
 	 * @param url
 	 * @param module
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	protected URL preProcessCruxPage(URL url, Module module) throws Exception
 	{
@@ -631,11 +638,12 @@ public abstract class AbstractCruxCompiler
 		{
 			url = preprocess.preProcess(url, module);
 		}
-		logger.info("File ["+url.toString()+"] pre-processed.");
-		
+
+		logger.debug("File ["+url.toString()+"] pre-processed.");
+
 		return url;
 	}
-	
+
 	/**
 	 * @param parameters
 	 */
@@ -707,8 +715,8 @@ public abstract class AbstractCruxCompiler
 			logger.error("You must inform at least one of outputDir and webDir parameters.");
 			System.exit(1);
 		}
-    }		
-		
+    }
+
 	/**
 	 * @param parameters
 	 */
@@ -752,7 +760,7 @@ public abstract class AbstractCruxCompiler
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void restoreSecurityManager()
     {
@@ -767,7 +775,7 @@ public abstract class AbstractCruxCompiler
     }
 
 	/**
-	 * 
+	 *
 	 */
 	private void setSecurityManagerToAvoidSystemExit()
     {
@@ -777,7 +785,7 @@ public abstract class AbstractCruxCompiler
 	        {
 	    		originalSecurityManager = System.getSecurityManager();
 	    		System.setSecurityManager(new SecurityManager(){
-	    			
+
 	    			@Override
 	    			public void checkExit(int status)
 	    			{
@@ -787,10 +795,10 @@ public abstract class AbstractCruxCompiler
 	    				}
 	    				super.checkExit(status);
 	    			}
-	    			
+
 	    			@Override
 	    			public void checkPermission(Permission perm){}
-	    			
+
 	    			@Override
 	    			public void checkPermission(Permission perm, Object context){}
 	    		});
@@ -798,8 +806,8 @@ public abstract class AbstractCruxCompiler
 	        }
 	    });
     }
-	
-	
+
+
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -808,5 +816,5 @@ public abstract class AbstractCruxCompiler
 	{
         private static final long serialVersionUID = -5285052847615664828L;
 	}
-	
+
 }

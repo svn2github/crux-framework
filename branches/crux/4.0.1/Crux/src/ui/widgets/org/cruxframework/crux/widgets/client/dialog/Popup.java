@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,9 +49,9 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	private String title;
 	private String url;
 	private String width = "400";
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Popup()
 	{
@@ -59,7 +59,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static void close()
 	{
@@ -73,7 +73,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		CruxInternalPopupController.hide(fireCloseEvents);
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -83,7 +83,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 		{
 			return popups.get(popups.size() - 1);
 		}
-		
+
 		return null;
 	}
 
@@ -94,7 +94,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		return CruxInternalPopupController.getOpener();
 	}
-	
+
 	/**
 	 * @return the window object of the popup opener
 	 */
@@ -126,7 +126,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	}
 
 	/**
-	 * 
+	 *
 	 * @param title
 	 * @param url
 	 * @param beforeCloseHandler
@@ -135,7 +135,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		show(title, url, null, null, beforeCloseHandler, DEFAULT_STYLE_NAME, false, true);
 	}
-	
+
 	/**
 	 * @param title
 	 * @param url
@@ -150,7 +150,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		fullShow(title, url, width, height, beforeCloseHandler, null, styleName, animationEnabled, closeable);
 	}
-	
+
 	/**
 	 * @param title
 	 * @param url
@@ -166,7 +166,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		fullShow(title, url, width, height, beforeCloseHandler, openHandler, styleName, animationEnabled, closeable);
 	}
-	
+
 	/**
 	 * Full parameterized internal method
 	 * @param title
@@ -181,12 +181,12 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	 */
 	private static void fullShow(String title, String url, String width, String height, BeforeCloseHandler beforeCloseHandler, OpenHandler openHandler, String styleName, boolean animationEnabled, boolean closeable)
 	{
-		Popup popup = new Popup(); 
+		Popup popup = new Popup();
 		popup.setTitle(title);
 		popup.setUrl(url);
 		popup.setStyleName(styleName);
 		popup.setCloseable(closeable);
-		
+
 		if(width != null)
 		{
 			popup.setWidth(width);
@@ -194,20 +194,20 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 		if(height != null)
 		{
 			popup.setHeight(height);
-		}			
-		
+		}
+
 		popup.setAnimationEnabled(animationEnabled);
-		
+
 		if (beforeCloseHandler != null)
 		{
 			popup.addBeforeCloseHandler(beforeCloseHandler);
 		}
-		
+
 		if (openHandler != null)
 		{
 			popup.addOpenHandler(openHandler);
-		}		
-		
+		}
+
 		popup.show();
 	}
 
@@ -218,7 +218,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 			popups.remove(popups.size() - 1);
 		}
 	}
-	
+
 	/*
 	 * @see org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers#addBeforeCloseHandler(org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler)
 	 */
@@ -239,17 +239,17 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		return styleName;
 	}
-	
+
 	public String getTitle()
 	{
 		return title;
 	}
-	
+
 	public String getUrl()
 	{
 		return url;
 	}
-	
+
 	/**
 	 * @return the width
 	 */
@@ -257,12 +257,12 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		return width;
 	}
-	
+
 	public boolean isAnimationEnabled()
 	{
 		return animationEnabled;
 	}
-	
+
 	public boolean isCloseable()
 	{
 		return closeable;
@@ -272,7 +272,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	{
 		this.animationEnabled = animationEnabled;
 	}
-	
+
 	public void setCloseable(boolean closeable)
 	{
 		this.closeable = closeable;
@@ -283,7 +283,17 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	 */
 	public void setHeight(String height)
 	{
-		this.height = height;
+		if (height != null && height.trim().length() != 0)
+		{
+			if (height.toLowerCase().endsWith("px") || height.endsWith("%"))
+			{
+				this.height = height;
+			}
+			else
+			{
+				this.height = height + "px";
+			}
+		}
 	}
 
 	public void setStyleName(String styleName)
@@ -306,7 +316,18 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	 */
 	public void setWidth(String width)
 	{
-		this.width = width;
+		if (width != null && width.trim().length() != 0)
+		{
+
+			if (width.toLowerCase().endsWith("px") || width.endsWith("%"))
+			{
+				this.width = width;
+			}
+			else
+			{
+				this.width = width + "px";
+			}
+		}
 	}
 
 	public HandlerRegistration addOpenHandler(OpenHandler handler)
@@ -315,13 +336,13 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void show()
 	{
 		if (popupController == null)
 		{
-			popupController = new CruxInternalPopupController(); 
+			popupController = new CruxInternalPopupController();
 		}
 		popups.add(this);
 		Timer timer = new Timer()
