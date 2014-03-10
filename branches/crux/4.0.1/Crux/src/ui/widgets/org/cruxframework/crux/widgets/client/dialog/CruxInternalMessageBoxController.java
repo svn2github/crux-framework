@@ -190,7 +190,7 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 * Closes the message box, removing its window from the stack
 	 */
 	private static native boolean popMessageBoxFromStack()/*-{
-		if($wnd.top._messageBox_origin != null && $wnd.top._messageBox_origin.length > 0)
+		if($wnd.top._messageBox_origin && $wnd.top._messageBox_origin != null && $wnd.top._messageBox_origin.length > 0)
 		{
 			$wnd.top._messageBox_origin.pop();
 
@@ -209,13 +209,14 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 * Push the window that has invoked the message box
 	 */
 	private native void pushMessageBoxOnStack()/*-{
-
-		if($wnd.top._messageBox_origin == null || $wnd.top._messageBox_origin.length == 0)
+		if(!$wnd.top._messageBox_origin || $wnd.top._messageBox_origin == null || $wnd.top._messageBox_origin.length == 0)
 		{
 			$wnd.top._messageBox_origin = new Array();
 		}
-
-		$wnd.top._messageBox_origin.push($wnd);
+		if($wnd)
+		{
+			$wnd.top._messageBox_origin.push($wnd);
+		}
 	}-*/;
 
 	/**

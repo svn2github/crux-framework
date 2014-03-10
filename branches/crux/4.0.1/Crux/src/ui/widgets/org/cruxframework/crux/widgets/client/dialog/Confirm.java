@@ -129,11 +129,14 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	 * Push the window that has invoked the confirm
 	 */
 	private native void pushConfirmOnStack()/*-{
-		if($wnd.top._confirm_origin == null || $wnd.top._confirm_origin.length > 0)
+		if(!$wnd.top._confirm_origin || $wnd.top._confirm_origin == null || $wnd.top._confirm_origin.length > 0)
 		{
 			$wnd.top._confirm_origin = new Array();
 		}
-		$wnd.top._confirm_origin.push($wnd);
+		if($wnd)
+		{
+			$wnd.top._confirm_origin.push($wnd);
+		}
 	}-*/;
 
 	/**

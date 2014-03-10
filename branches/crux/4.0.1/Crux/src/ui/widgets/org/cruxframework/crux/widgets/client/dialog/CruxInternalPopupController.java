@@ -164,7 +164,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * Closes the popup, removing its window from the stack
 	 */
 	private static native boolean popPopupFromStack()/*-{
-		if($wnd.top._popup_origin != null && $wnd.top._popup_origin.length > 0)
+		if($wnd.top._popup_origin && $wnd.top._popup_origin != null && $wnd.top._popup_origin.length > 0)
 		{
 			$wnd.top._popup_origin.pop();
 
@@ -444,7 +444,10 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * @param frameWindow
 	 */
 	private native void pushPopupWindowOnStack(JSWindow frameWindow)/*-{
-		$wnd.top._popup_wndws.push(frameWindow);
+		if(frameWindow)
+		{
+			$wnd.top._popup_wndws.push(frameWindow);
+		}
 	}-*/;
 
 	/**
@@ -452,16 +455,19 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * @param serializedData
 	 */
 	private native void pushPopupOnStack()/*-{
-		if($wnd.top._popup_origin == null || $wnd.top._popup_origin.length == 0)
+		if(!$wnd.top._popup_origin || $wnd.top._popup_origin == null || $wnd.top._popup_origin.length == 0)
 		{
 			$wnd.top._popup_origin = new Array();
 		}
 
-		if($wnd.top._popup_wndws == null || $wnd.top._popup_wndws.length == 0)
+		if(!$wnd.top._popup_wndws || $wnd.top._popup_wndws == null || $wnd.top._popup_wndws.length == 0)
 		{
 			$wnd.top._popup_wndws = new Array();
 		}
 
-		$wnd.top._popup_origin.push($wnd);
+		if($wnd)
+		{
+			$wnd.top._popup_origin.push($wnd);
+		}
 	}-*/;
 }

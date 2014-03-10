@@ -246,7 +246,7 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 	 * Closes the confirm, removing its window from the stack
 	 */
 	private static native boolean popConfirmFromStack()/*-{
-		if($wnd.top._confirm_origin != null && $wnd.top._confirm_origin.length > 0)
+		if($wnd.top._confirm_origin && $wnd.top._confirm_origin != null && $wnd.top._confirm_origin.length > 0)
 		{
 			$wnd.top._confirm_origin.pop();
 

@@ -216,7 +216,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 * Closes the popup, removing its window from the stack
 	 */
 	private static native boolean popProgressDialogFromStack()/*-{
-		if($wnd.top._progressDialog_origin != null && $wnd.top._progressDialog_origin.length > 0)
+		if($wnd.top._progressDialog_origin && $wnd.top._progressDialog_origin != null && $wnd.top._progressDialog_origin.length > 0)
 		{
 			$wnd.top._progressDialog_origin.pop();
 
@@ -232,12 +232,15 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	}-*/;
 
 	private native void pushProgressDialogOnStack()/*-{
-		if($wnd.top._progressDialog_origin == null || $wnd.top._progressDialog_origin.length == 0)
+		if(!$wnd.top._progressDialog_origin || $wnd.top._progressDialog_origin == null || $wnd.top._progressDialog_origin.length == 0)
 		{
 			$wnd.top._progressDialog_origin = new Array();
 		}
 
-		$wnd.top._progressDialog_origin.push($wnd);
+		if($wnd)
+		{
+			$wnd.top._progressDialog_origin.push($wnd);
+		}
 	}-*/;
 
 	public static native JSWindow getOpener()/*-{
