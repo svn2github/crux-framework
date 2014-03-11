@@ -198,10 +198,16 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	{
 		if (dialogBoxes.size() > 0)
 		{
-			CustomDialogBox dialogBox = dialogBoxes.remove(dialogBoxes.size() - 1);
+			final CustomDialogBox dialogBox = dialogBoxes.remove(dialogBoxes.size() - 1);
 			Screen.unblockToUser();
-			dialogBox.hide();
-			dialogBox = null;
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+			{
+				@Override
+				public void execute() 
+				{
+					dialogBox.hide();
+				}
+			});
 		}
 	}
 
@@ -228,14 +234,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		if (popPopupFromStack())
 		{
 			((TargetDocument)crossDoc).setTarget(Target.TOP);
-			Scheduler.get().scheduleDeferred(new ScheduledCommand() 
-			{
-				@Override
-				public void execute() 
-				{
-					crossDoc.hidePopup();
-				}
-			});
+			crossDoc.hidePopup();
 		}
 	}
 

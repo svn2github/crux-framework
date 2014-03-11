@@ -117,14 +117,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		popProgressDialogFromStack();
 		
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
-		{
-			@Override
-			public void execute() 
-			{
-				crossDoc.hideProgressDialogBox();
-			}
-		});
+		crossDoc.hideProgressDialogBox();
 	}
 
 	/**
@@ -183,8 +176,15 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 			if(dialog != null)
 			{
 				Screen.unblockToUser();
-				dialog.hide();
-				dialog = null;
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
+				{
+					@Override
+					public void execute() 
+					{
+						dialog.hide();
+						dialog = null;
+					}
+				});
 			}
 
 			this.stack.clear();
