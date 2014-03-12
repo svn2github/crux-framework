@@ -146,15 +146,6 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 			{
 				Screen.unblockToUser();
 
-				try
-				{
-					popMessageBoxFromStack();
-				}
-				catch (Throwable e)
-				{
-					// IE 7 BUG: When the reference window no longer exists.
-				}
-				
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
 					@Override
@@ -171,6 +162,7 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 					{
 						okClick(origin);
 					}
+					popMessageBoxFromStack();
 				}
 				catch (Throwable e)
 				{

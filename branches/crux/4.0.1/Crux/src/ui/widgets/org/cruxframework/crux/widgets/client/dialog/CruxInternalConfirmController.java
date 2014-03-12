@@ -141,8 +141,6 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 			{
 				Screen.unblockToUser();
 				
-				popConfirmFromStack();
-				
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
 					@Override
@@ -159,6 +157,7 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 					{
 						cancelClick(origin);
 					}
+					popConfirmFromStack();
 				}
 				catch (Throwable e)
 				{
@@ -205,8 +204,6 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 			{
 				Screen.unblockToUser();
 				
-				popConfirmFromStack();
-
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
 					@Override
@@ -223,6 +220,7 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 					{
 						okClick(origin);
 					}
+					popConfirmFromStack();
 				}
 				catch (Throwable e)
 				{
