@@ -176,13 +176,15 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 			if(dialog != null)
 			{
 				Screen.unblockToUser();
+				
+				final DialogBox d = dialog;
+				dialog = null;
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
 					@Override
 					public void execute() 
 					{
-						dialog.hide();
-						dialog = null;
+						d.hide();
 					}
 				});
 			}
