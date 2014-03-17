@@ -120,19 +120,28 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 			confirmController = GWT.create(CruxInternalConfirmControllerCrossDoc.class);
 			((TargetDocument)confirmController).setTarget(Target.TOP);
 		}
+		if (!isOriginStackCreated())
+		{
+			confirmController.createOriginStack();
+		}
 		confirm = this;
 		pushConfirmOnStack();
 		confirmController.showConfirm(new ConfirmData(title, message, okButtonText, cancelButtonText, styleName!=null?styleName:DEFAULT_STYLE_NAME, animationEnabled));
 	}
 
+	public native boolean isOriginStackCreated()/*-{
+		if($wnd.top._confirm_origin)
+		{
+			return true;
+		}
+		return false;
+	}-*/;
+	
+
 	/**
 	 * Push the window that has invoked the confirm
 	 */
 	private native void pushConfirmOnStack()/*-{
-		if($wnd.top._confirm_origin == null || $wnd.top._confirm_origin.length == 0)
-		{
-			$wnd.top._confirm_origin = new Array();
-		}
 		$wnd.top._confirm_origin.push($wnd);
 	}-*/;
 

@@ -170,19 +170,9 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		{
 			$wnd.top._popup_origin.pop();
 
-			if ($wnd.top._popup_origin.length == 0)
-			{
-				$wnd.top._popup_origin = null;
-			}
-
 			if($wnd.top._popup_wndws != null && $wnd.top._popup_wndws.length > 0)
 			{
 				$wnd.top._popup_wndws.pop();
-
-				if ($wnd.top._popup_wndws.length == 0)
-				{
-					$wnd.top._popup_wndws = null;
-				}
 
 				return true;
 			}
@@ -431,8 +421,12 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 */
 	public void showPopup(PopupData data)
 	{
-		pushPopupOnStack();
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		if (!isOriginStackCreated())
+		{
+			crossDoc.createOriginStack();
+		}
+		pushPopupOnStack();
 		crossDoc.openPopup(data);
 	}
 
@@ -460,16 +454,20 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * @param serializedData
 	 */
 	private native void pushPopupOnStack()/*-{
-		if($wnd.top._popup_origin == null || $wnd.top._popup_origin.length == 0)
-		{
-			$wnd.top._popup_origin = new Array();
-		}
-
-		if($wnd.top._popup_wndws == null || $wnd.top._popup_wndws.length == 0)
-		{
-			$wnd.top._popup_wndws = new Array();
-		}
-
 		$wnd.top._popup_origin.push($wnd);
 	}-*/;
+	
+	public native boolean isOriginStackCreated()/*-{
+		if($wnd.top._popup_origin)
+		{
+			return true;
+		}
+		return false;
+	}-*/;
+	
+	public native void createOriginStack()/*-{
+		$wnd.top._popup_origin = new Array();
+		$wnd.top._popup_wndws = new Array();
+	}-*/;
+	
 }

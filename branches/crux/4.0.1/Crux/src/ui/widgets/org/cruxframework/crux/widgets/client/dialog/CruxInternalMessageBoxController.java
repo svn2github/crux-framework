@@ -53,8 +53,12 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 */
 	public void showMessageBox(MessageBoxData data)
 	{
-		pushMessageBoxOnStack();
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		if (!isOriginStackCreated())
+		{
+			crossDoc.createOriginStack();
+		}
+		pushMessageBoxOnStack();
 		crossDoc.showMessageBoxDialog(data);
 	}
 
@@ -194,12 +198,6 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 		if($wnd.top._messageBox_origin != null && $wnd.top._messageBox_origin.length > 0)
 		{
 			$wnd.top._messageBox_origin.pop();
-
-			if ($wnd.top._messageBox_origin.length == 0)
-			{
-				$wnd.top._messageBox_origin = null;
-			}
-
 			return true;
 		}
 
@@ -211,14 +209,23 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 	 */
 	private native void pushMessageBoxOnStack()/*-{
 
-		if($wnd.top._messageBox_origin == null || $wnd.top._messageBox_origin.length == 0)
-		{
-			$wnd.top._messageBox_origin = new Array();
-		}
-
 		$wnd.top._messageBox_origin.push($wnd);
 	}-*/;
 
+	public native boolean isOriginStackCreated()/*-{
+		if($wnd.top._messageBox_origin)
+		{
+			return true;
+		}
+		return false;
+	}-*/;
+	
+	public native void createOriginStack()/*-{
+		$wnd.top._messageBox_origin = new Array();
+	}-*/;
+	
+	
+	
 	/**
 	 * Gets the window that has invoked the message box
 	 * @return

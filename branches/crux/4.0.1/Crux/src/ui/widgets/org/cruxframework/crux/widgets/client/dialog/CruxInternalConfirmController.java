@@ -263,17 +263,15 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 		if($wnd.top._confirm_origin != null && $wnd.top._confirm_origin.length > 0)
 		{
 			$wnd.top._confirm_origin.pop();
-
-			if ($wnd.top._confirm_origin.length == 0)
-			{
-				$wnd.top._confirm_origin = null;
-			}
-
 			return true;
 		}
 		return false;
 	}-*/;
 
+	public native void createOriginStack()/*-{
+		$wnd.top._confirm_origin = new Array();
+	}-*/;
+	
 	/**
 	 * Gets the window that has invoked the confirm
 	 * @return

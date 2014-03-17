@@ -53,7 +53,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	private FastList<String> stack = new FastList<String>();
 	private HandlerRegistration previewHandler = null;
 	private int numProgressDialogOnDocument = 0;
-
+	
 	/**
 	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
 	 */
@@ -95,8 +95,12 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 */
 	public void showProgressDialog(ProgressDialogData data)
 	{
-		pushProgressDialogOnStack();
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		if (!isOriginStackCreated())
+		{
+			crossDoc.createOriginStack();
+		}
+		pushProgressDialogOnStack();
 		crossDoc.showProgressDialogBox(data);
 		((TargetDocument)crossDoc).setTargetWindow(getOpener());
 		crossDoc.disableEventsOnOpener();
@@ -199,6 +203,18 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		}
 	}
 
+	public native boolean isOriginStackCreated()/*-{
+		if($wnd.top._progressDialog_origin)
+		{
+			return true;
+		}
+		return false;
+	}-*/;
+	
+	public native void createOriginStack()/*-{
+		$wnd.top._progressDialog_origin = new Array();
+	}-*/;
+	
 	/**
 	 * Creates a panel to display a icon for the message
 	 * @return a panel
@@ -226,29 +242,18 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	/**
 	 * Closes the popup, removing its window from the stack
 	 */
-	private static native boolean popProgressDialogFromStack()/*-{
-		if($wnd.top._progressDialog_origin != null && $wnd.top._progressDialog_origin.length > 0)
+	private static native void popProgressDialogFromStack()/*-{
+		if($wnd.top._progressDialog_origin != null)
 		{
 			$wnd.top._progressDialog_origin.pop();
-
-
-			if ($wnd.top._progressDialog_origin.length == 0)
-			{
-				$wnd.top._progressDialog_origin = null;
-			}
-
-			return true;
 		}
-		return false;
 	}-*/;
 
 	private native void pushProgressDialogOnStack()/*-{
-		if($wnd.top._progressDialog_origin == null || $wnd.top._progressDialog_origin.length == 0)
+		if($wnd.top._progressDialog_origin != null)
 		{
-			$wnd.top._progressDialog_origin = new Array();
+			$wnd.top._progressDialog_origin.push($wnd);
 		}
-
-		$wnd.top._progressDialog_origin.push($wnd);
 	}-*/;
 
 	public static native JSWindow getOpener()/*-{

@@ -26,4 +26,5 @@ public interface CruxInternalConfirmControllerCrossDoc extends CrossDocument
 	void onOk();
 	void onCancel();
 	void showConfirm(ConfirmData data);
+	void createOriginStack();
 }

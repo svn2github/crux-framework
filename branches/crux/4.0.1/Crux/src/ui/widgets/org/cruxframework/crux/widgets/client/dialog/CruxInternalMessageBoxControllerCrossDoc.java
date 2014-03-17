@@ -25,4 +25,6 @@ public interface CruxInternalMessageBoxControllerCrossDoc extends CrossDocument
 {
 	void showMessageBoxDialog(MessageBoxData data);
 	void onOk();
+	boolean isOriginStackCreated();
+	void createOriginStack();
 }
