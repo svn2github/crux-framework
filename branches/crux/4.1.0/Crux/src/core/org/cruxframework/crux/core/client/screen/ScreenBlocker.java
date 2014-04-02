@@ -34,7 +34,7 @@ public class ScreenBlocker
 		containerDiv.getStyle().setPropertyPx("width", width);
 		containerDiv.getStyle().setPropertyPx("height", height);
 				
-		addPreventTouchListener(containerDiv);
+		//addPreventTouchListener(containerDiv);
 		appendChildren(containerDiv, blockingDivStyleName);
 		
 		return containerDiv;
@@ -58,7 +58,7 @@ public class ScreenBlocker
 		blockingDiv.getStyle().setPropertyPx("left", 0);
 		blockingDiv.getStyle().setProperty("width", "100%");
 		blockingDiv.getStyle().setProperty("height", "100%");
-		addPreventTouchListener(blockingDiv);
+		//addPreventTouchListener(blockingDiv);
 		blockingDiv.setClassName(blockingDivStyleName);
 		containerDiv.appendChild(blockingDiv);
 	}
