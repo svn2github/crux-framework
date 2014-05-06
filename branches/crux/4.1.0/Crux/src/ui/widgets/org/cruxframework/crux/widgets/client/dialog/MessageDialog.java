@@ -31,6 +31,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasCloseHandlers;
+import com.google.gwt.event.logical.shared.HasOpenHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
@@ -48,7 +54,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler
+public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, OrientationChangeOrResizeHandler, HasCloseHandlers<MessageDialog>, HasOpenHandlers<MessageDialog>
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-MessageDialog";
 	private DialogBox dialogBox;
@@ -267,6 +273,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, Or
 			dialogBox.center();
 			dialogBox.show();
 			okButton.setFocus(true);
+			OpenEvent.fire(MessageDialog.this, MessageDialog.this);
 		}
 		catch (Exception e)
 		{
@@ -283,6 +290,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, Or
 		dialogBox.hide();
 		openedDialogBoxes.remove(openedDialogBoxes.indexOf(dialogBox));
 		Screen.unblockToUser();
+		CloseEvent.fire(MessageDialog.this, MessageDialog.this);
 	}
 	
 	
@@ -379,5 +387,17 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, Or
 		{
 			openedDialogBoxes.get(i).center();
 		}
+	}
+	
+	@Override
+	public HandlerRegistration addOpenHandler(OpenHandler<MessageDialog> handler) 
+	{
+		return dialogBox.addHandler(handler, OpenEvent.getType());
+	}
+
+	@Override
+	public HandlerRegistration addCloseHandler(CloseHandler<MessageDialog> handler) 
+	{
+		return dialogBox.addHandler(handler, CloseEvent.getType());
 	}
 }
