@@ -15,6 +15,9 @@
  */
 package org.cruxframework.crux.widgets.client.dialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.screen.Screen;
@@ -64,6 +67,9 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, Or
 	protected WidgetMessages messages = WidgetMsgFactory.getMessages();
 	private FastList<DialogBox> openedDialogBoxes = new FastList<DialogBox>();
 
+	private static List<CloseHandler<MessageDialog>> defaultCloseHandlers = new ArrayList<CloseHandler<MessageDialog>>();
+	private static List<OpenHandler<MessageDialog>> defaultOpenHandlers = new ArrayList<OpenHandler<MessageDialog>>();
+	
 	/**
 	 * Constructor 
 	 */
@@ -80,6 +86,22 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, Or
 		okButton = createOkButton();
 		horizontalPanel.add(okButton);
 
+		if(defaultCloseHandlers != null)
+		{
+			for(CloseHandler<MessageDialog> closeHandler : defaultCloseHandlers)
+			{
+				this.addCloseHandler(closeHandler);
+			}
+		}
+		
+		if(defaultOpenHandlers != null)
+		{
+			for(OpenHandler<MessageDialog> openHandler : defaultOpenHandlers)
+			{
+				this.addOpenHandler(openHandler);
+			}
+		}
+		
 		messagePanel.add(horizontalPanel, DockPanel.SOUTH);
 		messagePanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_CENTER);
 
@@ -399,5 +421,31 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget, Or
 	public HandlerRegistration addCloseHandler(CloseHandler<MessageDialog> handler) 
 	{
 		return dialogBox.addHandler(handler, CloseEvent.getType());
+	}
+	
+	/**
+	 * Add a default open handler that will be appended to each created object
+	 * @param defaultOpenHandler
+	 */
+	public static void addDefaultOpenHandler(OpenHandler<MessageDialog> defaultOpenHandler) 
+	{
+		if(defaultOpenHandlers == null)
+		{
+			defaultOpenHandlers = new ArrayList<OpenHandler<MessageDialog>>();
+		}
+		defaultOpenHandlers.add(defaultOpenHandler);
+	}
+	
+	/**
+	 * Add a default close handler that will be appended to each created object
+	 * @param defaultCloseHandler
+	 */
+	public static void addDefaultCloseHandler(CloseHandler<MessageDialog> defaultCloseHandler) 
+	{
+		if(defaultCloseHandlers == null)
+		{
+			defaultCloseHandlers = new ArrayList<CloseHandler<MessageDialog>>();
+		}
+		defaultCloseHandlers.add(defaultCloseHandler);
 	}
 }
