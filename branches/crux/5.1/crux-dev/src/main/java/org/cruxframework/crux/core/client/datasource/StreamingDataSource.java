@@ -19,6 +19,6 @@ package org.cruxframework.crux.core.client.datasource;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface StreamingDataSource<E> extends RemoteDataSource<E>
+public interface StreamingDataSource<E> extends RemoteDataSource<E>, PagedDataSource<E>
 {
 }
