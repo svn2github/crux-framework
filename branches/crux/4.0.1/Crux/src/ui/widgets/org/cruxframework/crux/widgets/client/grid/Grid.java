@@ -54,10 +54,15 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Focusable;
@@ -66,6 +71,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -87,6 +93,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	private SortingType defaultSortingType;
 	private RowDetailsManager rowDetailsManager;
 	private DataRow currentEditingRow;
+	private boolean editorFocused = false;
 	
 	/**
 	 * @param columnDefinitions the columns to be rendered
@@ -400,38 +407,38 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	{
 		renderRow(row, dataSource.getRecord(), false, null);
 	}
-	
-	protected void renderRow(DataRow row,  DataSourceRecord<?> record, boolean editMode,String focusCellKey)
+
+	protected void renderRow(final DataRow row,  DataSourceRecord<?> record, boolean editMode,String focusCellKey)
 	{
 		row.setDataSourceRecord(record);
 		ColumnDefinitions defs = getColumnDefinitions();
 		Iterator<ColumnDefinition> it = defs.getIterator();
 		FastList<Widget> editors = new FastList<Widget>();
 		FastList<String> editableColumns = new FastList<String>();
-		
+
 		while (it.hasNext())
 		{
 			ColumnDefinition column = it.next();
-			
+
 			if(column.isVisible())
 			{
 				Widget widget = null;
 				String key = column.getKey();
 				boolean wrapLine = true;
 				boolean truncate = true;
-				
+
 				// Access a field is much more efficient than call the instanceof operator.
 				// As this decision is executed for every column of every row when rendering the
 				// grid, we decided to avoid the instanceof operator.
 				if(column.isDataColumn)
 				{
 					DataColumnDefinition dataColumnDefinition = (DataColumnDefinition) column;
-					
+
 					wrapLine = true;
 					truncate = false;
-					
+
 					DataColumnEditorCreator<?> editorCreator = dataColumnDefinition.getEditorCreator();
-					
+
 					if(!editMode || editorCreator == null)
 					{
 						widget = createDataLabel(dataColumnDefinition, key, row.getDataSourceRecord());
@@ -439,18 +446,19 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 					else
 					{
 						Object editorWidget = editorCreator.createEditorWidget((DataColumnDefinition) column);
-						
+
 						if(editorWidget != null)
 						{
 							widget = setValueToEditorWidget(row, key, editorWidget);
 						}
-						
+
 						if(widget == null)
 						{
 							widget = createDataLabel(dataColumnDefinition, key, row.getDataSourceRecord());
 						}
 						else
 						{
+							widget = setEditorEventHandlers(widget, row);
 							editors.add(widget);
 							editableColumns.add(key);
 						}
@@ -462,19 +470,19 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 					truncate = true;
 					widget = createWidgetForColumn((WidgetColumnDefinition) column);
 				}
-				
+
 				row.setCell(createCell(widget, wrapLine, truncate), key);
 			}
 		}
-		
+
 		if(editMode)
 		{
 			chooseFocusedEditor(editors, editableColumns, focusCellKey);
 		}
-		
+
 		row.setSelected(row.getDataSourceRecord().isSelected());
 		row.setEnabled(!row.getDataSourceRecord().isReadOnly());
-		
+
 		if(dataSource.hasNextRecord())
 		{
 			dataSource.nextRecord();
@@ -514,33 +522,152 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		}
 	}
 	
-	/**
-	 * If there is any row in edit mode, applies its editors' values to the underlying data row.
+	/** Rollback the edition of the last column changed
 	 * @param row
 	 */
-	private void confirmLastEditedRowValues(DataRow row, FastList<String> editableColumns) 
+	public void rollbackRowEdition(DataRow row)
 	{
-		for (int i = 0; i < editableColumns.size(); i++) 
+		if(row != null)
+		{
+			row.setEditMode(false);
+			renderRow(row,row.getDataSourceRecord(),false,null);
+			this.currentEditingRow = null;
+		}
+	}
+	
+	private void confirmLastEditedRowValues(DataRow row, FastList<String> editableColumns)
+	{
+		for (int i = 0; i < editableColumns.size(); i++)
 		{
 			String key = editableColumns.get(i);
 			Widget widget = row.getWidget(key);
-			Object value = null;
-			
-			if(widget instanceof HasFormatter)
-			{
-				value = ((HasFormatter) widget).getUnformattedValue();
-			}
-			else if(widget instanceof HasValue)
-			{
-				value = ((HasValue<?>) widget).getValue();
-			}
-			
+			Object value = getEditorValue(widget);
+
 			dataSource.setValue(value, key, row.getDataSourceRecord());
 		}
-		
+
 		renderRow(row, row.getDataSourceRecord(), false, null);
 	}
+	
+	private Object getEditorValue(Widget widget)
+	{
+		Object value = null;
+		if(widget instanceof HasFormatter)
+		{
+			value = ((HasFormatter) widget).getUnformattedValue();
+		}
+		else if(widget instanceof HasValue)
+		{
+			value = ((HasValue<?>) widget).getValue();
+		} 
+		else if(widget instanceof ListBox)
+		{
+			value = ((ListBox) widget).getValue(((ListBox) widget).getSelectedIndex());
+		}
+		
+		return value;
+	}
+	
+	private void confirmLastEditedRowValues(DataRow row)
+	{
+		confirmLastEditedRowValues(row, getEditableColumns());
+		row.setEditMode(false);
+		currentEditingRow = null;
+	}
 
+	private FastList<String> getEditableColumns()
+	{
+		FastList<ColumnDefinition> defs = getColumnDefinitions().getDefinitions();
+
+		FastList<String> editableColumns = new FastList<String>();
+		for(int i = 0; i < defs.size(); i++)
+		{
+			ColumnDefinition def = defs.get(i);
+			if(def instanceof DataColumnDefinition)
+			{
+				DataColumnEditorCreator<?> editorCreator = ((DataColumnDefinition) def).getEditorCreator();
+				if(def.isVisible() && editorCreator != null)
+				{
+					editableColumns.add(def.getKey());
+				}
+			}
+		}
+		
+		return editableColumns;
+	}
+	
+	private Widget setEditorEventHandlers(Widget widget, final DataRow row)
+	{
+		if(widget instanceof HasAllKeyHandlers)
+		{
+			widget.addDomHandler(new KeyPressHandler() {
+				
+				@Override
+				public void onKeyPress(KeyPressEvent event)
+				{
+					int keycode = event.getNativeEvent().getKeyCode();
+					
+					switch(keycode)
+					{
+						case KeyCodes.KEY_ENTER:
+							confirmLastEditedRowValues(row);
+							break;
+						case KeyCodes.KEY_ESCAPE:
+							rollbackRowEdition(row);
+							break;
+						default:
+							return;
+					
+					}
+				}
+			}, KeyPressEvent.getType());
+		}
+		
+		widget.addDomHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event)
+			{
+				editorFocused = true;
+				
+				final Timer timer = new Timer() {
+					
+					@Override
+					public void run()
+					{
+						editorFocused = false;
+						this.cancel();
+					}
+				};
+				
+				timer.schedule(101);
+			}
+		}, ClickEvent.getType());
+		
+		widget.addDomHandler(new BlurHandler() {
+			
+			@Override
+			public void onBlur(BlurEvent event)
+			{
+				final Timer timer = new Timer() {
+					
+					@Override
+					public void run()
+					{
+						if(!editorFocused)
+						{
+							confirmLastEditedRowValues(row);
+							this.cancel();
+						}
+					}
+				};
+				timer.schedule(100);
+			}
+		}, BlurEvent.getType());
+		
+		return widget;
+	}
+	
 	/**
 	 * Sets the focus to the editor at the clicked cell or to the first focusable one at the row.
 	 * @param editors

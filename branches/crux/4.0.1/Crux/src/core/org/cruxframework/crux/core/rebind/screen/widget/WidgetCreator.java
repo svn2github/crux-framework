@@ -405,6 +405,23 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
     {
     	return factory.getSubTypeWriter(subType, superClass, interfaces, imports, isInterface);
     }
+    
+	/**
+	 * Create a new printer for a subType. That subType will be declared on the same package of the
+	 * {@code ViewFactory}. 
+	 * 
+	 * @param packageName
+     * @param subType
+     * @param superClass
+     * @param interfaces
+     * @param imports
+     * @param isInterface
+     * @return 
+     */
+    public SourcePrinter getSubTypeWriter(String packageName,String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
+    {
+    	return factory.getSubTypeWriter(packageName,subType, superClass, interfaces, imports, isInterface);
+    }
 	
 	
 	/**

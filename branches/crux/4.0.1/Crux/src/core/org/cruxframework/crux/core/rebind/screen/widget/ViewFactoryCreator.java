@@ -664,17 +664,50 @@ public class ViewFactoryCreator
 	
 	/**
 	 * Create a new printer for a subType. That subType will be declared on the same package of the
-	 * {@code ViewFactory}. 
-	 * 
+	 * {@code ViewFactory}.
+	 *
      * @param subType
      * @param superClass
      * @param interfaces
      * @param imports
      * @return
      */
-    SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
+    protected SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
     {
     	return getSubTypeWriter(subType, superClass, interfaces, imports, false);
+    }
+
+    /**
+	 * Create a new printer for a subType. That subType will be declared on the same package of the
+	 * {@code ViewFactory}.
+	 *
+	 * @param packageName
+     * @param subType
+     * @param superClass
+     * @param interfaces
+     * @param imports
+     * @param isInterface
+     * @return
+     */
+    protected SourcePrinter getSubTypeWriter(String packageName, String subType, String superClass, String[] interfaces, String[] imports)
+    {
+    	return getSubTypeWriter(packageName, subType, superClass, interfaces, imports, false);
+    }
+    
+    /**
+	 * Create a new printer for a subType. That subType will be declared on the same package of the
+	 * {@code ViewFactory}.
+	 *
+     * @param subType
+     * @param superClass
+     * @param interfaces
+     * @param imports
+     * @param isInterface
+     * @return
+     */
+    protected SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
+    {
+    	return getSubTypeWriter(null, subType, superClass, interfaces, imports, isInterface);
     }
     
     /**
@@ -684,13 +717,17 @@ public class ViewFactoryCreator
      * @param subType
      * @param superClass
      * @param interfaces
-     * @param imports
+     * @param importsS
      * @param isInterface
      * @return
      */
-    SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
+    SourcePrinter getSubTypeWriter(String packageName,String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
     {
-		String packageName = ViewFactory.class.getPackage().getName();
+    	if(StringUtils.isEmpty(packageName))
+    	{
+    		packageName = ViewFactory.class.getPackage().getName();
+    	}
+    	
 		PrintWriter printWriter = context.tryCreate(logger, packageName, subType);
 
 		if (printWriter == null)

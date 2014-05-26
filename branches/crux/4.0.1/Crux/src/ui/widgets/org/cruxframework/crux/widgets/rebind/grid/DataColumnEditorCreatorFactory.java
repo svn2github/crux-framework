@@ -59,19 +59,22 @@ public class DataColumnEditorCreatorFactory
 		this.loggerVariable = getLoggerVariable;
 		this.declaredMessages = declaredMessages;
 		
-		this.printer = gridFactory.getSubTypeWriter(
-    		classSimpleName, DataColumnEditorCreators.class.getCanonicalName() + ".GenericDataColumnEditorCreator", 
-    		getImports(), null, false);
+		this.printer = gridFactory.getSubTypeWriter(packageName,
+				classSimpleName, DataColumnEditorCreators.class.getCanonicalName() + ".GenericDataColumnEditorCreator", 
+	    		null, getImports(), false);
 	}
 
 	/**
 	 * Generates the body of the class file
 	 */
 	public void createEditorCreator() 
-	{	
-		generateFields();
-		generateCreateEditorMethod();
-		printer.commit();
+	{
+		if(printer != null)
+		{
+			generateFields();
+			generateCreateEditorMethod();
+			printer.commit();
+		}
 	}
 	
 	/**
