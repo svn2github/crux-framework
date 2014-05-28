@@ -56,13 +56,6 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 											TouchStartHandler, TouchMoveHandler, TouchEndHandler, OrientationChangeOrResizeHandler
 {
 	private static final int TAP_EVENT_THRESHOLD = 5;
-
-	public static interface ContentProvider
-	{
-		int size();
-		Widget loadWidget(int index);
-	}
-
 	private static final int SWIPE_THRESHOLD = 50;
 	private static final long SWIPE_TIME_THRESHOLD = 250;
 
@@ -299,8 +292,14 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		{
 			TapEvent.fire(this);
 		}
-		touchMoveHandler.removeHandler();
-		touchEndHandler.removeHandler();
+		if(touchMoveHandler != null)
+		{
+			touchMoveHandler.removeHandler();
+		}
+		if(touchEndHandler != null)
+		{
+			touchEndHandler.removeHandler();
+		}
 		event.preventDefault();
 	}
 
