@@ -7,18 +7,18 @@
 	<name>CruxSmartGWT</name>
 	<packaging>jar</packaging>
 	<description>Crux Smart GWT</description>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cruxVersion>5.2.0-SNAPSHOT</cruxVersion>
-        <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
+		<cruxVersion>5.1.0</cruxVersion>
+		<webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
 		<webinf.lib.folder>${webappDirectory}/WEB-INF/lib/</webinf.lib.folder>
 		<webinf.classes.folder>${webappDirectory}/WEB-INF/classes/</webinf.classes.folder>
 		<webappSourceDir>${basedir}/src/main/webapp</webappSourceDir>
 		<sourceDir>${project.build.sourceDirectory}</sourceDir>
-        <xsd.dir>${basedir}/xsd</xsd.dir>
+		<xsd.dir>${basedir}/xsd</xsd.dir>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.cruxframework</groupId>
@@ -41,7 +41,7 @@
 			<version>4.1p_lgpl</version>
 		</dependency>
 	</dependencies>
-		
+
 	<build>
 		<plugins>
 			<!-- Compile -->
@@ -75,7 +75,7 @@
 								</resource>
 							</resources>
 						</configuration>
-			          </execution>
+					</execution>
 					<execution>
 						<id>copy-classes</id>
 						<phase>process-classes</phase>
