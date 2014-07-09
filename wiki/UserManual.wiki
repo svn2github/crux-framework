@@ -2,7 +2,7 @@
 = Crux 4.0.0 =
 
 <font color="#8B0000">
-<b> Crux 5.0.4 is now released! Some of the features presented above are slightly different in new release. A new documentation is available in a new  Crux website: [http://www.cruxframework.org/ www.cruxframework.org].
+<b> Crux 5 is now released! Some of the features presented above are slightly different in new release. A new documentation is available in a new  Crux website: [http://www.cruxframework.org/ www.cruxframework.org].
 </b>
 </font>
 
