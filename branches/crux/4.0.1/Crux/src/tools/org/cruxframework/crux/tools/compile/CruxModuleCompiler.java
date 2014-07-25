@@ -87,7 +87,7 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 	}
 
 	@Override
-	protected void doCompileModule(URL url, Module module) throws Exception
+	public void doCompileModule(URL url, Module module) throws Exception
 	{
 		String moduleName = module.getFullName();
 		if (forceModulesCompilation || mustCompileModule(moduleName))
@@ -125,7 +125,30 @@ public class CruxModuleCompiler extends AbstractCruxCompiler
 		}
 		return urls;
 	}
+	
+	public Map<String,List<URL>> getModulePagesMap() throws Exception
+	{
+		Map<String,List<URL>> result = new HashMap<String,List<URL>>();
+		Iterator<CruxModule> cruxModules = CruxModuleHandler.iterateCruxModules();
+		while (cruxModules.hasNext())
+		{
+			CruxModule cruxModule = cruxModules.next();
+			String moduleName = cruxModule.getName();
+			CruxModuleBridge.getInstance().registerCurrentModule(moduleName);
 
+			String fullName = cruxModule.getGwtModule().getFullName();
+			List<URL> urls = result.get(fullName);
+			if (urls == null)
+			{
+				urls = new ArrayList<URL>();
+				result.put(fullName, urls);
+			}
+			urls.addAll(getURLsForRegisteredModule());
+		}
+		return result;
+	}
+
+	
 	/**
 	 * Gets all URLs for the current registered module.
 	 * @return
