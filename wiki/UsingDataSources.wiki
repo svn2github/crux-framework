@@ -1,3 +1,4 @@
+#labels Crux4,Deprecated
 =1 DataSources =
 
 _*Crux*_ DataSources are objects capable of providing a set of data to widgets that implement {{{HasDataSource}}} interface. DataSources support features like pagination, data sorting and editing.
