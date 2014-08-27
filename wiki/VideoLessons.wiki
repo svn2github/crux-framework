@@ -1,8 +1,0 @@
-#summary Videos about Crux development.
-#labels Featured
-
-= Lessons =
-
-Here you can find some videos about Crux development:
-
-<wiki:gadget url="http://crux-framework.googlecode.com/svn/wiki/gadgets/vimeoViewer.xml" height="600"  width="700" border="0" /> 
