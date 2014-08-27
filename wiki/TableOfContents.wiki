@@ -1,10 +1,10 @@
 ==Contents==
 <table>
 <tr>
-<td>*[VideoLessons Video Lessons]*</td>
+<td>*[Milestones Milestones Crux 5]*</td>
 </tr>
 <tr>
-<td>*[UserManual User Manual]*</td>
+<td>*[UserManual User Manual Crux 4]*</td>
 </tr>
 <tr>
 <td>....*1* [UserManual#1_Introduction Introduction]</td>
