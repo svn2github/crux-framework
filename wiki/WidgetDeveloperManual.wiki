@@ -1,3 +1,4 @@
+#labels Crux4,Deprecated
 = 1 Introduction =
 
 If you are not familiar with _*Crux*_ framework, please consult the [UserManual User Manual] first.
