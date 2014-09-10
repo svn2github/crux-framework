@@ -47,6 +47,9 @@ public interface Crux
 	String enableCrux2OldInterfacesCompatibility();
 	
 	@DefaultServerMessage("false")
+	String sendCruxViewNameOnClientRequests();
+	
+	@DefaultServerMessage("false")
 	String renderWidgetsWithIDs();
 
 	@DefaultServerMessage("false")
@@ -67,6 +70,7 @@ public interface Crux
 	void setLocaleResolver(String value);
 	void setServiceFactory(String value);
 	void setParameterBindGenerator(String value);
+	void setSendCruxViewNameOnClientRequests(Boolean value);
 	//TODO atualizar wiki com as opções correntes
 
 	@DefaultServerMessage("org.cruxframework.crux.core.server.rest.state.ClusteredResourceStateHandler")
