@@ -434,6 +434,7 @@ public abstract class AbstractCruxCompiler
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-validateOnly", " Validate all source code, but do not compile.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-compileReport", "Create a compile report that tells the Story of Your Compile.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-draftCompile", "Disable compiler optimizations and run faster.", false, true));
+		parametersProcessor.addSupportedParameter(new ConsoleParameter("-strict", "Only succeed if no input files have errors.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-help", "Display the usage screen.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-h", "Display the usage screen.", false, true));
 		return parametersProcessor;
@@ -662,6 +663,10 @@ public abstract class AbstractCruxCompiler
 	        	gwtCompilerArgs.add(parameter.getName());
 	        }
 	        else if (parameter.getName().equals("-draftCompile"))
+	        {
+	        	gwtCompilerArgs.add(parameter.getName());
+	        }
+	        else if (parameter.getName().equals("-strict"))
 	        {
 	        	gwtCompilerArgs.add(parameter.getName());
 	        }
